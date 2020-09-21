@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter_live_stream/core/services/service_module.dart';
+import 'package:flutter_live_stream/models/index.dart';
 
 class GlobalState {
   int _myNumber = 0;
@@ -15,11 +18,13 @@ class GlobalState {
   void getLoginInfo() async{
     final httpService = locator<HttpService>();
     final userName = 'HTTW08';
-
-
+    
     try {
-      Response response = await httpService.dio.get('api/games/fish/demo/$userName');
-      print(response);
+      Response resp = await httpService.dio.get('api/games/fish/demo/$userName');
+      final jsonResp = json.decode(resp.toString());
+     final result = LoginInfoModel.fromJson(jsonResp);
+     print(result.AnchorId);
+     print(result.Token);
     } catch (e) {
       print(e);
     }
