@@ -10,8 +10,8 @@ class Splash extends StatefulWidget {
 class _SplashPageState extends State<Splash> {
   @override
   void initState() {
-    // 使用此方法配合"WhenRebuilder"
-    RM.get<GlobalState>().setState((s) => s.getLoginInfo(), shouldAwait: true);
+
+
     super.initState();
   }
 
@@ -34,9 +34,9 @@ class _SplashPageState extends State<Splash> {
                     onError: (error) => (data) => print('onData'));
               },
               onIdle: () => Text('啟動頁'),
-              onWaiting: () => Text('取得資料中'),
-              onData: (data) => Text('拿到資料了'),
-              onError: (error) => Text('拿到資料了'),
+              onWaiting: () => Text('處理中..'),
+              onData: (data) => Text('拿到了'),
+              onError: (error) => Text('...'),
             ),
             RaisedButton(
                 child: Text('去首頁'),
@@ -44,7 +44,8 @@ class _SplashPageState extends State<Splash> {
                   // final routerService = locator<RouterService>();
                   // routerService.goToPage(
                   //     context: context, routeName: homeRoute);
-                })
+                  // 使用此方法配合"WhenRebuilder",而且必須手動按下function
+                  RM.get<GlobalState>().setState((s) => s.getLiveStreamInitInfo(), shouldAwait: true);                })
           ],
         ),
       ),
