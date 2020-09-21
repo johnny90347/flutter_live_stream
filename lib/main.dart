@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_live_stream/core/services/service_module.dart';
-import 'package:flutter_live_stream/core/states/global_state.dart';
-import 'package:states_rebuilder/states_rebuilder.dart';
+import 'package:flutter_live_stream/core/states/state_module.dart';
+
 
 //APP啟動點
 void main() {

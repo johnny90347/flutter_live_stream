@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_live_stream/components/home/home.dart';
 import 'package:flutter_live_stream/components/live_stream/live_stream.dart';
 import 'package:flutter_live_stream/components/splash/splash.dart';
-import 'package:flutter_live_stream/core/states/global_state.dart';
+import 'file:///C:/development/flutter_project/flutter_live_stream/lib/core/states/global_state/global_state.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 const String splash = '/';
