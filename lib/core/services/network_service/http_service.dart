@@ -1,14 +1,13 @@
 //匯入
 import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_live_stream/core/services/service_module.dart';
 
 //匯出
 export 'package:dio/dio.dart';
 
-final ROUTE_PATH = 'http://192.168.1.105:8002/';
-final USER_NAME = 'HTTW08'; //先寫死
+
 // 似乎用不到
 class HttpService {
   //初始設定
