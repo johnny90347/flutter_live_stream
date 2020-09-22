@@ -76,10 +76,39 @@ class GlobalState {
   }
 
   //建立SignalR連線
-  _initSignalRConnection(){
-    signalRService.liveStreamConnectHub(callback: (() => {print('liveStream連線成功')}));
-    signalRService.chatConnectHub(callback: (() => {print('chat連線成功')}));
+  void _initSignalRConnection()async{
+    //liveStream連線區
+    signalRService.liveStreamConnectHub(callback: ((){
+      print('liveStream連線成功');
+      //建立各種監聽
+      _setPlayerLobbyConnectListener().then((_) =>  _sendAnchorInfoToServer());
+      }));
+    //chat連線區
+    signalRService.chatConnectHub(callback: ((){
+      print('chat連線成功');
+      //建立各種監聽
+      _setChatMessageListener();
+    }));
   }
 
+  // 建立初始化資料監聽
+  Future _setPlayerLobbyConnectListener() async{
+    signalRService.addListener(url: 'livestreamapi', id: 'PlayerLobbyConnect', callback: ((msg){
+      print('收到$msg');
+      return 'PlayerLobbyConnectSuccess';
+    }));
+  }
+
+  //建立聊天監聽
+  void _setChatMessageListener(){
+    signalRService.addListener(url: 'chat', id: 'ReceiveChatMessage', callback: ((msg){
+      print('我收到通知了$msg');
+    }));
+  }
+  
+  //送出主播資訊 取得遊戲資訊
+  void _sendAnchorInfoToServer(){
+    signalRService.send(url: 'livestreamapi', id: 'PlayerLobbyConnect', msg: configService.getFishLiveInfo);
+  }
 
 }

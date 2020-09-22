@@ -1,12 +1,11 @@
 import 'package:flutter_live_stream/models/index.dart';
 
 class ConfigService {
-
   FishLiveGameInfoModel _fishLiveInfo; // 直播的初始資訊
 
-  set setFishLiveInfo(FishLiveGameInfoModel data) {
-    _fishLiveInfo = data;
-  }
+  set setFishLiveInfo(FishLiveGameInfoModel data) => _fishLiveInfo = data;
+
+  FishLiveGameInfoModel get getFishLiveInfo => _fishLiveInfo;
 
   // 取得登入token (singular用)
   Future<String> getAuthTokenForAsync() async {
