@@ -33,6 +33,7 @@ dependencies:
   json_annotation:
   characters: ^1.0.0
   signalr_core: ^1.0.5
+  get: ^3.11.1
 
 dev_dependencies:
   flutter_test:
