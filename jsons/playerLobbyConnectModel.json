@@ -1,0 +1,13 @@
+{
+  "RoomId": "string",
+  "Videos": "$[]videoDetailPart",
+  "GiftCount": 0,
+  "Currency": "string",
+  "Gifts": "$[]giftDetailPart",
+  "AnchorLobbyInfo": "$anchorLobbyInfoDetailPart",
+  "Id": "string",
+  "NickName": "string",
+  "MessageId": "string",
+  "Code": 0,
+  "CorrelationId": "string"
+}
