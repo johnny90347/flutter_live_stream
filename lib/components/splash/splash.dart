@@ -50,9 +50,9 @@ class _SplashPageState extends State<Splash> {
                   Get.find<GlobalController>().addObsNumber();
                 }),
             RaisedButton(
-                child: Text('去首頁'),
+                child: Text('去直播'),
                 onPressed: () {
-                  routerService.goToPage(path: homePath);
+                  routerService.goToPage(path: liveChatRoomPath);
                 })
           ],
         ),

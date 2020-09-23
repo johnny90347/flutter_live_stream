@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_live_stream/components/live_chat_room/live_chat_room.dart';
 import 'package:flutter_live_stream/components/splash/splash.dart';
 import 'package:flutter_live_stream/core/services/service_module.dart';
 import 'package:get/get.dart';
@@ -16,28 +17,6 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       home: Splash(),
       getPages: router.generateRoute,
-    );
-  }
-}
-
-class HomePage extends StatelessWidget {
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            Container(
-              child: Text('123'),
-            ),
-            RaisedButton(
-              onPressed: () {},
-              child: Text('按我'),
-            )
-          ],
-        ),
-      ),
     );
   }
 }

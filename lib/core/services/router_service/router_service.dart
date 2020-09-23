@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_live_stream/components/home/home.dart';
-import 'package:flutter_live_stream/components/live_stream/live_stream.dart';
+import 'package:flutter_live_stream/components/live_chat_room/live_chat_room.dart';
 import 'package:flutter_live_stream/components/splash/splash.dart';
-import 'package:flutter_live_stream/core/controllers/global_controller/global_controller.dart';
 import 'package:get/get.dart';
 
 const String homePath = "/home";
 const String splashPath = '/splash';
-const String liveStreamPath = '/liveStream';
+const String liveChatRoomPath = '/liveChatRoom';
 
 class RouterService {
   // 註冊路由
   final generateRoute = [
     GetPage(name: homePath, page: () => Home()),
     GetPage(name: splashPath, page: () => Splash()),
-    GetPage(name: liveStreamPath, page: () => LiveStream()),
+    GetPage(name: liveChatRoomPath, page: () => LiveChatRoom()),
   ];
 
   // 跳轉方法
@@ -26,8 +25,8 @@ class RouterService {
       case splashPath:
         Get.toNamed(splashPath);
         break;
-      case liveStreamPath:
-        Get.toNamed(liveStreamPath);
+      case liveChatRoomPath:
+        Get.toNamed(liveChatRoomPath);
         break;
       default:
         break;
