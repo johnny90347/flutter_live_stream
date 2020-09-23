@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_live_stream/components/home/home.dart';
 import 'package:flutter_live_stream/components/live_stream/live_stream.dart';
 import 'package:flutter_live_stream/components/splash/splash.dart';
+import 'package:flutter_live_stream/core/controllers/global_controller/global_controller.dart';
 import 'package:get/get.dart';
 
 const String homePath = "/home";

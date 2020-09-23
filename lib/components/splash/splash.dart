@@ -13,10 +13,12 @@ class Splash extends StatefulWidget {
 class _SplashPageState extends State<Splash> {
   final routerService = locator<RouterService>();
   final globalController = Get.put(GlobalController());
+
+
   @override
   void initState() {
     super.initState();
-    globalController.getLiveStreamInitInfo();
+    globalController.initAllRequire();
   }
 
   @override
