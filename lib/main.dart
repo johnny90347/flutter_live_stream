@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_live_stream/components/live_chat_room/live_chat_room.dart';
 import 'package:flutter_live_stream/components/splash/splash.dart';
+import 'package:flutter_live_stream/core/bindings/global_binding.dart';
 import 'package:flutter_live_stream/core/services/service_module.dart';
 import 'package:get/get.dart';
 
@@ -11,10 +12,11 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  final router =  locator<RouterService>();
+  final router = locator<RouterService>();
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      initialBinding: GlobalBidding(),
       home: Splash(),
       getPages: router.generateRoute,
     );
