@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './childs/anchor_info/anchor_info.dart';
 
 class ChatRoomFeature extends StatelessWidget {
   @override
@@ -6,17 +7,40 @@ class ChatRoomFeature extends StatelessWidget {
     //取得statusBar的高,避開
     double statusBarHeight = MediaQuery.of(context).padding.top;
     return Container(
+      padding: EdgeInsets.all(4.0),
       child: Column(
         children: [
           SizedBox(
-            height: statusBarHeight,
+            height: statusBarHeight,// statusBar高
           ),
-          Text('123'),
-          Text('123'),
-          Text('123'),
-          Text('123'),
-          Text('123'),
-          Text('123'),
+          Expanded(
+            flex: 1,
+            child: AnchorInfo(),// 主播資訊
+          ),
+          Expanded(
+            flex: 9,// 中央活動
+            child: Container(
+              decoration: BoxDecoration(color: Colors.greenAccent),
+            ),
+          ),
+          Expanded(
+            flex: 3, // 聊天內容
+            child: Container(
+              decoration: BoxDecoration(color: Colors.lightBlue),
+            ),
+          ),
+          Expanded(
+            flex: 1, //對話輸入框
+            child: Container(
+              decoration: BoxDecoration(color: Colors.cyan),
+            ),
+          ),
+          Expanded(
+            flex: 1, // 底部功能按鈕
+            child: Container(
+              decoration: BoxDecoration(color: Colors.deepPurpleAccent),
+            ),
+          )
         ],
       ),
     );
