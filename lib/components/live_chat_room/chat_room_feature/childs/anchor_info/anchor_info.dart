@@ -1,6 +1,58 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
-class AnchorInfo extends StatelessWidget {
+class AnchorInfo extends StatefulWidget {
+  @override
+  _AnchorInfoState createState() => _AnchorInfoState();
+}
+
+class _AnchorInfoState extends State<AnchorInfo> {
+
+  var anchorInfoPageController; // 在線人數,人氣值,輪播控制器
+  var _switchInfoTimer; // 切換在線人數,人氣值的timer
+  int infoPageIndex = 0; // 在線人數 = 0, 人氣值 = 1
+
+  @override
+  void initState() {
+    _pageControllerSetUp();
+    _timerSetUp();
+    super.initState();
+  }
+
+  // 在線人數,人氣值,輪播控制器 設置
+  void _pageControllerSetUp() {
+    anchorInfoPageController = PageController(
+        initialPage: infoPageIndex, keepPage: true, viewportFraction: 1);
+  }
+
+  // 切換在線人數,人氣值的timer 設置
+  void _timerSetUp() {
+    // 目前設置每五秒切換一次
+    _switchInfoTimer =
+        Timer.periodic(const Duration(seconds: 5), (Timer timer) {
+      if (infoPageIndex == 0) {
+        infoPageIndex = 1;
+        anchorInfoPageController.animateToPage(1,
+            curve: Curves.easeIn, duration: Duration(milliseconds: 1000));
+      } else if (infoPageIndex == 1) {
+        infoPageIndex = 2;
+        anchorInfoPageController.animateToPage(2,
+            curve: Curves.easeIn, duration: Duration(milliseconds: 1000));
+      } else if (infoPageIndex == 2) {
+        infoPageIndex = 0;
+        anchorInfoPageController.jumpToPage(0);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    anchorInfoPageController.dispose();
+    _switchInfoTimer.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -9,7 +61,7 @@ class AnchorInfo extends StatelessWidget {
         final maxHeight = constraints.maxHeight; // 父層高
 
         const paddingValue = 2.0; // 整個主播資訊容器的padding
-        const borderRadiusValue = 8.0;
+        const borderRadiusValue = 8.0; // 邊框圓角
 
         return Container(
           alignment: Alignment.centerLeft,
@@ -59,28 +111,16 @@ class AnchorInfo extends StatelessWidget {
                         ),
                         Expanded(
                           flex: 1,
-                          child: Container(
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.person,
-                                  color: Colors.yellowAccent,
-                                  size: 15,
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    '666',
-                                    softWrap: false,
-                                    style: TextStyle(
-                                      fontSize: 12.0,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
+                          child: PageView(
+                            scrollDirection: Axis.vertical,
+                            controller: anchorInfoPageController,
+                            children: [
+                              OnlineUser(),
+                              StartValue(),
+                              OnlineUser(),
+                            ],
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ),
@@ -89,7 +129,7 @@ class AnchorInfo extends StatelessWidget {
                   flex: 5,
                   child: InkWell(
                     onTap: () {
-                      print('object');
+                      print('訂閱');
                     },
                     child: Container(
                       alignment: Alignment.center,
@@ -102,8 +142,7 @@ class AnchorInfo extends StatelessWidget {
                         style: TextStyle(
                             color: Colors.grey.shade700,
                             fontWeight: FontWeight.w700,
-                          fontSize: 12.0
-                        ),
+                            fontSize: 12.0),
                       ),
                     ),
                   ),
@@ -113,6 +152,64 @@ class AnchorInfo extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+// 線上人數
+class OnlineUser extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Row(
+        children: [
+          Icon(
+            Icons.person,
+            color: Colors.yellowAccent,
+            size: 15,
+          ),
+          SizedBox(width: 5.0),
+          Expanded(
+            child: Text(
+              '666',
+              softWrap: false,
+              style: TextStyle(
+                fontSize: 12.0,
+                color: Colors.white,
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+// 主播人氣
+class StartValue extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Row(
+        children: [
+          Icon(
+            Icons.stars,
+            color: Colors.redAccent,
+            size: 15,
+          ),
+          SizedBox(width: 5.0),
+          Expanded(
+            child: Text(
+              '666',
+              softWrap: false,
+              style: TextStyle(
+                fontSize: 12.0,
+                color: Colors.white,
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }
