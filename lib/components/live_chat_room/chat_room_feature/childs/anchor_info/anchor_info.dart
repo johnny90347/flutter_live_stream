@@ -8,29 +8,36 @@ class AnchorInfo extends StatefulWidget {
 }
 
 class _AnchorInfoState extends State<AnchorInfo> {
-  var anchorInfoPageController; // 在線人數,人氣值,輪播控制器
-  var _switchInfoTimer; // 切換在線人數,人氣值的timer
-  int infoPageIndex = 0; // 在線人數 = 0, 人氣值 = 1
-  bool scrollAnchorName = false;
+  var _anchorInfoPageController; // 在線人數,人氣值,輪播控制器
+  Timer _switchInfoTimer; // 切換在線人數,人氣值的timer
+  int _infoPageIndex = 0; // 在線人數 = 0, 人氣值 = 1
+
+  Timer _anchorScrollTimer; // 主播名子太長 => 開始滾
+  bool _animationScrollAnchorName = false;
+  double _scrollOffset = 0;
   GlobalKey _keyAnchorName = GlobalKey();
+  final _anchorName = '來試試看名字太長會不會滾呢';
 
   @override
   void initState() {
     _pageControllerSetUp();
     _timerSetUp();
-
-    Timer(Duration(seconds: 10), () {
-      _getSizes();
-    });
-
-
+    _computedScrollNameNeeded();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _anchorInfoPageController.dispose();
+    _switchInfoTimer.cancel();
+    _anchorScrollTimer.cancel();
+    super.dispose();
   }
 
   // 在線人數,人氣值,輪播控制器 設置
   void _pageControllerSetUp() {
-    anchorInfoPageController = PageController(
-        initialPage: infoPageIndex, keepPage: true, viewportFraction: 1);
+    _anchorInfoPageController = PageController(
+        initialPage: _infoPageIndex, keepPage: true, viewportFraction: 1);
   }
 
   // 切換在線人數,人氣值的timer 設置
@@ -38,47 +45,47 @@ class _AnchorInfoState extends State<AnchorInfo> {
     var smallTimer;
     // 目前設置每X秒切換一次
     _switchInfoTimer =
-        Timer.periodic(const Duration(seconds: 5), (Timer timer) {
-      if (infoPageIndex == 0) {
-        infoPageIndex = 1;
-        anchorInfoPageController.animateToPage(1,
+        Timer.periodic(const Duration(seconds: 12), (Timer timer) {
+      if (_infoPageIndex == 0) {
+        _infoPageIndex = 1;
+        _anchorInfoPageController.animateToPage(1,
             curve: Curves.easeIn, duration: Duration(milliseconds: 800));
-      } else if (infoPageIndex == 1) {
-        infoPageIndex = 2;
-        anchorInfoPageController.animateToPage(2,
+      } else if (_infoPageIndex == 1) {
+        _infoPageIndex = 2;
+        _anchorInfoPageController.animateToPage(2,
             curve: Curves.easeIn, duration: Duration(milliseconds: 800));
         smallTimer = Timer(Duration(milliseconds: 1200), () {
-          infoPageIndex = 0;
-          anchorInfoPageController.jumpToPage(0);
+          _infoPageIndex = 0;
+          _anchorInfoPageController.jumpToPage(0);
         });
       }
     });
   }
 
-
-  void computedTextSpace(double containerSize) {
-
-    final unit = containerSize / 750.0;
-    final fontSize = 13.0;
-    final oneWordUnit = fontSize / unit;
-    final maxStringLength = (750.0 / oneWordUnit).round();
-    print('可以放幾個字${maxStringLength}');
-    // 每個字大小13,多一個字,多往左13;
-//    return spaceString;
+  // 計算是否主播名稱太長,讓他滾動
+  void _computedScrollNameNeeded() {
+    Timer(Duration(seconds: 5), () {
+      _getSizesDetect();
+    });
   }
+ // 取得
+  void _getSizesDetect() {
+    final RenderBox renderAnchorNameBox =
+        _keyAnchorName.currentContext.findRenderObject();
+    final sizeName = renderAnchorNameBox.size;
+    final fontSize = 12.0;
+    final maxFittedStringLength = (sizeName.width / fontSize).truncate();
 
-  _getSizes() {
-    final RenderBox renderBoxRed = _keyAnchorName.currentContext.findRenderObject();
-    final sizeRed = renderBoxRed.size;
-    computedTextSpace(sizeRed.width);
-    print("SIZE of Red: $sizeRed");
-  }
-
-  @override
-  void dispose() {
-    anchorInfoPageController.dispose();
-    _switchInfoTimer.dispose();
-    super.dispose();
+    if (_anchorName.length > maxFittedStringLength) {
+      _scrollOffset = ((_anchorName.length - maxFittedStringLength) * 12)
+          .toDouble(); // 每個字大小12
+      _anchorScrollTimer =
+          Timer.periodic(const Duration(seconds: 10), (Timer timer) {
+        setState(() {
+          _animationScrollAnchorName = !_animationScrollAnchorName;
+        });
+      });
+    }
   }
 
   @override
@@ -133,9 +140,11 @@ class _AnchorInfoState extends State<AnchorInfo> {
                               children: [
                                 AnimatedPositioned(
                                   duration: Duration(milliseconds: 1000),
-                                  left: scrollAnchorName ? -13 : 0,
+                                  left: _animationScrollAnchorName
+                                      ? -_scrollOffset
+                                      : 0,
                                   child: Text(
-                                    '妮妮妮妮妮妮妮妮',
+                                    _anchorName,
                                     softWrap: false,
                                     style: TextStyle(
                                         fontSize: 12.0, color: Colors.white),
@@ -149,7 +158,7 @@ class _AnchorInfoState extends State<AnchorInfo> {
                           flex: 1,
                           child: PageView(
                             scrollDirection: Axis.vertical,
-                            controller: anchorInfoPageController,
+                            controller: _anchorInfoPageController,
                             children: [
                               OnlineUser(),
                               StartValue(),
@@ -166,11 +175,6 @@ class _AnchorInfoState extends State<AnchorInfo> {
                   child: InkWell(
                     onTap: () {
                       print('訂閱');
-                      setState(() {
-                       setState(() {
-                         scrollAnchorName = !scrollAnchorName;
-                       });
-                      });
                     },
                     child: Container(
                       alignment: Alignment.center,
