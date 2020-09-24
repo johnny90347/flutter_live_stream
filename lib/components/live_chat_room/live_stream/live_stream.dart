@@ -21,11 +21,11 @@ class _LiveStreamState extends State<LiveStream> {
   @override
   void initState() {
 
-    urlToStreamVideo ='http:${Get.put(GlobalController()).videos[0].Flv}' ;
-
-    _videoViewController = new VlcPlayerController(onInit: () {
-      _videoViewController.play();
-    });
+//    urlToStreamVideo ='http:${Get.put(GlobalController()).videos[0].Flv}' ;
+//
+//    _videoViewController = new VlcPlayerController(onInit: () {
+//      _videoViewController.play();
+//    });
     super.initState();
   }
 

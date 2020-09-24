@@ -38,7 +38,7 @@ class ConfigService {
       }
 
       print('getLoginInfo: $resp');
-      
+
       final LoginInfoModel serializationResp = LoginInfoModel.fromJson(resp);
       if (serializationResp.Code == 0) {
         return serializationResp;
