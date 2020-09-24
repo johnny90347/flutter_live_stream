@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_live_stream/components/error/error.dart';
 import 'package:flutter_live_stream/components/home/home.dart';
 import 'package:flutter_live_stream/components/live_chat_room/live_chat_room.dart';
 import 'package:flutter_live_stream/components/splash/splash.dart';
@@ -7,6 +8,7 @@ import 'package:get/get.dart';
 const String homePath = "/home";
 const String splashPath = '/splash';
 const String liveChatRoomPath = '/liveChatRoom';
+const String errorPath = '/error';
 
 class RouterService {
   // 註冊路由
@@ -14,19 +16,24 @@ class RouterService {
     GetPage(name: homePath, page: () => Home()),
     GetPage(name: splashPath, page: () => Splash()),
     GetPage(name: liveChatRoomPath, page: () => LiveChatRoom()),
+    GetPage(name: errorPath,page: ()=>Error())
+
   ];
 
   // 跳轉方法
-  void goToPage({@required String path}) {
+  void goToPage({@required String path,dynamic argument}) {
     switch (path) {
       case homePath:
-        Get.offAllNamed(homePath);
+        Get.offAllNamed(homePath,arguments: argument);
         break;
       case splashPath:
-        Get.toNamed(splashPath);
+        Get.toNamed(splashPath,arguments: argument);
         break;
       case liveChatRoomPath:
-        Get.toNamed(liveChatRoomPath);
+        Get.toNamed(liveChatRoomPath,arguments: argument);
+        break;
+      case errorPath:
+        Get.offAllNamed(errorPath,arguments: argument);
         break;
       default:
         break;

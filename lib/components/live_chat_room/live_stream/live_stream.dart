@@ -33,18 +33,18 @@ class _LiveStreamState extends State<LiveStream> {
   @override
   Widget build(BuildContext context) {
     return Container(
-//      child: Image(
-//        image: AssetImage('assets/images/girl.jpg'),
-//        fit: BoxFit.fitWidth,
-//      ),
-    height: playerHeight,
-      width: playerWidth,
-    child: VlcPlayer(
-      aspectRatio: 16 / 9,
-      url: urlToStreamVideo,
-      controller: _videoViewController,
-      placeholder: Center(child: CircularProgressIndicator()),
-    )
+      child: Image(
+        image: AssetImage('assets/images/girl.jpg'),
+        fit: BoxFit.fitWidth,
+      ),
+//    height: playerHeight,
+//      width: playerWidth,
+//    child: VlcPlayer(
+//      aspectRatio: 16 / 9,
+//      url: urlToStreamVideo,
+//      controller: _videoViewController,
+//      placeholder: Center(child: CircularProgressIndicator()),
+//    )
     );
   }
 }

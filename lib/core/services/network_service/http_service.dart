@@ -24,7 +24,14 @@ class HttpService {
       final jsonResp = json.decode(resp.toString());
       return jsonResp;
     } on DioError catch (e) {
-      print(e);
+
+      print('錯誤的 statusCode: ${e.response.statusCode}');
+      print('錯誤 data: ${e.response.data}'); //ex:{Code: 101503, Message: Dev only => :LSG....
+
+      //自己做一個 訊息 return 出去
+      final errorMsg = e.response.data;
+
+      return errorMsg;
     }
   }
 }

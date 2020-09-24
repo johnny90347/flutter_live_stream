@@ -16,7 +16,7 @@ class ConfigService {
 
   /// 注入服務
   final httpService = locator<HttpService>();
-
+  final routeService = locator<RouterService>();
 
   // 初始化連線前該有的資料
     Future initConfig()async{
@@ -31,7 +31,14 @@ class ConfigService {
     return httpService
         .httpGet(url: 'api/games/fish/demo/$USER_NAME')
         .then((resp) {
-      print('getLoginInfo:$resp');
+
+      // code != 0 導向錯誤頁
+      if(resp["code"] != 0 ){
+        routeService.goToPage(path: errorPath,argument: resp["Message"]);
+      }
+
+      print('getLoginInfo: $resp');
+      
       final LoginInfoModel serializationResp = LoginInfoModel.fromJson(resp);
       if (serializationResp.Code == 0) {
         return serializationResp;
