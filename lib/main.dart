@@ -16,10 +16,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      initialBinding: GlobalBidding(),
-      home: LiveChatRoom(),
-      getPages: router.generateRoute,
-    );
+        initialBinding: GlobalBidding(),
+        home: LiveChatRoom(),
+        getPages: router.generateRoute,
+        builder: (context, child) {
+          //讓字體不受外部影響
+          return MediaQuery(
+            child: child,
+            data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+          );
+        });
   }
 }
 

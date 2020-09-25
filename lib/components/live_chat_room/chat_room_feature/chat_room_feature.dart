@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import './childs/anchor_info/anchor_info.dart';
+import './childs/bottom_panel/bottom_panel.dart';
 
 class ChatRoomFeature extends StatelessWidget {
   @override
@@ -37,9 +38,7 @@ class ChatRoomFeature extends StatelessWidget {
           ),
           Expanded(
             flex: 1, // 底部功能按鈕
-            child: Container(
-              decoration: BoxDecoration(color: Colors.deepPurpleAccent),
-            ),
+            child: BottomPanel(),
           )
         ],
       ),

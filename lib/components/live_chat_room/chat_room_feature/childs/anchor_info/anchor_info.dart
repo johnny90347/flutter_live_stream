@@ -42,7 +42,6 @@ class _AnchorInfoState extends State<AnchorInfo> {
 
   // 切換在線人數,人氣值的timer 設置
   void _timerSetUp() {
-    var smallTimer;
     // 目前設置每X秒切換一次
     _switchInfoTimer =
         Timer.periodic(const Duration(seconds: 12), (Timer timer) {
@@ -54,7 +53,7 @@ class _AnchorInfoState extends State<AnchorInfo> {
         _infoPageIndex = 2;
         _anchorInfoPageController.animateToPage(2,
             curve: Curves.easeIn, duration: Duration(milliseconds: 800));
-        smallTimer = Timer(Duration(milliseconds: 1200), () {
+        Timer(Duration(milliseconds: 1200), () {
           _infoPageIndex = 0;
           _anchorInfoPageController.jumpToPage(0);
         });
@@ -68,7 +67,8 @@ class _AnchorInfoState extends State<AnchorInfo> {
       _getSizesDetect();
     });
   }
- // 取得
+
+  // 取得
   void _getSizesDetect() {
     final RenderBox renderAnchorNameBox =
         _keyAnchorName.currentContext.findRenderObject();
@@ -80,9 +80,15 @@ class _AnchorInfoState extends State<AnchorInfo> {
       _scrollOffset = ((_anchorName.length - maxFittedStringLength) * 12)
           .toDouble(); // 每個字大小12
       _anchorScrollTimer =
-          Timer.periodic(const Duration(seconds: 10), (Timer timer) {
+          Timer.periodic(const Duration(seconds: 18), (Timer timer) {
         setState(() {
           _animationScrollAnchorName = !_animationScrollAnchorName;
+        });
+        // 五秒後滑回來
+        Timer(Duration(seconds: 5), () {
+          setState(() {
+            _animationScrollAnchorName = !_animationScrollAnchorName;
+          });
         });
       });
     }
