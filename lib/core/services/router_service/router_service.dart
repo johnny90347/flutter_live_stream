@@ -3,6 +3,7 @@ import 'package:flutter_live_stream/components/error/error.dart';
 import 'package:flutter_live_stream/components/home/home.dart';
 import 'package:flutter_live_stream/components/live_chat_room/live_chat_room.dart';
 import 'package:flutter_live_stream/components/splash/splash.dart';
+import 'package:flutter_live_stream/core/bindings/live_chat_room_binding.dart';
 import 'package:get/get.dart';
 
 const String homePath = "/home";
@@ -15,7 +16,7 @@ class RouterService {
   final generateRoute = [
     GetPage(name: homePath, page: () => Home()),
     GetPage(name: splashPath, page: () => Splash()),
-    GetPage(name: liveChatRoomPath, page: () => LiveChatRoom()),
+    GetPage(name: liveChatRoomPath, page: () => LiveChatRoom(),binding: LiveChatRoomBinding()),
     GetPage(name: errorPath,page: ()=>Error())
 
   ];

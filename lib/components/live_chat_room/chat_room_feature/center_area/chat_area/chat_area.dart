@@ -1,26 +1,57 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_live_stream/components/live_chat_room/chat_room_feature/center_area/chat_area/chat_input/chat_input.dart';
-
+import 'package:flutter_live_stream/core/controllers/global_controller.dart';
+import 'package:flutter_live_stream/core/controllers/live_chat_room_controller.dart';
+import 'package:keyboard_visibility/keyboard_visibility.dart';
 class ChatArea extends StatefulWidget {
   @override
   _ChatAreaState createState() => _ChatAreaState();
 }
 
 class _ChatAreaState extends State<ChatArea> {
-
-  FocusNode inputFocusNode; // 輸入框的聚焦
+  final liveChatRoomController = Get.find<LiveChatRoomController>();
+  // 監聽鍵盤的實體
+  KeyboardVisibilityNotification _keyboardVisibility = new KeyboardVisibilityNotification();
+  int _keyboardVisibilitySubscriberId;
+  double _keyboardHeight = 0; // 鍵盤高度
 
   @override
   void initState() {
-    inputFocusNode = FocusNode();
+    _setKeyboardListener();
     super.initState();
+  }
+
+  // 設置鍵盤彈出監聽
+  _setKeyboardListener(){
+    _keyboardVisibilitySubscriberId = _keyboardVisibility.addNewListener(
+        onChange: (bool visible){
+          //　鍵盤彈出
+          if(visible){
+            Timer(Duration(milliseconds: 100), () {
+              // 取的鍵盤高度
+              final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+              // -4 是一開始寫在最外面的padding,不扣了畫,會多一條線(空白)
+              _keyboardHeight = keyboardHeight - liveChatRoomController.bottomPanelHeight - 4;
+              setState(() {
+                // 跑出chatInput
+                liveChatRoomController.openChatInput.value = true;
+              });
+            });
+            //　鍵盤消失
+          }else{
+            // 取消焦點
+            FocusScope.of(context).requestFocus(FocusNode());
+            // 關閉chatInput
+            liveChatRoomController.openChatInput.value = false;
+          }
+        }
+    );
   }
 
   @override
   void dispose() {
-    inputFocusNode.dispose();
+    _keyboardVisibility.removeListener(_keyboardVisibilitySubscriberId);
     super.dispose();
   }
   @override
@@ -29,77 +60,72 @@ class _ChatAreaState extends State<ChatArea> {
       final maxWidth = constraints.maxWidth; // 父層寬
       final maxHeight = constraints.maxHeight; // 父層高
       return GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: (){
-          FocusScope.of(context).requestFocus(FocusNode());
-        },
-        child: Container(
-          height: maxHeight,
-          width: maxWidth,
-          child: Column(
-            children: [
-              Expanded(
-                flex: 10,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey
-                  ),
-                  child: RaisedButton(
-                    onPressed: (){
-                      inputFocusNode.requestFocus();
+            behavior: HitTestBehavior.translucent,
+            onTap: (){
+              // 取消所有焦點
+              FocusScope.of(context).requestFocus(FocusNode());
+              // chatInput 隱藏
+              liveChatRoomController.openChatInput.value = false;
+            },
+            child: Container(
+              height: maxHeight,
+              width: maxWidth,
+              child: Stack(
+                children: [
+                  Obx(() =>  AnimatedPositioned(
+                    duration: Duration(milliseconds: 400),
+                    bottom: liveChatRoomController.openChatInput.value ? _keyboardHeight : -maxHeight * 1/16,
+                    // bottom: liveChatRoomController.openChatInput.value ? _keyboardHeight : 0,
+                    right: 0,
+                    left: 0,
+                    top: liveChatRoomController.openChatInput.value ? -_keyboardHeight : maxHeight * 1/16,
+                    // top: liveChatRoomController.openChatInput.value ? -_keyboardHeight : 0,
+                    child: Column(
+                      children: [
+                        Expanded(
+                          flex: 10,
+                          child: Container(
+                            height: 80,
+                            width: 150,
+                            decoration: BoxDecoration(
+                                color: Colors.grey
+                            ),
+                            child: RaisedButton(
+                              onPressed: (){
 
-                      Timer(Duration(milliseconds: 300), () {
-                        final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
-                        print(keyboardHeight);
-                      });
-
-                    },
-                    child: Text('測試'),
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 4,
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.tealAccent
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.blue
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Row(
-                    children: [
-                      Expanded(
-                        flex: 80,
-                        child: TextField(
-                          focusNode: inputFocusNode,
-                          decoration: InputDecoration(
-                              contentPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                              fillColor: Colors.white,
-                              filled: true,
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.grey.shade300, width: 1.0)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color:  Colors.grey.shade300, width: 2.5))
+                              },
+                              child: Text('測試鍵盤'),
+                            ),
                           ),
-
                         ),
-                      )
-                    ],
-                ),
-              )],
-          ),
-        ),
+                        Expanded(
+                          flex: 4,
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: Colors.tealAccent
+                            ),
+                            child: Text('${liveChatRoomController.openChatInput.value}'),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: Colors.blue
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: ChatInput(),
+                        )],
+                    ),
+                  )
+                  )],
+              ),
+            ),
+          );
+        },
       );
-    });
   }
 }

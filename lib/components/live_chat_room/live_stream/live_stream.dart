@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_live_stream/core/controllers/global_controller/global_controller.dart';
+import 'package:flutter_live_stream/core/controllers/global_controller.dart';
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 import 'package:get/get.dart';
 

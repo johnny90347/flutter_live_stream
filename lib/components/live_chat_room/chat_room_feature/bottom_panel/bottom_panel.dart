@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_live_stream/core/controllers/live_chat_room_controller.dart';
 class BottomPanel extends StatelessWidget {
+
+  final liveChatRoomController = Get.find<LiveChatRoomController>();
+
   // 粉色
   static const Gradient pickGradient = LinearGradient(
     begin: Alignment.topCenter,
@@ -15,28 +18,50 @@ class BottomPanel extends StatelessWidget {
       )
     ],
   );
-
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       final maxHeight = constraints.maxHeight;
+      liveChatRoomController.bottomPanelHeight = maxHeight;
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
-            // 左邊區域 切換分流,重整,音效
+            // 左邊區域 聊天,切換分流,重整,音效
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                CircleButton(icon: Icons.wifi, diameter: maxHeight * 0.7),
+                CircleButton(
+                  icon: Icons.textsms,
+                  diameter: maxHeight * 0.7,
+                  onTap: () {
+                    liveChatRoomController.openChatInput.value = true;
+                  },
+                ),
                 SizedBox(
                   width: maxHeight * 0.7 * 0.5,
                 ),
-                CircleButton(icon: Icons.refresh, diameter: maxHeight * 0.7),
+                CircleButton(
+                  icon: Icons.wifi,
+                  diameter: maxHeight * 0.7,
+                  onTap: () {},
+                ),
                 SizedBox(
                   width: maxHeight * 0.7 * 0.5,
                 ),
-                CircleButton(icon: Icons.volume_up, diameter: maxHeight * 0.7),
+                CircleButton(
+                  icon: Icons.refresh,
+                  diameter: maxHeight * 0.7,
+                  onTap: () {},
+                ),
+                SizedBox(
+                  width: maxHeight * 0.7 * 0.5,
+                ),
+                CircleButton(
+                  icon: Icons.volume_up,
+                  diameter: maxHeight * 0.7,
+                  onTap: () {},
+                ),
               ],
             ),
           ),
@@ -45,10 +70,10 @@ class BottomPanel extends StatelessWidget {
             child: Row(
               children: [
                 CircleButton(
-                  icon: Icons.card_giftcard,
-                  diameter: maxHeight * 0.7,
-                  btnGradientColor: pickGradient,
-                ),
+                    icon: Icons.card_giftcard,
+                    diameter: maxHeight * 0.7,
+                    btnGradientColor: pickGradient,
+                    onTap: () {}),
               ],
             ),
           )
@@ -64,6 +89,7 @@ class CircleButton extends StatelessWidget {
   final double diameter; // 直徑
   final Gradient btnGradientColor; // icon 背景漸層
   final Color iconColor;
+  final Function onTap;
 
   static const Gradient whiteGradient = LinearGradient(
     begin: Alignment.topCenter,
@@ -74,30 +100,28 @@ class CircleButton extends StatelessWidget {
   CircleButton(
       {@required this.icon,
       @required this.diameter,
+      @required this.onTap,
       this.btnGradientColor = whiteGradient,
       this.iconColor = Colors.white});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        print('object');
-      },
+      onTap: onTap,
       child: Container(
         width: diameter,
         height: diameter,
         decoration: BoxDecoration(
             shape: BoxShape.circle,
             gradient: btnGradientColor,
-            boxShadow:[
+            boxShadow: [
               BoxShadow(
                 color: Colors.grey.withOpacity(0.5),
                 spreadRadius: 0.5,
                 blurRadius: 0.5,
                 offset: Offset(0.5, 0.5),
               )
-            ]
-        ),
+            ]),
         child: Icon(
           icon,
           size: diameter / 2,

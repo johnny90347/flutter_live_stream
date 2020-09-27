@@ -255,7 +255,7 @@ class StartValue extends StatelessWidget {
           SizedBox(width: 5.0),
           Expanded(
             child: Text(
-              '64564466',
+              '645666',
               softWrap: false,
               style: TextStyle(
                 fontSize: 10.0,

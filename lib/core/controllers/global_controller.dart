@@ -1,9 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter_live_stream/core/services/service_module.dart';
 import 'package:flutter_live_stream/models/index.dart';
 //套件
 import 'package:get/get.dart';
+// 用到這個的,都需要用到套件
+export 'package:get/get.dart';
 
 class GlobalController extends GetxController {
   // 測試用資料
