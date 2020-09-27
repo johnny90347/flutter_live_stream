@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AnchorInfo extends StatefulWidget {
   @override
@@ -16,7 +17,7 @@ class _AnchorInfoState extends State<AnchorInfo> {
   bool _animationScrollAnchorName = false;
   double _scrollOffset = 0;
   GlobalKey _keyAnchorName = GlobalKey();
-  final _anchorName = '來試試看名字太長會不會滾呢';
+  final _anchorName = '我的名子特别长会不会滚';
 
   @override
   void initState() {
@@ -73,12 +74,12 @@ class _AnchorInfoState extends State<AnchorInfo> {
     final RenderBox renderAnchorNameBox =
         _keyAnchorName.currentContext.findRenderObject();
     final sizeName = renderAnchorNameBox.size;
-    final fontSize = 12.0;
+    final fontSize = 13.0;
     final maxFittedStringLength = (sizeName.width / fontSize).truncate();
 
     if (_anchorName.length > maxFittedStringLength) {
-      _scrollOffset = ((_anchorName.length - maxFittedStringLength) * 12)
-          .toDouble(); // 每個字大小12
+      _scrollOffset = ((_anchorName.length - maxFittedStringLength) * fontSize)
+          .toDouble(); // 每個字大小14
       _anchorScrollTimer =
           Timer.periodic(const Duration(seconds: 18), (Timer timer) {
         setState(() {
@@ -108,7 +109,7 @@ class _AnchorInfoState extends State<AnchorInfo> {
           alignment: Alignment.centerLeft,
           child: Container(
             padding: EdgeInsets.all(paddingValue),
-            width: maxWidth * 0.5,
+            width: maxWidth * 0.45,
             height: maxHeight,
             decoration: BoxDecoration(
                 color: Color.fromARGB(150, 0, 0, 0),
@@ -212,12 +213,13 @@ class OnlineUser extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      alignment: Alignment.centerLeft,
       child: Row(
         children: [
           Icon(
             Icons.person,
             color: Colors.yellowAccent,
-            size: 15,
+            size: 12,
           ),
           SizedBox(width: 5.0),
           Expanded(
@@ -225,8 +227,9 @@ class OnlineUser extends StatelessWidget {
               '666',
               softWrap: false,
               style: TextStyle(
-                fontSize: 12.0,
+                fontSize: 10.0,
                 color: Colors.white,
+                letterSpacing: 1.0
               ),
             ),
           )
@@ -241,21 +244,23 @@ class StartValue extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      alignment: Alignment.centerLeft,
       child: Row(
         children: [
           Icon(
             Icons.stars,
             color: Colors.redAccent,
-            size: 15,
+            size: 12,
           ),
           SizedBox(width: 5.0),
           Expanded(
             child: Text(
-              '666',
+              '64564466',
               softWrap: false,
               style: TextStyle(
-                fontSize: 12.0,
+                fontSize: 10.0,
                 color: Colors.white,
+                  letterSpacing: 1.0
               ),
             ),
           )

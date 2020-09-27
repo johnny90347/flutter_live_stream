@@ -61,9 +61,9 @@ class BottomPanel extends StatelessWidget {
 // 圓形icon按鈕 - 共用
 class CircleButton extends StatelessWidget {
   final IconData icon; // icon 圖示
-  final double diameter;// 直徑
+  final double diameter; // 直徑
   final Gradient btnGradientColor; // icon 背景漸層
-  final Color iconColor ;
+  final Color iconColor;
 
   static const Gradient whiteGradient = LinearGradient(
     begin: Alignment.topCenter,
@@ -75,8 +75,7 @@ class CircleButton extends StatelessWidget {
       {@required this.icon,
       @required this.diameter,
       this.btnGradientColor = whiteGradient,
-      this.iconColor = Colors.white
-      });
+      this.iconColor = Colors.white});
 
   @override
   Widget build(BuildContext context) {
@@ -87,8 +86,18 @@ class CircleButton extends StatelessWidget {
       child: Container(
         width: diameter,
         height: diameter,
-        decoration: new BoxDecoration(
-            shape: BoxShape.circle, gradient: btnGradientColor),
+        decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: btnGradientColor,
+            boxShadow:[
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 0.5,
+                blurRadius: 0.5,
+                offset: Offset(0.5, 0.5),
+              )
+            ]
+        ),
         child: Icon(
           icon,
           size: diameter / 2,

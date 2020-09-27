@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import './childs/anchor_info/anchor_info.dart';
-import './childs/bottom_panel/bottom_panel.dart';
+import './anchor_info/anchor_info.dart';
+import './bottom_panel/bottom_panel.dart';
+import './center_area/center_area.dart';
 
 class ChatRoomFeature extends StatelessWidget {
   @override
@@ -19,22 +20,8 @@ class ChatRoomFeature extends StatelessWidget {
             child: AnchorInfo(),// 主播資訊
           ),
           Expanded(
-            flex: 9,// 中央活動
-            child: Container(
-              decoration: BoxDecoration(color: Colors.greenAccent),
-            ),
-          ),
-          Expanded(
-            flex: 3, // 聊天內容
-            child: Container(
-              decoration: BoxDecoration(color: Colors.lightBlue),
-            ),
-          ),
-          Expanded(
-            flex: 1, //對話輸入框
-            child: Container(
-              decoration: BoxDecoration(color: Colors.cyan),
-            ),
+            flex: 14,
+            child: CenterArea(),  // 中央區域 (動畫層 & 聊天區)
           ),
           Expanded(
             flex: 1, // 底部功能按鈕
