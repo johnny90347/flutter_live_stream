@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
         theme: ThemeData(// 設定預設字體
-          textTheme: GoogleFonts.zcoolXiaoWeiTextTheme(
+          textTheme: GoogleFonts.notoSansTextTheme(
             Theme.of(context).textTheme,
           ),
         ),
