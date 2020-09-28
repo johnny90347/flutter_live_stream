@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_live_stream/components/live_chat_room/live_chat_room.dart';
+import 'package:flutter_live_stream/pages/live_chat_room/live_chat_room.dart';
 import 'package:flutter_live_stream/core/bindings/global_binding.dart';
 import 'package:flutter_live_stream/core/services/service_module.dart';
 import 'package:get/get.dart';

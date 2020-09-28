@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_live_stream/components/home/home.dart';
+import 'package:flutter_live_stream/pages/home/home.dart';
 import 'package:flutter_live_stream/core/controllers/global_controller.dart';
 import 'package:flutter_live_stream/core/services/service_module.dart';
 // 套件

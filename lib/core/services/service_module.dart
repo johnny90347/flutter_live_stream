@@ -20,7 +20,7 @@ export 'package:flutter_live_stream/core/services/live_stream_service/live_strea
 final ROUTE_PATH = 'http://172.24.10.63:8002/';
 final USER_NAME = 'HTTW08';
 
-// 全局的GetIt實體
+// 全局的GetIt實體(用於service)
 GetIt locator = GetIt.instance;
 
 // 註冊service

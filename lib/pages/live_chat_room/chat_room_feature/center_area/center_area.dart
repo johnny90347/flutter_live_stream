@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_live_stream/components/live_chat_room/chat_room_feature/center_area/chat_area/chat_area.dart';
+import 'package:flutter_live_stream/pages/live_chat_room/chat_room_feature/center_area/chat_area/chat_area.dart';
 
 //  中央區域
 class CenterArea extends StatelessWidget {
