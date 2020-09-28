@@ -11,7 +11,7 @@ class GlobalBidding implements Bindings{
   void dependencies() {
     Get.lazyPut<GlobalController>(() => GlobalController());
 
-    // 等到開發完這頁,就要刪掉這行
+    //TODO  等到開發完這頁,就要刪掉這行
     Get.lazyPut<LiveChatRoomController>(() => LiveChatRoomController());
   }
 }
