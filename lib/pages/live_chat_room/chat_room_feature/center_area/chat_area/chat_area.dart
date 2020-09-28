@@ -76,51 +76,49 @@ class _ChatAreaState extends State<ChatArea>
             child: Stack(
               children: [
                 // 照著鍵盤高度 改變位置
-                Obx(() => Positioned(
-                        bottom: liveChatRoomController.openChatInput.value
-                            ? _keyboardHeight
-                            : -maxHeight * 1 / 16,
-                        right: 0,
-                        left: 0,
-                        top: liveChatRoomController.openChatInput.value
-                            ? -_keyboardHeight
-                            : maxHeight * 1 / 16,
-                        child: Column(
-                          children: [
-                            Expanded(
-                              flex: 10,
-                              child: Container(
-                                height: 80,
-                                width: 150,
-                                decoration: BoxDecoration(color: Colors.grey),
-                                child: RaisedButton(
-                                  onPressed: () {},
-                                  child: Text('測試鍵盤'),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 4,
-                              child: Container(
-                                decoration:
-                                    BoxDecoration(color: Colors.tealAccent),
-                                child: Text(
-                                    '${liveChatRoomController.openChatInput.value}'),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: Container(
-                                decoration: BoxDecoration(color: Colors.blue),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: ChatInput(),
-                            )
-                          ],
+                Obx(
+                  () => Positioned(
+//                        bottom: liveChatRoomController.openChatInput.value
+//                            ? _keyboardHeight
+//                            : -maxHeight * 1 / 16,
+                    bottom: liveChatRoomController.openChatInput.value
+                        ? _keyboardHeight
+                        : 0,
+                    right: 0,
+                    left: 0,
+//                        top: liveChatRoomController.openChatInput.value
+//                            ? -_keyboardHeight
+//                            : maxHeight * 1 / 16,
+                    top: liveChatRoomController.openChatInput.value
+                        ? -_keyboardHeight
+                        : 0,
+                    child: Column(
+                      children: [
+                        Expanded(
+                          flex: 10,
+                          child: Container(),
                         ),
-                      ),
+                        Expanded(
+                          flex: 4,
+                          child: Container(
+                            decoration: BoxDecoration(color: Colors.tealAccent),
+                            child: Text(
+                                '${liveChatRoomController.openChatInput.value}'),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Container(
+                            decoration: BoxDecoration(color: Colors.blue),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: ChatInput(),
+                        )
+                      ],
+                    ),
+                  ),
                 )
               ],
             ),
@@ -130,8 +128,6 @@ class _ChatAreaState extends State<ChatArea>
     );
   }
 }
-
-
 
 // 有動畫的版本(感覺怪怪的)
 
