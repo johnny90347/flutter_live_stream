@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_live_stream/pages/live_chat_room/chat_room_feature/center_area/chat_area/chat_input/chat_input.dart';
 import 'package:flutter_live_stream/core/controllers/global_controller.dart';
 import 'package:flutter_live_stream/core/controllers/live_chat_room_controller.dart';
+import 'package:flutter_live_stream/pages/live_chat_room/chat_room_feature/center_area/chat_area/dialog_display/dialog_display.dart';
 import 'package:flutter_live_stream/pages/live_chat_room/chat_room_feature/center_area/chat_area/quick_message/quick_message.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 
@@ -101,9 +102,7 @@ class _ChatAreaState extends State<ChatArea>
                         ),
                         Expanded(
                           flex: 4,
-                          child: Container(
-                            decoration: BoxDecoration(color: Colors.tealAccent),
-                          ),
+                          child: DialogDisplay(),
                         ),
                         Expanded(
                           flex: 1,

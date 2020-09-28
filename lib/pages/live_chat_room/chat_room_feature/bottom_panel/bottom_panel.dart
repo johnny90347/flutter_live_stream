@@ -41,7 +41,7 @@ class BottomPanel extends StatelessWidget {
                     },
                   ),
                   SizedBox(
-                    width: maxHeight * 0.7 * 0.5,
+                    width: maxHeight * 0.7 * 0.3,
                   ),
                   CircleButton(
                     icon: Icons.wifi,
@@ -49,7 +49,7 @@ class BottomPanel extends StatelessWidget {
                     onTap: () {},
                   ),
                   SizedBox(
-                    width: maxHeight * 0.7 * 0.5,
+                    width: maxHeight * 0.7 * 0.3,
                   ),
                   CircleButton(
                     icon: Icons.refresh,
@@ -57,7 +57,7 @@ class BottomPanel extends StatelessWidget {
                     onTap: () {},
                   ),
                   SizedBox(
-                    width: maxHeight * 0.7 * 0.5,
+                    width: maxHeight * 0.7 * 0.3,
                   ),
                   CircleButton(
                     icon: Icons.volume_up,
