@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_live_stream/core/controllers/live_chat_room_controller.dart';
 class BottomPanel extends StatelessWidget {
 
-  final liveChatRoomController = Get.find<LiveChatRoomController>();
+  final ctr = Get.find<LiveChatRoomController>();
 
   // 粉色
   static const Gradient pickGradient = LinearGradient(
@@ -22,7 +22,7 @@ class BottomPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       final maxHeight = constraints.maxHeight;
-      liveChatRoomController.bottomPanelHeight = maxHeight;
+      ctr.bottomPanelHeight = maxHeight;
       return Container(
         padding: EdgeInsets.only(left: 5.0,right: 5.0,bottom: 5.0),
         child: Row(
@@ -37,7 +37,7 @@ class BottomPanel extends StatelessWidget {
                     icon: Icons.textsms,
                     diameter: maxHeight * 0.7,
                     onTap: () {
-                      liveChatRoomController.openChatInput.value = true;
+                      ctr.openChatInput.value = true;
                     },
                   ),
                   SizedBox(
@@ -63,6 +63,16 @@ class BottomPanel extends StatelessWidget {
                     icon: Icons.volume_up,
                     diameter: maxHeight * 0.7,
                     onTap: () {},
+                  ),
+                  SizedBox(
+                    width: maxHeight * 0.7 * 0.3,
+                  ),
+                  CircleButton(
+                    icon: Icons.center_focus_strong,
+                    diameter: maxHeight * 0.7,
+                    onTap: () {
+                      ctr.listItems.add('item');
+                    },
                   ),
                 ],
               ),

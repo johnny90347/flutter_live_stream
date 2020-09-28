@@ -104,6 +104,9 @@ class _ChatAreaState extends State<ChatArea>
                           flex: 4,
                           child: DialogDisplay(),
                         ),
+                        SizedBox(
+                          height: 5.0,
+                        ),
                         Expanded(
                           flex: 1,
                           child: QuickMessage(), // 快速訊息
