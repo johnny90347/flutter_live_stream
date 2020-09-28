@@ -13,7 +13,7 @@ class CenterArea extends StatelessWidget {
             bottom: 0,
             left: 0,
             child: Container( // 動畫區
-              decoration: BoxDecoration(color: Colors.greenAccent),
+
             )
         ),
         Positioned(

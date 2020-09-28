@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_live_stream/pages/live_chat_room/chat_room_feature/center_area/chat_area/chat_input/chat_input.dart';
 import 'package:flutter_live_stream/core/controllers/global_controller.dart';
 import 'package:flutter_live_stream/core/controllers/live_chat_room_controller.dart';
+import 'package:flutter_live_stream/pages/live_chat_room/chat_room_feature/center_area/chat_area/quick_message/quick_message.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 
 // 沒有動畫的版本 => 好像比較好
@@ -96,7 +97,9 @@ class _ChatAreaState extends State<ChatArea>
                       children: [
                         Expanded(
                           flex: 10,
-                          child: Container(),
+                          child: Container(
+                            color: Colors.yellow,
+                          ),
                         ),
                         Expanded(
                           flex: 4,
@@ -108,14 +111,9 @@ class _ChatAreaState extends State<ChatArea>
                         ),
                         Expanded(
                           flex: 1,
-                          child: Container(
-                            decoration: BoxDecoration(color: Colors.blue),
-                          ),
+                          child: QuickMessage(),
                         ),
-                        Expanded(
-                          flex: 1,
-                          child: ChatInput(),
-                        )
+                        ChatInput(),
                       ],
                     ),
                   ),
