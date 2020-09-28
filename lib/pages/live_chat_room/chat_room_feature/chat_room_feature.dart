@@ -8,27 +8,24 @@ class ChatRoomFeature extends StatelessWidget {
   Widget build(BuildContext context) {
     //取得statusBar的高,避開
     double statusBarHeight = MediaQuery.of(context).padding.top;
-    return Container(
-      padding: EdgeInsets.all(4.0),
-      child: Column(
-        children: [
-          SizedBox(
-            height: statusBarHeight,// statusBar高
-          ),
-          Expanded(
-            flex: 1,
-            child: AnchorInfo(),// 主播資訊
-          ),
-          Expanded(
-            flex: 14,
-            child: CenterArea(),  // 中央區域 (動畫層 & 聊天區)
-          ),
-          Expanded(
-            flex: 1, // 底部功能按鈕
-            child: BottomPanel(),
-          )
-        ],
-      ),
+    return Column(
+      children: [
+        SizedBox(
+          height: statusBarHeight,// statusBar高
+        ),
+        Expanded(
+          flex: 3,
+          child: AnchorInfo(),// 主播資訊
+        ),
+        Expanded(
+          flex: 35,
+          child: CenterArea(),  // 中央區域 (動畫層 & 聊天區)
+        ),
+        Expanded(
+          flex: 3, // 底部功能按鈕
+          child: BottomPanel(),
+        ),
+      ],
     );
   }
 }

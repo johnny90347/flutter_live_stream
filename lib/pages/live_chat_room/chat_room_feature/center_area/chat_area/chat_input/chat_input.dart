@@ -64,13 +64,13 @@ class _ChatInputState extends State<ChatInput> {
               onSubmitted: (value) {
                 print("發送訊息");
               },
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.left,
                controller: _inputController,
               decoration: InputDecoration(
                 hintText: '开始聊天吧！',
                 fillColor: Colors.white,
                 filled: true,
-                contentPadding: EdgeInsets.all(1.0),
+                contentPadding: EdgeInsets.symmetric(vertical: 2.0,horizontal: 10.0),
                 enabledBorder: OutlineInputBorder(
                   borderSide:
                       BorderSide(color: Colors.grey.shade300, width: 1.0),

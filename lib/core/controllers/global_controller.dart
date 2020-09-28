@@ -8,9 +8,9 @@ export 'package:get/get.dart';
 class GlobalController extends GetxController {
   // 測試用資料
   int myNumber = 0;
-  var obsNumber = 'johnny'.obs;
+  RxString obsNumber = 'johnny'.obs;
   var chatMsg = '還沒收到'.obs;
-  var test = LoginInfoModel().obs; //自定義就這樣寫
+  Rx<LoginInfoModel> test = LoginInfoModel().obs; //自定義就這樣寫
   get getObsNumber => obsNumber;
 
   void addNumber() {

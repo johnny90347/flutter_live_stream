@@ -23,61 +23,64 @@ class BottomPanel extends StatelessWidget {
     return LayoutBuilder(builder: (context, constraints) {
       final maxHeight = constraints.maxHeight;
       liveChatRoomController.bottomPanelHeight = maxHeight;
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-            // 左邊區域 聊天,切換分流,重整,音效
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                CircleButton(
-                  icon: Icons.textsms,
-                  diameter: maxHeight * 0.7,
-                  onTap: () {
-                    liveChatRoomController.openChatInput.value = true;
-                  },
-                ),
-                SizedBox(
-                  width: maxHeight * 0.7 * 0.5,
-                ),
-                CircleButton(
-                  icon: Icons.wifi,
-                  diameter: maxHeight * 0.7,
-                  onTap: () {},
-                ),
-                SizedBox(
-                  width: maxHeight * 0.7 * 0.5,
-                ),
-                CircleButton(
-                  icon: Icons.refresh,
-                  diameter: maxHeight * 0.7,
-                  onTap: () {},
-                ),
-                SizedBox(
-                  width: maxHeight * 0.7 * 0.5,
-                ),
-                CircleButton(
-                  icon: Icons.volume_up,
-                  diameter: maxHeight * 0.7,
-                  onTap: () {},
-                ),
-              ],
-            ),
-          ),
-          Container(
-            // 右邊區域 目前只有禮物
-            child: Row(
-              children: [
-                CircleButton(
-                    icon: Icons.card_giftcard,
+      return Container(
+        padding: EdgeInsets.only(left: 5.0,right: 5.0,bottom: 5.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              // 左邊區域 聊天,切換分流,重整,音效
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  CircleButton(
+                    icon: Icons.textsms,
                     diameter: maxHeight * 0.7,
-                    btnGradientColor: pickGradient,
-                    onTap: () {}),
-              ],
+                    onTap: () {
+                      liveChatRoomController.openChatInput.value = true;
+                    },
+                  ),
+                  SizedBox(
+                    width: maxHeight * 0.7 * 0.5,
+                  ),
+                  CircleButton(
+                    icon: Icons.wifi,
+                    diameter: maxHeight * 0.7,
+                    onTap: () {},
+                  ),
+                  SizedBox(
+                    width: maxHeight * 0.7 * 0.5,
+                  ),
+                  CircleButton(
+                    icon: Icons.refresh,
+                    diameter: maxHeight * 0.7,
+                    onTap: () {},
+                  ),
+                  SizedBox(
+                    width: maxHeight * 0.7 * 0.5,
+                  ),
+                  CircleButton(
+                    icon: Icons.volume_up,
+                    diameter: maxHeight * 0.7,
+                    onTap: () {},
+                  ),
+                ],
+              ),
             ),
-          )
-        ],
+            Container(
+              // 右邊區域 目前只有禮物
+              child: Row(
+                children: [
+                  CircleButton(
+                      icon: Icons.card_giftcard,
+                      diameter: maxHeight * 0.7,
+                      btnGradientColor: pickGradient,
+                      onTap: () {}),
+                ],
+              ),
+            )
+          ],
+        ),
       );
     });
   }

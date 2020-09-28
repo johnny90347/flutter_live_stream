@@ -20,6 +20,7 @@ class _ChatAreaState extends State<ChatArea>
       new KeyboardVisibilityNotification();
   int _keyboardVisibilitySubscriberId;
   double _keyboardHeight = 0; // 鍵盤高度
+  double _chatInputHeight = 40; // 聊天輸入的高,這是死的
 
   @override
   void initState() {
@@ -36,9 +37,8 @@ class _ChatAreaState extends State<ChatArea>
         Timer(Duration(milliseconds: 200), () {
           // 取的鍵盤高度
           final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
-          // -4 是一開始寫在最外面的padding,不扣了畫,會多一條線(空白)
           _keyboardHeight =
-              keyboardHeight - liveChatRoomController.bottomPanelHeight - 4;
+              keyboardHeight - liveChatRoomController.bottomPanelHeight;
           setState(() {});
         });
         //　鍵盤消失
@@ -79,41 +79,37 @@ class _ChatAreaState extends State<ChatArea>
                 // 照著鍵盤高度 改變位置
                 Obx(
                   () => Positioned(
-//                        bottom: liveChatRoomController.openChatInput.value
-//                            ? _keyboardHeight
-//                            : -maxHeight * 1 / 16,
                     bottom: liveChatRoomController.openChatInput.value
                         ? _keyboardHeight
-                        : 0,
+                        : -_chatInputHeight,
+//                    bottom: liveChatRoomController.openChatInput.value
+//                        ? _keyboardHeight
+//                        : 0,
                     right: 0,
                     left: 0,
-//                        top: liveChatRoomController.openChatInput.value
-//                            ? -_keyboardHeight
-//                            : maxHeight * 1 / 16,
                     top: liveChatRoomController.openChatInput.value
                         ? -_keyboardHeight
-                        : 0,
+                        : _chatInputHeight,
+//                    top: liveChatRoomController.openChatInput.value
+//                        ? -_keyboardHeight
+//                        : 0,
                     child: Column(
                       children: [
                         Expanded(
                           flex: 10,
-                          child: Container(
-                            color: Colors.yellow,
-                          ),
+                          child: Container(),
                         ),
                         Expanded(
                           flex: 4,
                           child: Container(
                             decoration: BoxDecoration(color: Colors.tealAccent),
-                            child: Text(
-                                '${liveChatRoomController.openChatInput.value}'),
                           ),
                         ),
                         Expanded(
                           flex: 1,
-                          child: QuickMessage(),
+                          child: QuickMessage(), // 快速訊息
                         ),
-                        ChatInput(),
+                        ChatInput(), // 聊天輸入
                       ],
                     ),
                   ),
