@@ -12,26 +12,14 @@ class _DialogDisplayState extends State<DialogDisplay> {
   final ctr = Get.find<LiveChatRoomController>();
 
   ScrollController _scrollController;
+  bool _isOnBottom = false;
 
   @override
   void initState() {
     _scrollController = ScrollController();
-
-    ctr.listItems.listen((value) {
-      Timer(Duration(milliseconds: 100), () {
-        _scrollToBottom(useAnimate: true);
-      });
-    });
-
-    Timer(Duration(milliseconds: 1000), () {
-      _scrollToBottom(useAnimate: false);
-    });
-
-    _scrollController.addListener(() {
-     print(_scrollController.position.pixels);
-     print(_scrollController.position.maxScrollExtent);
-    });
-
+    _setUpChatListListener();
+    _setUpScrollListener();
+    _firstScrollToBottom();
     super.initState();
   }
 
@@ -42,36 +30,90 @@ class _DialogDisplayState extends State<DialogDisplay> {
   }
 
   // 列表滾動至底部
-  _scrollToBottom({@required bool useAnimate}){
+  _scrollToBottom({@required bool useAnimate}) {
     //分動畫滾動 and 非動畫
-    if(useAnimate){
+    if (useAnimate) {
       _scrollController.animateTo(_scrollController.position.maxScrollExtent,
           duration: const Duration(milliseconds: 200), curve: Curves.linear);
-    }else{
+    } else {
       _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
     }
   }
 
+  // 第一次一定先滾到底部
+  _firstScrollToBottom() {
+    Timer(Duration(milliseconds: 1000), () {
+      _scrollToBottom(useAnimate: false);
+    });
+  }
+
+  // 聊天列表監聽
+  _setUpChatListListener() {
+    ctr.listItems.listen((value) {
+      Timer(Duration(milliseconds: 100), () {
+        // 如果在底部才允許字幕自動滾動
+        if (_isOnBottom) {
+          _scrollToBottom(useAnimate: true);
+        }
+      });
+    });
+  }
+
+  // 滾動監聽
+  _setUpScrollListener() {
+    _scrollController.addListener(() {
+      double distance = _scrollController.position.maxScrollExtent -
+          _scrollController.position.pixels;
+      // 與底部距離小於 10 ,代表已滾動到底 + 不讓他一直setState
+      if (distance < 10 && _isOnBottom == false) {
+        _isOnBottom = true;
+        setState(() {});
+      } else if(distance >= 10 && _isOnBottom == true){
+        _isOnBottom = false;
+        setState(() {});
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Obx(
-        () => ListView.builder(
-            padding: EdgeInsets.symmetric(horizontal: 10.0),
-            controller: _scrollController,
-            itemCount: ctr.listItems.length,
-            itemBuilder: (context, index) {
-              return Container(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(Icons.record_voice_over),
-                    Expanded(child: Text('${ctr.listItems[index]}')),
-                  ],
-                ),
-              );
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Container(
+          child: Obx(
+                () => ListView.builder(
+                padding: EdgeInsets.symmetric(horizontal: 10.0),
+                controller: _scrollController,
+                itemCount: ctr.listItems.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(Icons.record_voice_over),
+                        Expanded(child: Text('${ctr.listItems[index]}')),
+                      ],
+                    ),
+                  );
+                }),
+          ),
+        ),
+          !_isOnBottom ?  Positioned(
+          bottom: 10,
+          child: Container(
+            width: 40.0,
+            height: 20.0,
+            decoration: BoxDecoration(
+              color: Colors.black26,
+              borderRadius: BorderRadius.circular(4.0)
+            ),
+            child: IconButton(padding :EdgeInsets.zero,icon: Icon(Icons.keyboard_arrow_down,size: 20.0,color: Colors.white,), onPressed: (){
+              _scrollToBottom(useAnimate: true);
             }),
-      ),
+          ),
+        ):SizedBox()
+      ],
     );
   }
 }

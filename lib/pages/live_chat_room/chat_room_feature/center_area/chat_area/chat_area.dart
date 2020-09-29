@@ -24,6 +24,8 @@ class _ChatAreaState extends State<ChatArea>
   double _chatInputHeight = 40; // 聊天輸入的高,這是死的
   double _opacity = 1; // 切換高度時的透明度
   int _opacityDuration = 0; // 透明度的動畫時間 (點擊下去馬上消失)
+  bool _canStartListen = false; // 監聽第一次會先傳預設值過來,但我不要
+
 
   @override
   void initState() {
@@ -57,6 +59,12 @@ class _ChatAreaState extends State<ChatArea>
   // 設定切換高度時,有透明動畫
   _setupOpacityWithChane() {
     ctr.openChatInput.listen((value) {
+      // 第一筆資料忽略
+      if(!_canStartListen){
+        _canStartListen =true;
+        return;
+      }
+
       // 馬上先變透明
       _opacityDuration = 0;
       setState(() {
