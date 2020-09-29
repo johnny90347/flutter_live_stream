@@ -68,7 +68,7 @@ class _DialogDisplayState extends State<DialogDisplay> {
       if (distance < 10 && _isOnBottom == false) {
         _isOnBottom = true;
         setState(() {});
-      } else if(distance >= 10 && _isOnBottom == true){
+      } else if (distance >= 10 && _isOnBottom == true) {
         _isOnBottom = false;
         setState(() {});
       }
@@ -82,38 +82,88 @@ class _DialogDisplayState extends State<DialogDisplay> {
       children: [
         Container(
           child: Obx(
-                () => ListView.builder(
+            () => ListView.builder(
                 padding: EdgeInsets.symmetric(horizontal: 10.0),
                 controller: _scrollController,
                 itemCount: ctr.listItems.length,
                 itemBuilder: (context, index) {
-                  return Container(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Icon(Icons.record_voice_over),
-                        Expanded(child: Text('${ctr.listItems[index]}')),
-                      ],
-                    ),
-                  );
+                  return MessageItem(
+                      level: 5, name: 'null', message: ctr.listItems[index]);
+//                  return Container(
+//                    child: Row(
+//                      crossAxisAlignment: CrossAxisAlignment.start,
+//                      children: [
+//                        Icon(Icons.record_voice_over),
+//                        Expanded(child: Text('${ctr.listItems[index]}')),
+//                      ],
+//                    ),
+//                  );
                 }),
           ),
         ),
-          !_isOnBottom ?  Positioned(
+        Positioned(
           bottom: 10,
-          child: Container(
-            width: 40.0,
-            height: 20.0,
-            decoration: BoxDecoration(
-              color: Colors.black26,
-              borderRadius: BorderRadius.circular(4.0)
-            ),
-            child: IconButton(padding :EdgeInsets.zero,icon: Icon(Icons.keyboard_arrow_down,size: 20.0,color: Colors.white,), onPressed: (){
-              _scrollToBottom(useAnimate: true);
-            }),
-          ),
-        ):SizedBox()
+          child: !_isOnBottom
+              ? Container(
+                  width: 40.0,
+                  height: 20.0,
+                  decoration: BoxDecoration(
+                      color: Colors.black26,
+                      borderRadius: BorderRadius.circular(4.0)),
+                  child: IconButton(
+                      padding: EdgeInsets.zero,
+                      icon: Icon(
+                        Icons.keyboard_arrow_down,
+                        size: 20.0,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        _scrollToBottom(useAnimate: true);
+                      }),
+                )
+              : SizedBox(),
+        )
       ],
+    );
+  }
+}
+
+// 聊天內容的樣式
+class MessageItem extends StatelessWidget {
+  final int level;
+  final String name;
+  final String message;
+
+  MessageItem(
+      {@required this.level, @required this.name, @required this.message});
+
+  final backgroundColor = Colors.black26;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 1.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+              decoration: BoxDecoration(color: backgroundColor),
+              child: Icon(Icons.record_voice_over)),
+          Flexible(
+            child: Container(
+              decoration: BoxDecoration(color: backgroundColor),
+              child: RichText(
+                textAlign: TextAlign.end,
+                text: TextSpan(style: TextStyle(fontSize: 12.0), children: [
+                  TextSpan(text: 'Nini'),
+                  TextSpan(text: message)
+                ]),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
