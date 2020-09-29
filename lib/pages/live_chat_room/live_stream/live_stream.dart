@@ -35,7 +35,7 @@ class _LiveStreamState extends State<LiveStream> {
     return Container(
       child: Image(
         image: AssetImage('assets/images/girl.jpg'),
-        fit: BoxFit.fitWidth,
+        fit: BoxFit.fitHeight,
       ),
 //    height: playerHeight,
 //      width: playerWidth,

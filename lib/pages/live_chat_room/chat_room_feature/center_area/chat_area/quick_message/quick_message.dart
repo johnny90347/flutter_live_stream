@@ -6,7 +6,9 @@ class QuickMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 4.0,horizontal: 8.0),
+      height: 30.0,
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(horizontal: 8.0),
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: [
@@ -33,10 +35,10 @@ class MessageItem extends StatelessWidget {
     return Container(
       alignment: Alignment.center,
       margin: EdgeInsets.only(right: 10.0),
-      padding: EdgeInsets.symmetric(vertical: 2.0,horizontal: 4.0),
+      padding: EdgeInsets.symmetric(vertical: 1.0,horizontal: 8.0),
       decoration: BoxDecoration(
         color: Colors.black38,
-        borderRadius: BorderRadius.circular(4.0)
+        borderRadius: BorderRadius.circular(10.0)
       ),
       child: Text(text,style: TextStyle(
         fontSize: 10.0,

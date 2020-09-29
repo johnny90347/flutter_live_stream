@@ -22,9 +22,10 @@ class BottomPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       final maxHeight = constraints.maxHeight;
+      final circleHeight = maxHeight * 0.6;
       ctr.bottomPanelHeight = maxHeight;
       return Container(
-        padding: EdgeInsets.only(left: 5.0,right: 5.0,bottom: 5.0),
+        padding: EdgeInsets.only(left: 8.0,right: 8.0,bottom: 5.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -35,41 +36,41 @@ class BottomPanel extends StatelessWidget {
                 children: [
                   CircleButton(
                     icon: Icons.textsms,
-                    diameter: maxHeight * 0.7,
+                    diameter: circleHeight,
                     onTap: () {
                       ctr.openChatInput.value = true;
                     },
                   ),
                   SizedBox(
-                    width: maxHeight * 0.7 * 0.3,
+                    width: circleHeight * 0.3,
                   ),
                   CircleButton(
                     icon: Icons.wifi,
-                    diameter: maxHeight * 0.7,
+                    diameter: circleHeight,
                     onTap: () {},
                   ),
                   SizedBox(
-                    width: maxHeight * 0.7 * 0.3,
+                    width: circleHeight * 0.3,
                   ),
                   CircleButton(
                     icon: Icons.refresh,
-                    diameter: maxHeight * 0.7,
+                    diameter: circleHeight,
                     onTap: () {},
                   ),
                   SizedBox(
-                    width: maxHeight * 0.7 * 0.3,
+                    width: circleHeight * 0.3,
                   ),
                   CircleButton(
                     icon: Icons.volume_up,
-                    diameter: maxHeight * 0.7,
+                    diameter: circleHeight,
                     onTap: () {},
                   ),
                   SizedBox(
-                    width: maxHeight * 0.7 * 0.3,
+                    width: circleHeight * 0.3,
                   ),
                   CircleButton(
                     icon: Icons.center_focus_strong,
-                    diameter: maxHeight * 0.7,
+                    diameter: circleHeight,
                     onTap: () {
                       ctr.listItems.add('item');
                     },
@@ -83,7 +84,7 @@ class BottomPanel extends StatelessWidget {
                 children: [
                   CircleButton(
                       icon: Icons.card_giftcard,
-                      diameter: maxHeight * 0.7,
+                      diameter: circleHeight,
                       btnGradientColor: pickGradient,
                       onTap: () {}),
                 ],
