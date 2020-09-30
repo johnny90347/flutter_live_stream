@@ -89,15 +89,6 @@ class _DialogDisplayState extends State<DialogDisplay> {
                 itemBuilder: (context, index) {
                   return MessageItem(
                       level: 5, name: 'null', message: ctr.listItems[index]);
-//                  return Container(
-//                    child: Row(
-//                      crossAxisAlignment: CrossAxisAlignment.start,
-//                      children: [
-//                        Icon(Icons.record_voice_over),
-//                        Expanded(child: Text('${ctr.listItems[index]}')),
-//                      ],
-//                    ),
-//                  );
                 }),
           ),
         ),
@@ -139,31 +130,35 @@ class MessageItem extends StatelessWidget {
 
   final backgroundColor = Colors.black26;
 
+  // 由於 listView 直向,寬度會被強制擴展,為了讓對話有彈性的背景顏色,所以我嘗試多次選擇
+  // 1.row開頭
+  // 2.包一層Flexible,讓大量文字不會超出邊界
+  // 3.Warp 是仿照17的顯示,若文字太多,玩家名稱與內容文字,是分開兩排,不黏再一起
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 1.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-              decoration: BoxDecoration(color: backgroundColor),
-              child: Icon(Icons.record_voice_over)),
-          Flexible(
-            child: Container(
-              decoration: BoxDecoration(color: backgroundColor),
-              child: RichText(
-                textAlign: TextAlign.end,
-                text: TextSpan(style: TextStyle(fontSize: 12.0), children: [
-                  TextSpan(text: 'Nini'),
-                  TextSpan(text: message)
-                ]),
-              ),
+    return Row(
+      children: [
+        Flexible(
+          child: Container(
+            decoration: BoxDecoration(color: backgroundColor,borderRadius: BorderRadius.circular(4.0)),
+            padding: EdgeInsets.symmetric(horizontal: 2.0,vertical: 1.0),
+            margin: EdgeInsets.symmetric(vertical: 2),
+            child: Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                Icon(Icons.record_voice_over),
+                RichText(
+                  textAlign: TextAlign.start,
+                  text: TextSpan(style: TextStyle(fontSize: 12.0), children: [
+                    TextSpan(text: 'Nini'),
+                    TextSpan(text: message)
+                  ]),
+                ),
+              ],
             ),
           ),
-        ],
-      ),
+        )
+      ],
     );
   }
 }
