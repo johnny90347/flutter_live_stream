@@ -97,20 +97,17 @@ class _AnchorInfoState extends State<AnchorInfo> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final maxWidth = constraints.maxWidth; // 父層寬
-        final maxHeight = constraints.maxHeight; // 父層高
-
-        const paddingValue = 2.0; // 整個主播資訊容器的padding
-        const borderRadiusValue = 8.0; // 邊框圓角
-
-        return Container(
+   final maxWidth =  MediaQuery.of(context).size.width;
+    const containerHeight = 45.0;
+    const paddingValue = 4.0; // 整個主播資訊容器的padding
+    const borderRadiusValue = 8.0; // 邊框圓角
+    return Container(
           alignment: Alignment.centerLeft,
+          margin: EdgeInsets.only(left: 8.0,top: 8.0),
           child: Container(
             padding: EdgeInsets.all(paddingValue),
             width: maxWidth * 0.45,
-            height: maxHeight,
+            height: containerHeight,
             decoration: BoxDecoration(
                 color: Color.fromARGB(150, 0, 0, 0),
                 borderRadius: BorderRadius.circular(borderRadiusValue)),
@@ -118,8 +115,8 @@ class _AnchorInfoState extends State<AnchorInfo> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Container(
-                  height: maxHeight - paddingValue * 2,
-                  width: maxHeight - paddingValue * 2,
+                  height: containerHeight - paddingValue * 2,
+                  width: containerHeight - paddingValue * 2,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(borderRadiusValue),
                     child: FadeInImage.assetNetwork(
@@ -203,8 +200,6 @@ class _AnchorInfoState extends State<AnchorInfo> {
             ),
           ),
         );
-      },
-    );
   }
 }
 

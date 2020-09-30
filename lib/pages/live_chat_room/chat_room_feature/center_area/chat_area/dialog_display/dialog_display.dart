@@ -79,6 +79,33 @@ class _DialogDisplayState extends State<DialogDisplay> {
     });
   }
 
+  // 滾動通知處理
+  _scrollNotifyHandel(ScrollNotification notification){
+    switch (notification.runtimeType) {
+      case ScrollStartNotification:
+      // 開始滾動
+        break;
+      case ScrollUpdateNotification:
+      // 滾動中
+        break;
+      case ScrollEndNotification:
+      // 停止滾動時,再去算位置,看是否在底部
+        if (notification.metrics.maxScrollExtent -
+            notification.metrics.pixels <
+            10) {
+          if(_isOnBottom != true && _showScrollButton!= false){
+            _isOnBottom = true;
+            _showScrollButton = false;
+          }
+          setState(() {});
+        }
+        break;
+      case OverscrollNotification:
+      //在邊界
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -87,30 +114,8 @@ class _DialogDisplayState extends State<DialogDisplay> {
         Container(
           child: Obx(
             () => NotificationListener<ScrollNotification>(
-              onNotification: (notification) {
-                switch (notification.runtimeType) {
-                  case ScrollStartNotification:
-                  // 開始滾動
-                    break;
-                  case ScrollUpdateNotification:
-                  // 滾動中
-                    break;
-                  case ScrollEndNotification:
-                  // 停止滾動時,再去算位置,看是否在底部
-                    if (notification.metrics.maxScrollExtent -
-                            notification.metrics.pixels <
-                        10) {
-                      if(_isOnBottom != true && _showScrollButton!= false){
-                        _isOnBottom = true;
-                        _showScrollButton = false;
-                      }
-                      setState(() {});
-                    }
-                    break;
-                  case OverscrollNotification:
-                    //在邊界
-                    break;
-                }
+              onNotification: (ScrollNotification notification) {
+                _scrollNotifyHandel(notification);
                 return false;
               },
               child: ListView.builder(
@@ -182,7 +187,7 @@ class MessageItem extends StatelessWidget {
               children: [
                 ConstrainedBox(
                     constraints: BoxConstraints(minHeight: 16.0), // 給個最小高度
-                    child: VipRank()),
+                    child: VipRank(rank: 16,)),
                 SizedBox(
                   width: 4.0,
                 ),
@@ -214,20 +219,64 @@ class MessageItem extends StatelessWidget {
 }
 
 // 使用者內容 等級Icon,等級數字,名稱
-class VipRank extends StatelessWidget {
-  final Gradient vipBgGradient = LinearGradient(
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-    colors: [Color(0xffbb4e75), Color(0xffff9d6c)],
-  );
+class VipRank extends StatefulWidget {
+
+  final int rank;
+
+  VipRank({@required this.rank});
+
+  @override
+  _VipRankState createState() => _VipRankState();
+}
+
+class _VipRankState extends State<VipRank> {
+
+  final backgroundColors = [
+    [Color(0xffbb4e75), Color(0xffb1aeae)],
+    [Color(0xff07a15d), Color(0xff4ecfa6)],
+    [Color(0xff0396ff), Color(0xff96d3ff)],
+    [Color(0xff4a92a6), Color(0xff30cfd0)],
+    [Color(0xff6590cb), Color(0xffb4cbf6)],
+    [Color(0xfff74747), Color(0xfff68f8f)],
+    [Color(0xff2bb9be), Color(0xff18f576)],
+    [Color(0xff736efe), Color(0xff5efce8)],
+    [Color(0xff7683d9), Color(0xffd8a0fe)],
+    [Color(0xff78178e), Color(0xffd942fa)],
+    [Color(0xff623aa2), Color(0xfff97794)],
+    [Color(0xffdb8ade), Color(0xfff6bf9f)],
+    [Color(0xffff7a95), Color(0xffffb696)],
+    [Color(0xfff5576c), Color(0xfff093fb)],
+    [Color(0xffbb4e75), Color(0xffff9d6c)],
+    [Color(0xfff37987), Color(0xff75fbf0)],
+    [Color(0xffb490ca), Color(0xff5ee7df)],
+    [Color(0xffffd015), Color(0xff8be8f9)],
+    [Color(0xfffa813f), Color(0xffffe159)],
+    [Color(0xfff75867), Color(0xffffa043)],
+  ];
+
+  Gradient vipBgGradient; // 被景色漸層
+
+  @override
+  void initState() {
+    _setBackgroundColor();
+    super.initState();
+  }
+
+  // 設定vip背景顏色
+  _setBackgroundColor(){
+    vipBgGradient = LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors:backgroundColors[widget.rank],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     // 1.背景變形
     // 2.沒變形的內容相疊而成
-
-    final boxWidth = 40.0;
-    final boxHeight = 16.0;
+    const boxWidth = 40.0;
+    const boxHeight = 16.0;
     return Stack(
       children: [
         Transform(
@@ -255,15 +304,14 @@ class VipRank extends StatelessWidget {
                 child: SvgPicture.asset(
                   'assets/images/vip/vip-diamond.svg',
                   color: Colors.white,
-
                 ),
               ),
               SizedBox(
                 width: 3.0,
               ),
               Text(
-                '17',
-                style: TextStyle(color: Colors.white, fontSize: 10.0),
+                '${widget.rank}',
+                style: TextStyle(color: Colors.white, fontSize: 10.0,fontWeight: FontWeight.w700),
               )
             ],
           ),

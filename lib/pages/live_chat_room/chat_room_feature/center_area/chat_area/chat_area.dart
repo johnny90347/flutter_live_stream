@@ -71,8 +71,8 @@ class _ChatAreaState extends State<ChatArea>
         _opacity = 0;
       });
       // 300毫秒後 漸變還原
-      Timer(Duration(milliseconds: 300), () {
-        _opacityDuration = 300;
+      Timer(Duration(milliseconds: 200), () {
+        _opacityDuration = 200;
         setState(() {
           _opacity = 1;
         });
