@@ -3,6 +3,7 @@ import 'package:flutter_live_stream/core/controllers/live_chat_room_controller.d
 class BottomPanel extends StatelessWidget {
 
   final ctr = Get.find<LiveChatRoomController>();
+  var testNumber = 0;
 
   // 粉色
   static const Gradient pickGradient = LinearGradient(
@@ -72,7 +73,7 @@ class BottomPanel extends StatelessWidget {
                     icon: Icons.center_focus_strong,
                     diameter: circleHeight,
                     onTap: () {
-                      ctr.listItems.add('item');
+                      ctr.listItems.add('item ${testNumber+=1}');
                     },
                   ),
                 ],

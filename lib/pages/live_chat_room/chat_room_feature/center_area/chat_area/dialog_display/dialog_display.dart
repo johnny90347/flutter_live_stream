@@ -1,5 +1,6 @@
 //套件
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'dart:async';
@@ -15,7 +16,8 @@ class _DialogDisplayState extends State<DialogDisplay> {
   final ctr = Get.find<LiveChatRoomController>();
 
   ScrollController _scrollController;
-  bool _isOnBottom = false;
+  bool _isOnBottom = true;
+  bool _showScrollButton = false;
 
   @override
   void initState() {
@@ -57,26 +59,22 @@ class _DialogDisplayState extends State<DialogDisplay> {
         // 如果在底部才允許字幕自動滾動
         if (_isOnBottom) {
           _scrollToBottom(useAnimate: true);
-        }else{
-          // 如果不在底部,要顯示滾動到底部的按鈕
-
         }
       });
     });
   }
 
-  // 滾動監聽,決定是否需要顯示滾動至底部的按鈕
+//   滾動監聽,決定是否需要顯示滾動至底部的按鈕
   _setUpScrollListener() {
     _scrollController.addListener(() {
-      double distance = _scrollController.position.maxScrollExtent -
-          _scrollController.position.pixels;
-      // 與底部距離小於 10 ,代表已滾動到底 + 不讓他一直setState
-      if (distance < 10 && _isOnBottom == false) {
-        _isOnBottom = true;
-        setState(() {});
-      } else if (distance >= 10 && _isOnBottom == true) {
-        _isOnBottom = false;
-        setState(() {});
+      // 向上滾就顯示滾到底部按鈕 , 並且一定不是在底部
+      if (_scrollController.position.userScrollDirection ==
+          ScrollDirection.forward) {
+        if (_isOnBottom != false && _showScrollButton != true) {
+          _isOnBottom = false;
+          _showScrollButton = true;
+          setState(() {});
+        }
       }
     });
   }
@@ -88,19 +86,48 @@ class _DialogDisplayState extends State<DialogDisplay> {
       children: [
         Container(
           child: Obx(
-            () => ListView.builder(
-                padding: EdgeInsets.symmetric(horizontal: 10.0),
-                controller: _scrollController,
-                itemCount: ctr.listItems.length,
-                itemBuilder: (context, index) {
-                  return MessageItem(
-                      level: 5, name: 'null', message: ctr.listItems[index]);
-                }),
+            () => NotificationListener<ScrollNotification>(
+              onNotification: (notification) {
+                switch (notification.runtimeType) {
+                  case ScrollStartNotification:
+                  // 開始滾動
+                    break;
+                  case ScrollUpdateNotification:
+                  // 滾動中
+                    break;
+                  case ScrollEndNotification:
+                  // 停止滾動時,再去算位置,看是否在底部
+                    if (notification.metrics.maxScrollExtent -
+                            notification.metrics.pixels <
+                        10) {
+                      if(_isOnBottom != true && _showScrollButton!= false){
+                        _isOnBottom = true;
+                        _showScrollButton = false;
+                      }
+                      setState(() {});
+                    }
+                    break;
+                  case OverscrollNotification:
+                    //在邊界
+                    break;
+                }
+                return false;
+              },
+              child: ListView.builder(
+                  padding: EdgeInsets.symmetric(horizontal: 10.0),
+                  controller: _scrollController,
+                  itemCount: ctr.listItems.length,
+                  itemBuilder: (context, index) {
+                    return MessageItem(
+                        level: 5, name: 'null', message: ctr.listItems[index]);
+                  }),
+            ),
           ),
         ),
-        Positioned( // 滾動至底部按鈕
+        Positioned(
+          // 滾動至底部按鈕
           bottom: 10,
-          child: !_isOnBottom
+          child: _showScrollButton
               ? Container(
                   width: 40.0,
                   height: 20.0,
@@ -159,15 +186,23 @@ class MessageItem extends StatelessWidget {
                 SizedBox(
                   width: 4.0,
                 ),
-                Text('HTTW01',style: TextStyle(fontSize: messageFontSize,color:Color(0xffdbdbdb),fontWeight: FontWeight.w700),),
+                Text(
+                  'HTTW01',
+                  style: TextStyle(
+                      fontSize: messageFontSize,
+                      color: Color(0xffdbdbdb),
+                      fontWeight: FontWeight.w700),
+                ),
                 SizedBox(
                   width: 2.0,
                 ),
                 RichText(
                   textAlign: TextAlign.start,
-                  text: TextSpan(style: TextStyle(fontSize: messageFontSize,fontWeight: FontWeight.w500), children: [
-                    TextSpan(text: message)
-                  ]),
+                  text: TextSpan(
+                      style: TextStyle(
+                          fontSize: messageFontSize,
+                          fontWeight: FontWeight.w500),
+                      children: [TextSpan(text: message)]),
                 ),
               ],
             ),
@@ -188,7 +223,6 @@ class VipRank extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     // 1.背景變形
     // 2.沒變形的內容相疊而成
 
@@ -226,10 +260,10 @@ class VipRank extends StatelessWidget {
               SizedBox(
                 width: 3.0,
               ),
-              Text('17',style: TextStyle(
-                color: Colors.white,
-                fontSize: 10.0
-              ),)
+              Text(
+                '17',
+                style: TextStyle(color: Colors.white, fontSize: 10.0),
+              )
             ],
           ),
         ),
