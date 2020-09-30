@@ -248,13 +248,14 @@ class VipRank extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              SizedBox(
+              Container(
                 // 給圖片Size
                 height: 14,
                 width: 14,
                 child: SvgPicture.asset(
                   'assets/images/vip/vip-diamond.svg',
                   color: Colors.white,
+
                 ),
               ),
               SizedBox(
