@@ -1,12 +1,15 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_live_stream/core/controllers/live_chat_room_controller.dart';
-class BottomPanel extends StatelessWidget {
+class BottomPanel extends StatefulWidget {
 
-  final ctr = Get.find<LiveChatRoomController>();
-  var testNumber = 0;
+  @override
+  _BottomPanelState createState() => _BottomPanelState();
+}
 
-  // 粉色
-  static const Gradient pickGradient = LinearGradient(
+class _BottomPanelState extends State<BottomPanel> {
+
+  final Gradient pickGradient = LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
     colors: [
@@ -19,14 +22,31 @@ class BottomPanel extends StatelessWidget {
       )
     ],
   );
+  final ctr = Get.find<LiveChatRoomController>();
+  final GlobalKey _bottomPanelKey = GlobalKey();
+  var testNumber = 0;
+
+  @override
+  void initState() {
+    _getBottomPanelSize();
+    super.initState();
+  }
+  // 底部選單的高度 給到全域
+  _getBottomPanelSize(){
+    Timer(Duration(milliseconds: 1000), () {
+      final RenderBox  object = _bottomPanelKey.currentContext.findRenderObject();
+      ctr.bottomPanelHeight = object.size.height;
+    });
+  }
+  //TODO : 可針對不同機種 加入margin bottom
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      final maxHeight = constraints.maxHeight;
-      final circleHeight = maxHeight * 0.6;
-      ctr.bottomPanelHeight = maxHeight;
-      return Container(
-        padding: EdgeInsets.only(left: 8.0,right: 8.0,bottom: 5.0),
+    final maxWidth = MediaQuery.of(context).size.width;
+    final circleHeight = maxWidth * 0.08;
+    return Container(
+      key: _bottomPanelKey,
+      alignment: Alignment.topCenter,
+        padding: EdgeInsets.only(left: 8.0,right: 8.0,bottom: 5.0,top: 5.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -94,7 +114,6 @@ class BottomPanel extends StatelessWidget {
           ],
         ),
       );
-    });
   }
 }
 

@@ -18,10 +18,7 @@ class ChatRoomFeature extends StatelessWidget {
           flex: 10,
           child: CenterArea(),  // 中央區域 (動畫層 & 聊天區)
         ),
-        Expanded(
-          flex: 1, // 底部功能按鈕
-          child: BottomPanel(),
-        ),
+        BottomPanel(),// 底部按鈕
       ],
     );
   }
