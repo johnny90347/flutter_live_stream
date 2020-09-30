@@ -1,5 +1,8 @@
-import 'dart:async';
+//套件
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_live_stream/core/controllers/live_chat_room_controller.dart';
 
@@ -54,12 +57,15 @@ class _DialogDisplayState extends State<DialogDisplay> {
         // 如果在底部才允許字幕自動滾動
         if (_isOnBottom) {
           _scrollToBottom(useAnimate: true);
+        }else{
+          // 如果不在底部,要顯示滾動到底部的按鈕
+
         }
       });
     });
   }
 
-  // 滾動監聽
+  // 滾動監聽,決定是否需要顯示滾動至底部的按鈕
   _setUpScrollListener() {
     _scrollController.addListener(() {
       double distance = _scrollController.position.maxScrollExtent -
@@ -92,7 +98,7 @@ class _DialogDisplayState extends State<DialogDisplay> {
                 }),
           ),
         ),
-        Positioned(
+        Positioned( // 滾動至底部按鈕
           bottom: 10,
           child: !_isOnBottom
               ? Container(
@@ -124,12 +130,11 @@ class MessageItem extends StatelessWidget {
   final int level;
   final String name;
   final String message;
-
   MessageItem(
       {@required this.level, @required this.name, @required this.message});
 
-  final backgroundColor = Colors.black26;
-
+  final backgroundColor = Colors.black38;
+  final messageFontSize = 12.0;
   // 由於 listView 直向,寬度會被強制擴展,為了讓對話有彈性的背景顏色,所以我嘗試多次選擇
   // 1.row開頭
   // 2.包一層Flexible,讓大量文字不會超出邊界
@@ -140,17 +145,27 @@ class MessageItem extends StatelessWidget {
       children: [
         Flexible(
           child: Container(
-            decoration: BoxDecoration(color: backgroundColor,borderRadius: BorderRadius.circular(4.0)),
-            padding: EdgeInsets.symmetric(horizontal: 2.0,vertical: 1.0),
+            decoration: BoxDecoration(
+                color: backgroundColor,
+                borderRadius: BorderRadius.circular(4.0)),
+            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
             margin: EdgeInsets.symmetric(vertical: 2),
             child: Wrap(
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
-                Icon(Icons.record_voice_over),
+                ConstrainedBox(
+                    constraints: BoxConstraints(minHeight: 16.0), // 給個最小高度
+                    child: VipRank()),
+                SizedBox(
+                  width: 4.0,
+                ),
+                Text('HTTW01',style: TextStyle(fontSize: messageFontSize,color:Color(0xffdbdbdb),fontWeight: FontWeight.w700),),
+                SizedBox(
+                  width: 2.0,
+                ),
                 RichText(
                   textAlign: TextAlign.start,
-                  text: TextSpan(style: TextStyle(fontSize: 12.0), children: [
-                    TextSpan(text: 'Nini'),
+                  text: TextSpan(style: TextStyle(fontSize: messageFontSize,fontWeight: FontWeight.w500), children: [
                     TextSpan(text: message)
                   ]),
                 ),
@@ -158,6 +173,66 @@ class MessageItem extends StatelessWidget {
             ),
           ),
         )
+      ],
+    );
+  }
+}
+
+// 使用者內容 等級Icon,等級數字,名稱
+class VipRank extends StatelessWidget {
+  final Gradient vipBgGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xffbb4e75), Color(0xffff9d6c)],
+  );
+
+  @override
+  Widget build(BuildContext context) {
+
+    // 1.背景變形
+    // 2.沒變形的內容相疊而成
+
+    final boxWidth = 40.0;
+    final boxHeight = 16.0;
+    return Stack(
+      children: [
+        Transform(
+          transform: Matrix4.skewX(-0.2),
+          child: Container(
+            width: boxWidth,
+            height: boxHeight,
+            decoration: BoxDecoration(
+              gradient: vipBgGradient,
+              borderRadius: BorderRadius.circular(3.0),
+            ),
+          ),
+        ),
+        Container(
+          width: boxWidth,
+          height: boxHeight,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                // 給圖片Size
+                height: 14,
+                width: 14,
+                child: SvgPicture.asset(
+                  'assets/images/vip/vip-diamond.svg',
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(
+                width: 3.0,
+              ),
+              Text('17',style: TextStyle(
+                color: Colors.white,
+                fontSize: 10.0
+              ),)
+            ],
+          ),
+        ),
       ],
     );
   }
