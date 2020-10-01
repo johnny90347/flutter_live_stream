@@ -100,7 +100,7 @@ class _AnchorInfoState extends State<AnchorInfo> {
    final maxWidth =  MediaQuery.of(context).size.width;
     const containerHeight = 45.0;
     const paddingValue = 4.0; // 整個主播資訊容器的padding
-    const borderRadiusValue = 8.0; // 邊框圓角
+    const borderRadiusValue = 12.0; // 邊框圓角
     return Container(
           alignment: Alignment.centerLeft,
           margin: EdgeInsets.only(left: 8.0,top: 8.0),
@@ -109,7 +109,7 @@ class _AnchorInfoState extends State<AnchorInfo> {
             width: maxWidth * 0.45,
             height: containerHeight,
             decoration: BoxDecoration(
-                color: Color.fromARGB(150, 0, 0, 0),
+                color: Colors.black45,
                 borderRadius: BorderRadius.circular(borderRadiusValue)),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_live_stream/core/controllers/live_chat_room_controller.dart';
+import 'package:flutter_live_stream/shared/widgets/gift_bottom_sheet.dart';
 class BottomPanel extends StatefulWidget {
 
   @override
@@ -22,6 +23,7 @@ class _BottomPanelState extends State<BottomPanel> {
       )
     ],
   );
+
   final ctr = Get.find<LiveChatRoomController>();
   final GlobalKey _bottomPanelKey = GlobalKey();
   var testNumber = 0;
@@ -38,7 +40,8 @@ class _BottomPanelState extends State<BottomPanel> {
       ctr.bottomPanelHeight = object.size.height;
     });
   }
-  //TODO : 可針對不同機種 加入margin bottom
+
+  //TODO : 可針對不同機種 加入margin bottom (避免被遮住)
   @override
   Widget build(BuildContext context) {
     final maxWidth = MediaQuery.of(context).size.width;
@@ -107,7 +110,11 @@ class _BottomPanelState extends State<BottomPanel> {
                       icon: Icons.card_giftcard,
                       diameter: circleHeight,
                       btnGradientColor: pickGradient,
-                      onTap: () {}),
+                      onTap: () {
+                        Get.bottomSheet(
+                            GiftBottomSheet()
+                        );
+                      }),
                 ],
               ),
             )

@@ -45,7 +45,7 @@ class MessageItem extends StatelessWidget {
             borderRadius: BorderRadius.circular(6.0)
           ),
           child: Text(text,style: TextStyle(
-            fontSize: 10.0,
+            fontSize: 12.0,
             color: Colors.white,
           ),),
         ),

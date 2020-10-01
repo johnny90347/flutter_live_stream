@@ -167,10 +167,10 @@ class MessageItem extends StatelessWidget {
 
   final backgroundColor = Colors.black38;
   final messageFontSize = 12.0;
-  // 由於 listView 直向,寬度會被強制擴展,為了讓對話有彈性的背景顏色,所以我嘗試多次選擇
+  // 由於 listView 直向,寬度會被強制擴展,為了讓對話有彈性的背景顏色,所以我嘗試後選擇
   // 1.row開頭
   // 2.包一層Flexible,讓大量文字不會超出邊界
-  // 3.Warp 是仿照17的顯示,若文字太多,玩家名稱與內容文字,是分開兩排,不黏再一起
+  // 3.Warp 是仿照17的顯示,若文字太多,玩家名稱與內容文字,是分開兩排,不黏在一起
   @override
   Widget build(BuildContext context) {
     return Row(
