@@ -1,10 +1,17 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_live_stream/core/controllers/global_controller.dart';
 import 'package:signalr_core/signalr_core.dart';
 import 'package:flutter_live_stream/core/services/service_module.dart';
 
-class SignalRService {
+class SignalRService extends GetxService {
+  // service 初始化
+  Future<SignalRService> init() async {
+    print('$runtimeType ready!');
+    return this;
+  }
+
   /// 注入
-  final configService = locator<ConfigService>();
+  final configService = Get.find<ConfigService>();
 
   /// 屬性
   HubConnection liveStreamApiConnect; // liveStream連線

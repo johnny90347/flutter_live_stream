@@ -11,7 +11,7 @@ class Splash extends StatefulWidget {
 }
 
 class _SplashPageState extends State<Splash> {
-  final routerService = locator<RouterService>();
+  final routerService = Get.find<RouterService>();
   final globalController = Get.find<GlobalController>();
 
 

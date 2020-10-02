@@ -1,11 +1,18 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_live_stream/core/controllers/global_controller.dart';
 import 'package:flutter_live_stream/core/services/service_module.dart';
 
-class LiveStreamService {
+class LiveStreamService extends GetxService{
+
+  // service 初始化
+  Future<LiveStreamService> init() async {
+    print('$runtimeType ready!');
+    return this;
+  }
 
   // 注入服務
-  final signalRService = locator<SignalRService>();
-  final configService = locator<ConfigService>();
+  final signalRService = Get.find<SignalRService>();
+  final configService = Get.find<ConfigService>();
 
   // 建立liveStream連線
   Future initLiveStreamConnection() async {

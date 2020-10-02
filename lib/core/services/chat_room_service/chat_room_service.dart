@@ -1,10 +1,17 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_live_stream/core/controllers/global_controller.dart';
 import 'package:flutter_live_stream/core/services/service_module.dart';
 
-class ChatRoomService {
+class ChatRoomService extends GetxService {
+
+  // service 初始化
+  Future<ChatRoomService> init() async {
+    print('$runtimeType ready!');
+    return this;
+  }
 
   /// 注入服務
-  final signalRService = locator<SignalRService>();
+  final signalRService = Get.find<SignalRService>();
 
   // 建立chatRoom連線
   Future initChatConnection()async{

@@ -17,19 +17,19 @@ export 'package:flutter_live_stream/core/services/chat_room_service/chat_room_se
 export 'package:flutter_live_stream/core/services/live_stream_service/live_stream_service.dart';
 
 //先寫死
-final ROUTE_PATH = 'http://172.24.10.63:8002/';
+final ROUTE_PATH = 'http://192.168.1.105:8002/';
 final USER_NAME = 'HTTW08';
 
-// 全局的GetIt實體(用於service)
-GetIt locator = GetIt.instance;
-
-// 註冊service
-void setupLocator() {
-  //有先後順序,如果service要互相使用,被使用的要排在前面,不然會報錯
-  locator.registerSingleton(RouterService());
-  locator.registerSingleton(HttpService());
-  locator.registerSingleton(ConfigService());
-  locator.registerSingleton(SignalRService());
-  locator.registerSingleton(ChatRoomService());
-  locator.registerSingleton(LiveStreamService());
-}
+// // 全局的GetIt實體(用於service)
+// GetIt locator = GetIt.instance;
+//
+// // 註冊service
+// void setupLocator() {
+//   //有先後順序,如果service要互相使用,被使用的要排在前面,不然會報錯
+//   locator.registerSingleton(RouterService());
+//   locator.registerSingleton(HttpService());
+//   locator.registerSingleton(ConfigService());
+//   locator.registerSingleton(SignalRService());
+//   locator.registerSingleton(ChatRoomService());
+//   locator.registerSingleton(LiveStreamService());
+// }

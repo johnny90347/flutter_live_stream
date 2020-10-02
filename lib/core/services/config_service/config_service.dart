@@ -1,9 +1,17 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_live_stream/core/controllers/global_controller.dart';
 import 'package:flutter_live_stream/core/services/service_module.dart';
 import 'package:flutter_live_stream/models/fishLiveGameInfoModel.dart';
 import 'package:flutter_live_stream/models/index.dart';
 
-class ConfigService {
+class ConfigService extends GetxService {
+
+  // service 初始化
+  Future<ConfigService> init() async {
+    print('$runtimeType ready!');
+    return this;
+  }
+
 
   FishLiveGameInfoModel _fishLiveInfo; // 直播的初始資訊
 
@@ -15,8 +23,8 @@ class ConfigService {
   }
 
   /// 注入服務
-  final httpService = locator<HttpService>();
-  final routeService = locator<RouterService>();
+  final httpService = Get.find<HttpService>();
+  final routeService = Get.find<RouterService>();
 
   // 初始化連線前該有的資料
     Future initConfig()async{
@@ -33,7 +41,7 @@ class ConfigService {
         .then((resp) {
 
       // code != 0 導向錯誤頁
-      if(resp["code"] != 0 ){
+      if(resp["Code"] != 0 ){
         routeService.goToPage(path: errorPath,argument: resp["Message"]);
       }
 

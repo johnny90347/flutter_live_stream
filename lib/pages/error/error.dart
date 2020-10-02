@@ -9,7 +9,7 @@ class Error extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(title: Text('錯誤頁'),),
         body: Container(
-          child: Text(errorMsg),
+          child: Text('$errorMsg'),
         ));
   }
 }

@@ -11,7 +11,15 @@ const String splashPath = '/splash';
 const String liveChatRoomPath = '/liveChatRoom';
 const String errorPath = '/error';
 
-class RouterService {
+class RouterService extends GetxService{
+  // service 初始化
+  Future<RouterService> init() async {
+    print('$runtimeType ready!');
+    return this;
+  }
+
+
+
   // 註冊路由
   final generateRoute = [
     GetPage(name: homePath, page: () => Home()),

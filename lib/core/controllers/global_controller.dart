@@ -27,11 +27,11 @@ class GlobalController extends GetxController {
 
 
   /// 注入服務
-  final httpService = locator<HttpService>();
-  final signalRService = locator<SignalRService>();
-  final configService = locator<ConfigService>();
-  final liveStreamService = locator<LiveStreamService>();
-  final chatRoomService = locator<ChatRoomService>();
+  final httpService = Get.find<HttpService>();
+  final signalRService = Get.find<SignalRService>();
+  final configService = Get.find<ConfigService>();
+  final liveStreamService = Get.find<LiveStreamService>();
+  final chatRoomService = Get.find<ChatRoomService>();
 
   /// 屬性
   List<GiftDetailPart> gifts;
