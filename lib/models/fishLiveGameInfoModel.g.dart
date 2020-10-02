@@ -13,7 +13,8 @@ FishLiveGameInfoModel _$FishLiveGameInfoModelFromJson(
     ..AnchorId = json['AnchorId'] as String
     ..LobbyUrl = json['LobbyUrl'] as String
     ..GameUrl = json['GameUrl'] as String
-    ..Code = json['Code'] as num;
+    ..Code = json['Code'] as num
+    ..AllowSendGift = json['AllowSendGift'] as bool;
 }
 
 Map<String, dynamic> _$FishLiveGameInfoModelToJson(
@@ -23,5 +24,6 @@ Map<String, dynamic> _$FishLiveGameInfoModelToJson(
       'AnchorId': instance.AnchorId,
       'LobbyUrl': instance.LobbyUrl,
       'GameUrl': instance.GameUrl,
-      'Code': instance.Code
+      'Code': instance.Code,
+      'AllowSendGift': instance.AllowSendGift
     };

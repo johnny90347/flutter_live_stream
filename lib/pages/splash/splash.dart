@@ -29,18 +29,6 @@ class _SplashPageState extends State<Splash> {
       body: Center(
         child: Column(
           children: [
-            GetBuilder<GlobalController>(
-              init: GlobalController(),
-              builder: (_) {
-                return Column(
-                  children: [
-                    Text('${_.myNumber}'),
-//                    Text('${_.chatMsg}')
-                    Obx(() => Text('${_.getObsNumber}')),
-                  ],
-                );
-              },
-            ),
             Obx(() => Text('${globalController.test.value.AnchorId}')),
             RaisedButton(
                 child: Text('拿資料'),

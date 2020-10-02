@@ -3,5 +3,6 @@
   "AnchorId": "45fa165e-b0dd-4ee7-ce0d-08d85ecfd07d",
   "LobbyUrl": "http://172.24.10.63:8002/",
   "GameUrl":" http://gci.aggdemo.com:81/LIVEHUNTER/h5pcfh/HPLZ/index.html?token=a811d6998e6a8051826de3e63f160588&username=HTTW08&pid=TST",
-  "Code": 0
+  "Code": 0,
+  "AllowSendGift": false
 }

@@ -54,7 +54,7 @@ class _DialogDisplayState extends State<DialogDisplay> {
 
   // 聊天列表監聽
   _setUpChatListListener() {
-    ctr.listItems.listen((value) {
+    ctr.chatList.listen((value) {
       Timer(Duration(milliseconds: 100), () {
         // 如果在底部才允許字幕自動滾動
         if (_isOnBottom) {
@@ -121,10 +121,10 @@ class _DialogDisplayState extends State<DialogDisplay> {
               child: ListView.builder(
                   padding: EdgeInsets.symmetric(horizontal: 10.0),
                   controller: _scrollController,
-                  itemCount: ctr.listItems.length,
+                  itemCount: ctr.chatList.length,
                   itemBuilder: (context, index) {
-                    return MessageItem(
-                        level: 5, name: 'null', message: ctr.listItems[index]);
+                    return MessageItem(isAnchor:  ctr.chatList[index].IsAnchor,
+                        level: ctr.chatList[index].Level, name: ctr.chatList[index].NickName, message: ctr.chatList[index].Body);
                   }),
             ),
           ),
@@ -162,8 +162,10 @@ class MessageItem extends StatelessWidget {
   final int level;
   final String name;
   final String message;
+  final bool isAnchor;
+
   MessageItem(
-      {@required this.level, @required this.name, @required this.message});
+      {@required this.level,@required this.isAnchor, @required this.name, @required this.message});
 
   final backgroundColor = Colors.black38;
   final messageFontSize = 12.0;
@@ -183,16 +185,16 @@ class MessageItem extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
             margin: EdgeInsets.symmetric(vertical: 2),
             child: Wrap(
-              crossAxisAlignment: WrapCrossAlignment.center,
+              crossAxisAlignment: WrapCrossAlignment.end,
               children: [
                 ConstrainedBox(
                     constraints: BoxConstraints(minHeight: 16.0), // 給個最小高度
-                    child: VipRank(rank: 16,)),
+                    child: VipRank(rank: level,isAnchor: isAnchor,)),
                 SizedBox(
                   width: 4.0,
                 ),
                 Text(
-                  'HTTW01',
+                  name,
                   style: TextStyle(
                       fontSize: messageFontSize,
                       color: Color(0xffdbdbdb),
@@ -222,8 +224,9 @@ class MessageItem extends StatelessWidget {
 class VipRank extends StatefulWidget {
 
   final int rank;
+  final bool isAnchor;
 
-  VipRank({@required this.rank});
+  VipRank({@required this.rank,@required this.isAnchor});
 
   @override
   _VipRankState createState() => _VipRankState();
@@ -232,7 +235,7 @@ class VipRank extends StatefulWidget {
 class _VipRankState extends State<VipRank> {
 
   final backgroundColors = [
-    [Color(0xffbb4e75), Color(0xffb1aeae)],
+    [Color(0xff686868), Color(0xffb1aeae)],
     [Color(0xff07a15d), Color(0xff4ecfa6)],
     [Color(0xff0396ff), Color(0xff96d3ff)],
     [Color(0xff4a92a6), Color(0xff30cfd0)],

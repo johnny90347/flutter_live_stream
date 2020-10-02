@@ -23,7 +23,6 @@ class ConfigService extends GetxService {
     Future initConfig()async{
       final LoginInfoModel loginInfoResp = await _getLoginInfo();
       await _getFishLiveGameInfo(loginInfo: loginInfoResp);
-      print('CinfigInit 完成');
       return 'success';
   }
 

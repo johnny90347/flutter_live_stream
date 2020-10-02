@@ -11,6 +11,7 @@ class FishLiveGameInfoModel {
     String LobbyUrl;
     String GameUrl;
     num Code;
+    bool AllowSendGift;
     
     factory FishLiveGameInfoModel.fromJson(Map<String,dynamic> json) => _$FishLiveGameInfoModelFromJson(json);
     Map<String, dynamic> toJson() => _$FishLiveGameInfoModelToJson(this);

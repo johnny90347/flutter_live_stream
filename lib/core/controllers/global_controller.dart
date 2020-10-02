@@ -32,45 +32,19 @@ class GlobalController extends GetxController {
   final liveStreamService = Get.find<LiveStreamService>();
   final chatRoomService = Get.find<ChatRoomService>();
 
-  /// 屬性
-  List<GiftDetailPart> gifts;
-  List<VideoDetailPart> videos;
-  AnchorLobbyInfoDetailPart anchorLobbyInfo;
+
 
   /// 方法
   //初始化所有需要的資料,連線
   void initAllRequire() async{
-    await configService.initConfig();
-    await liveStreamService.initLiveStreamConnection();
-    await chatRoomService.initChatConnection();
-    setupPlayerLobbyConnectListener();
-    setupChatMessageListener();
-    getAnchorInfo();
+    final result = await configService.initConfig();
+
+    if(result == 'success'){
+      print('config資料拿完了');
+    }
   }
 
 
-  //建立PlayerLobby 監聽 獲得主播資訊
-  void setupPlayerLobbyConnectListener(){
-    liveStreamService.setupPlayerLobbyConnectListener(callback: (msg){
-      // 這裡回來的msg都是list包著
-      final resultMsg = PlayerLobbyConnectModel.fromJson(msg[0]);
-      gifts = resultMsg.Gifts;
-      videos = resultMsg.Videos;
-      anchorLobbyInfo = resultMsg.AnchorLobbyInfo;
-    });
-  }
 
-  // 建立聊天監聽
-  void setupChatMessageListener(){
-    chatRoomService.setupChatMessageListener(callBack: (msg){
-      print(msg);
-
-    });
-  }
-
-  // 取得主播資訊
-  void getAnchorInfo(){
-    liveStreamService.getAnchorInfo();
-  }
 
 }

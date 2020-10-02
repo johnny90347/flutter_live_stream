@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import './live_stream/live_stream.dart';
 import './chat_room_feature/chat_room_feature.dart';
+import 'package:flutter_live_stream/core/controllers/live_chat_room_controller.dart';
 
 class LiveChatRoom extends StatefulWidget {
   @override
@@ -8,10 +9,11 @@ class LiveChatRoom extends StatefulWidget {
 }
 
 class _LiveChatRoomState extends State<LiveChatRoom> {
-
+  final ctr = Get.find<LiveChatRoomController>();
 
   @override
   void initState() {
+    ctr.liveChatRoomInit();
     super.initState();
   }
 

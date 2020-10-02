@@ -10,20 +10,20 @@ class _ChatInputState extends State<ChatInput> {
   final liveChatRoomController = Get.find<LiveChatRoomController>();
 
   FocusNode _inputFocusNode; // 輸入框的聚焦
-  TextEditingController _inputController; // textField控制器
+
 
   @override
   void initState() {
     _listenOpenChatInput();
     _inputFocusNode = FocusNode(); // node初始化
-    _inputController = TextEditingController(); // 控制器初始化
+    liveChatRoomController.inputController = TextEditingController(); // 控制器初始化
     super.initState();
   }
 
   @override
   void dispose() {
     _inputFocusNode.dispose();
-    _inputController.dispose();
+    liveChatRoomController.inputController.dispose();
     super.dispose();
   }
 
@@ -65,7 +65,7 @@ class _ChatInputState extends State<ChatInput> {
                 print("發送訊息");
               },
               textAlign: TextAlign.left,
-               controller: _inputController,
+               controller: liveChatRoomController.inputController,
               decoration: InputDecoration(
                 hintText: '开始聊天吧！',
                 fillColor: Colors.white,

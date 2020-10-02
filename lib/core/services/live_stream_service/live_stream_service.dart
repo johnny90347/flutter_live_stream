@@ -16,7 +16,6 @@ class LiveStreamService extends GetxService{
    return signalRService.liveStreamConnectHub(
       callback: (() {
         print('liveStream連線成功');
-        return 'success';
       }),
     );
   }

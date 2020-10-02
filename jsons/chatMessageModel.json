@@ -1,0 +1,9 @@
+{
+  "MessageId": "string",
+  "NickName": "string",
+  "Id": "string",
+  "Level": 0,
+  "Body": "string",
+  "IsAnchor": false,
+  "CorrelationId":"string"
+}

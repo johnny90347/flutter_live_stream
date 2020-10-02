@@ -6,19 +6,22 @@ class ChatRoomService extends GetxService {
   /// 注入服務
   final signalRService = Get.find<SignalRService>();
 
-  // 建立chatRoom連線
-  Future initChatConnection()async{
-    print('開始initChatConnection');
-    return signalRService.chatConnectHub(callback: ((){
-      print('chat連線成功');
-      return 'success';
-    }));
+  /// 建立chatRoom連線
+  Future initChatConnection({@required callBack})async{
+    return signalRService.chatConnectHub(callback: callBack);
   }
 
-  // 建立聊天監聽
+  /// 建立聊天監聽
   setupChatMessageListener({@required callBack}){
     signalRService.addListener(url: 'chat', id: 'ReceiveChatMessage',callback:callBack );
   }
+
+
+  /// 第一次載入時取得最新幾筆歷史紀錄
+  setUpChatHistoryListener({@required callBack}){
+    signalRService.addListener(url: 'chat', id: 'ChatHistory',callback:callBack );
+  }
+
 
   /// service 初始化
   Future<ChatRoomService> init() async {
