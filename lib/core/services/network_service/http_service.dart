@@ -2,22 +2,9 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_live_stream/core/controllers/global_controller.dart';
 import 'package:flutter_live_stream/core/services/service_module.dart';
 
-//匯出
-export 'package:dio/dio.dart';
-
-
-// 似乎用不到
 class HttpService extends GetxService {
-
-  // service 初始化
-  Future<HttpService> init() async {
-    print('$runtimeType ready!');
-    return this;
-  }
-
   //初始設定
   Dio dio = Dio(BaseOptions(
     //TODO: baseUrl根據不同的電腦要替換(APP不懂localhost)
@@ -41,6 +28,11 @@ class HttpService extends GetxService {
 
       return errorMsg;
     }
+  }
+
+  /// service 初始化
+  Future<HttpService> init() async {
+    return this;
   }
 }
 

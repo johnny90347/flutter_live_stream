@@ -1,6 +1,6 @@
-
-
-import 'package:get_it/get_it.dart';
+//套件
+import 'package:get/get.dart';
+export 'package:get/get.dart';
 // 匯入
 import 'package:flutter_live_stream/core/services/config_service/config_service.dart';
 import 'package:flutter_live_stream/core/services/router_service/router_service.dart';
@@ -20,16 +20,12 @@ export 'package:flutter_live_stream/core/services/live_stream_service/live_strea
 final ROUTE_PATH = 'http://192.168.1.105:8002/';
 final USER_NAME = 'HTTW08';
 
-// // 全局的GetIt實體(用於service)
-// GetIt locator = GetIt.instance;
-//
-// // 註冊service
-// void setupLocator() {
-//   //有先後順序,如果service要互相使用,被使用的要排在前面,不然會報錯
-//   locator.registerSingleton(RouterService());
-//   locator.registerSingleton(HttpService());
-//   locator.registerSingleton(ConfigService());
-//   locator.registerSingleton(SignalRService());
-//   locator.registerSingleton(ChatRoomService());
-//   locator.registerSingleton(LiveStreamService());
-// }
+// 全部Service 初始化
+Future<void> initServices() async {
+  await Get.putAsync(() => RouterService().init());
+  await Get.putAsync(() => HttpService().init());
+  await Get.putAsync(() => ConfigService().init());
+  await Get.putAsync(() => SignalRService().init());
+  await Get.putAsync(() => ChatRoomService().init());
+  await Get.putAsync(() => LiveStreamService().init());
+}

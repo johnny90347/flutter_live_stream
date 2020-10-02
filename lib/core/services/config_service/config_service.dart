@@ -6,13 +6,6 @@ import 'package:flutter_live_stream/models/index.dart';
 
 class ConfigService extends GetxService {
 
-  // service 初始化
-  Future<ConfigService> init() async {
-    print('$runtimeType ready!');
-    return this;
-  }
-
-
   FishLiveGameInfoModel _fishLiveInfo; // 直播的初始資訊
 
   FishLiveGameInfoModel get getFishLiveInfo => _fishLiveInfo;
@@ -73,6 +66,11 @@ class ConfigService extends GetxService {
     });
   }
 
+
+  /// service 初始化
+  Future<ConfigService> init() async {
+    return this;
+  }
 }
 
 

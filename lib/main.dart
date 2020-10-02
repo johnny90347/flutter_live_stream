@@ -8,33 +8,12 @@ import 'package:get/get.dart';
 
 //APP啟動點
 void main() async  {
-  // setupLocator();
+  // 初始化所有Service
   await initServices();
   runApp(MyApp());
 }
 
-Future<void> initServices() async {
-  print('starting services ...');
-  await Get.putAsync(() => RouterService().init());
-  await Get.putAsync(() => HttpService().init());
-  await Get.putAsync(() => ConfigService().init());
-  await Get.putAsync(() => SignalRService().init());
-  await Get.putAsync(() => ChatRoomService().init());
-  await Get.putAsync(() => LiveStreamService().init());
-  print('All services started...');
-}
-
-//   locator.registerSingleton(RouterService());
-//   locator.registerSingleton(HttpService());
-//   locator.registerSingleton(ConfigService());
-//   locator.registerSingleton(SignalRService());
-//   locator.registerSingleton(ChatRoomService());
-//   locator.registerSingleton(LiveStreamService());
-
-
-
 class MyApp extends StatelessWidget {
-  // final router = locator<RouterService>();
   final router = Get.find<RouterService>();
   @override
   Widget build(BuildContext context) {
@@ -45,6 +24,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
         initialBinding: GlobalBidding(),
+        defaultTransition: Transition.native,
         home: Splash(),
         getPages: router.generateRoute,
         builder: (context, child) {

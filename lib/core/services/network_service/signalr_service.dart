@@ -4,12 +4,6 @@ import 'package:signalr_core/signalr_core.dart';
 import 'package:flutter_live_stream/core/services/service_module.dart';
 
 class SignalRService extends GetxService {
-  // service 初始化
-  Future<SignalRService> init() async {
-    print('$runtimeType ready!');
-    return this;
-  }
-
   /// 注入
   final configService = Get.find<ConfigService>();
 
@@ -76,5 +70,10 @@ class SignalRService extends GetxService {
       default:
         return null;
     }
+  }
+
+  /// service 初始化
+  Future<SignalRService> init() async {
+    return this;
   }
 }
