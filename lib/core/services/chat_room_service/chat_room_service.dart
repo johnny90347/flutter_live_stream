@@ -7,8 +7,10 @@ class ChatRoomService extends GetxService {
   final signalRService = Get.find<SignalRService>();
 
   /// 建立chatRoom連線
-  Future initChatConnection({@required callBack})async{
-    return signalRService.chatConnectHub(callback: callBack);
+  Future initChatConnection()async{
+    return signalRService.chatConnectHub(callback: (() {
+      print('Chat連線成功');
+    }),);
   }
 
   /// 建立聊天監聽

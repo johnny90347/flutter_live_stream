@@ -5,5 +5,9 @@
   "Level": 0,
   "Body": "string",
   "IsAnchor": false,
-  "CorrelationId":"string"
+  "CorrelationId":"string",
+  "GiftId": 2,
+  "StarValue": 100,
+  "GiftUrl": "string",
+  "GiftName": "String"
 }

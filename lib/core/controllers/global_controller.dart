@@ -5,24 +5,8 @@ import 'package:get/get.dart';
 export 'package:get/get.dart';
 
 class GlobalController extends GetxController {
-  // 測試用資料
-  int myNumber = 0;
-  RxString obsNumber = 'johnny'.obs;
-  var chatMsg = '還沒收到'.obs;
-  Rx<LoginInfoModel> test = LoginInfoModel().obs; //自定義就這樣寫
-  get getObsNumber => obsNumber;
 
-  void addNumber() {
-    myNumber++;
-    update();
-  }
-
-  void addObsNumber(){
-   obsNumber.value = 'lhlhlh';
-  }
-
-
-  // 測試用資料
+  var loadingState = '獲取資料中..'.obs;
 
 
   /// 注入服務
@@ -41,8 +25,10 @@ class GlobalController extends GetxController {
 
     if(result == 'success'){
       print('config資料拿完了');
+      loadingState.value = '資料取得完畢';
     }
   }
+
 
 
 

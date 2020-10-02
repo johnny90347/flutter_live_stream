@@ -80,20 +80,19 @@ class _DialogDisplayState extends State<DialogDisplay> {
   }
 
   // 滾動通知處理
-  _scrollNotifyHandel(ScrollNotification notification){
+  _scrollNotifyHandel(ScrollNotification notification) {
     switch (notification.runtimeType) {
       case ScrollStartNotification:
-      // 開始滾動
+        // 開始滾動
         break;
       case ScrollUpdateNotification:
-      // 滾動中
+        // 滾動中
         break;
       case ScrollEndNotification:
-      // 停止滾動時,再去算位置,看是否在底部
-        if (notification.metrics.maxScrollExtent -
-            notification.metrics.pixels <
+        // 停止滾動時,再去算位置,看是否在底部
+        if (notification.metrics.maxScrollExtent - notification.metrics.pixels <
             10) {
-          if(_isOnBottom != true && _showScrollButton!= false){
+          if (_isOnBottom != true && _showScrollButton != false) {
             _isOnBottom = true;
             _showScrollButton = false;
           }
@@ -101,7 +100,7 @@ class _DialogDisplayState extends State<DialogDisplay> {
         }
         break;
       case OverscrollNotification:
-      //在邊界
+        //在邊界
         break;
     }
   }
@@ -123,8 +122,11 @@ class _DialogDisplayState extends State<DialogDisplay> {
                   controller: _scrollController,
                   itemCount: ctr.chatList.length,
                   itemBuilder: (context, index) {
-                    return MessageItem(isAnchor:  ctr.chatList[index].IsAnchor,
-                        level: ctr.chatList[index].Level, name: ctr.chatList[index].NickName, message: ctr.chatList[index].Body);
+                    return MessageItem(
+                        isAnchor: ctr.chatList[index].IsAnchor,
+                        level: ctr.chatList[index].Level,
+                        name: ctr.chatList[index].NickName,
+                        message: ctr.chatList[index].Body);
                   }),
             ),
           ),
@@ -165,7 +167,10 @@ class MessageItem extends StatelessWidget {
   final bool isAnchor;
 
   MessageItem(
-      {@required this.level,@required this.isAnchor, @required this.name, @required this.message});
+      {@required this.level,
+      @required this.isAnchor,
+      @required this.name,
+      @required this.message});
 
   final backgroundColor = Colors.black38;
   final messageFontSize = 12.0;
@@ -189,7 +194,10 @@ class MessageItem extends StatelessWidget {
               children: [
                 ConstrainedBox(
                     constraints: BoxConstraints(minHeight: 16.0), // 給個最小高度
-                    child: VipRank(rank: level,isAnchor: isAnchor,)),
+                    child: VipRank(
+                      rank: level,
+                      isAnchor: isAnchor,
+                    )),
                 SizedBox(
                   width: 4.0,
                 ),
@@ -222,18 +230,16 @@ class MessageItem extends StatelessWidget {
 
 // 使用者內容 等級Icon,等級數字,名稱
 class VipRank extends StatefulWidget {
-
   final int rank;
   final bool isAnchor;
 
-  VipRank({@required this.rank,@required this.isAnchor});
+  VipRank({@required this.rank, @required this.isAnchor});
 
   @override
   _VipRankState createState() => _VipRankState();
 }
 
 class _VipRankState extends State<VipRank> {
-
   final backgroundColors = [
     [Color(0xff686868), Color(0xffb1aeae)],
     [Color(0xff07a15d), Color(0xff4ecfa6)],
@@ -258,6 +264,12 @@ class _VipRankState extends State<VipRank> {
   ];
 
   Gradient vipBgGradient; // 被景色漸層
+  final Gradient anchorGradient = LinearGradient(
+      // 主播背景漸層色
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xffbf820d), Color(0xffe6b760), Color(0xffb88c3b)],
+      stops: [0.1, 0.4, 1.0]);
 
   @override
   void initState() {
@@ -266,11 +278,11 @@ class _VipRankState extends State<VipRank> {
   }
 
   // 設定vip背景顏色
-  _setBackgroundColor(){
+  _setBackgroundColor() {
     vipBgGradient = LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors:backgroundColors[widget.rank],
+      colors: backgroundColors[widget.rank],
     );
   }
 
@@ -278,19 +290,25 @@ class _VipRankState extends State<VipRank> {
   Widget build(BuildContext context) {
     // 1.背景變形
     // 2.沒變形的內容相疊而成
-    const boxWidth = 40.0;
-    const boxHeight = 16.0;
+    final boxWidth = 45.0;
+    final boxHeight = 16.0;
     return Stack(
       children: [
         Transform(
-          transform: Matrix4.skewX(-0.2),
+          transform: Matrix4.skewX(-0.1),
           child: Container(
             width: boxWidth,
             height: boxHeight,
             decoration: BoxDecoration(
-              gradient: vipBgGradient,
-              borderRadius: BorderRadius.circular(3.0),
-            ),
+                gradient: widget.isAnchor ? anchorGradient : vipBgGradient,
+                borderRadius: BorderRadius.circular(2.0),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.shade700,
+                    spreadRadius: 0.5,
+                    offset: Offset(0.5, 0.5),
+                  ),
+                ]),
           ),
         ),
         Container(
@@ -301,20 +319,40 @@ class _VipRankState extends State<VipRank> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
+                alignment: Alignment.bottomCenter,
                 // 給圖片Size
                 height: 14,
                 width: 14,
-                child: SvgPicture.asset(
-                  'assets/images/vip/vip-diamond.svg',
-                  color: Colors.white,
+                child: widget.isAnchor
+                    ? Icon(
+                        Icons.headset,
+                        size: 12,
+                        color: Colors.white,
+                      )
+                    : Container(
+                  padding: EdgeInsets.symmetric(horizontal: 1.5),
+                      child: SvgPicture.asset(
+                          'assets/images/vip/vip-diamond.svg',
+                          color: Colors.white,
+                        ),
+                    ),
+              ),
+              SizedBox(
+                width: widget.isAnchor ? 1 : 3,
+              ),
+              Container(
+                alignment: Alignment.center,
+                child: Text(
+                  widget.isAnchor ? '主播' : '${widget.rank}',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 10.0,
+                      fontWeight: FontWeight.w700,
+                     ),
                 ),
               ),
               SizedBox(
-                width: 3.0,
-              ),
-              Text(
-                '${widget.rank}',
-                style: TextStyle(color: Colors.white, fontSize: 10.0,fontWeight: FontWeight.w700),
+                width: 2.0,
               )
             ],
           ),

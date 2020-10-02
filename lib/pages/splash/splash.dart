@@ -13,7 +13,6 @@ class _SplashPageState extends State<Splash> {
   final routerService = Get.find<RouterService>();
   final globalController = Get.find<GlobalController>();
 
-
   @override
   void initState() {
     super.initState();
@@ -29,12 +28,10 @@ class _SplashPageState extends State<Splash> {
       body: Center(
         child: Column(
           children: [
-            Obx(() => Text('${globalController.test.value.AnchorId}')),
+            Obx(() => Text('${globalController.loadingState.value}')),
             RaisedButton(
                 child: Text('拿資料'),
                 onPressed: () {
-                  Get.find<GlobalController>().addNumber();
-                  Get.find<GlobalController>().addObsNumber();
                 }),
             RaisedButton(
                 child: Text('去直播'),
