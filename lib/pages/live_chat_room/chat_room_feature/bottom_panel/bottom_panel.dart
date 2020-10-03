@@ -38,6 +38,7 @@ class _BottomPanelState extends State<BottomPanel> {
     Timer(Duration(milliseconds: 1000), () {
       final RenderBox  object = _bottomPanelKey.currentContext.findRenderObject();
       ctr.bottomPanelHeight = object.size.height;
+      print('底部選單的高度${ctr.bottomPanelHeight}');
     });
   }
 

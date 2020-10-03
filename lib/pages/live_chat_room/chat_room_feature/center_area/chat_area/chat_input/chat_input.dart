@@ -33,6 +33,12 @@ class _ChatInputState extends State<ChatInput> {
       if (isOpen) {
         // 請求焦點
         _inputFocusNode.requestFocus();
+      }else{
+
+
+        // 取消焦點
+        FocusScope.of(context).requestFocus(FocusNode());
+        liveChatRoomController.inputController.clear();
       }
       //TODO : 如果input收起來,要把textFiled內的內容清掉
     });
@@ -62,7 +68,11 @@ class _ChatInputState extends State<ChatInput> {
               focusNode: _inputFocusNode,
               textInputAction: TextInputAction.send,
               onSubmitted: (value) {
-                print("發送訊息");
+                final msg =  liveChatRoomController.inputController.text;
+                if(msg != ''){
+                  liveChatRoomController.sendChatMessage(msg: msg);
+
+                }
               },
               textAlign: TextAlign.left,
                controller: liveChatRoomController.inputController,

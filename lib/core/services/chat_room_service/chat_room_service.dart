@@ -24,6 +24,13 @@ class ChatRoomService extends GetxService {
     signalRService.addListener(url: 'chat', id: 'ChatHistory',callback:callBack );
   }
 
+  /// 發送聊天訊息
+  sendMessage(msg) {
+    final message = {
+    "Body": msg
+    };
+    signalRService.send(url: 'chat',id: 'SendMessage',msg: message);
+  }
 
   /// service 初始化
   Future<ChatRoomService> init() async {

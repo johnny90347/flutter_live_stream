@@ -40,7 +40,7 @@ class _ChatAreaState extends State<ChatArea>
         _keyboardVisibility.addNewListener(onChange: (bool visible) {
       //　鍵盤彈出
       if (visible) {
-        Timer(Duration(milliseconds: 200), () {
+        Timer(Duration(milliseconds: 500), () {
           // 取的鍵盤高度
           final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
           _keyboardHeight = keyboardHeight - ctr.bottomPanelHeight;

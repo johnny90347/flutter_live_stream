@@ -80,6 +80,12 @@ class LiveChatRoomController extends GetxController {
     });
   }
 
+  /// 發送聊天訊息
+  void sendChatMessage({@required String msg}){
+    chatRoomService.sendMessage(msg);
+    
+  }
+
   /// 取得主播資訊
   void getAnchorInfo() {
     liveStreamService.getAnchorInfo();
