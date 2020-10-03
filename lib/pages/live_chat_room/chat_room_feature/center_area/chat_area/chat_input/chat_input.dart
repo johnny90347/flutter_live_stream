@@ -50,7 +50,7 @@ class _ChatInputState extends State<ChatInput> {
       height: 40.0,
       width: double.infinity,
       decoration: BoxDecoration(color: Colors.white),
-      padding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 2.0),
+      padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 2.0),
       child: Row(
         children: [
           Expanded(

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_live_stream/core/controllers/live_chat_room_controller.dart';
+import 'package:flutter_live_stream/core/services/system_info_service/system_info_service.dart';
 import 'package:flutter_live_stream/shared/widgets/gift_bottom_sheet.dart';
 class BottomPanel extends StatefulWidget {
 
@@ -25,6 +26,7 @@ class _BottomPanelState extends State<BottomPanel> {
   );
 
   final ctr = Get.find<LiveChatRoomController>();
+  final systemInfoService = Get.find<SystemInfoService>();
   final GlobalKey _bottomPanelKey = GlobalKey();
   var testNumber = 0;
 
@@ -37,20 +39,18 @@ class _BottomPanelState extends State<BottomPanel> {
   _getBottomPanelSize(){
     Timer(Duration(milliseconds: 1000), () {
       final RenderBox  object = _bottomPanelKey.currentContext.findRenderObject();
-      ctr.bottomPanelHeight = object.size.height;
-      print('底部選單的高度${ctr.bottomPanelHeight}');
+      systemInfoService.bottomPanelHeight = object.size.height;
     });
   }
 
   //TODO : 可針對不同機種 加入margin bottom (避免被遮住)
   @override
   Widget build(BuildContext context) {
-    final maxWidth = MediaQuery.of(context).size.width;
-    final circleHeight = maxWidth * 0.08;
+    final circleHeight = systemInfoService.screenMaxWidth * 0.08;
     return Container(
       key: _bottomPanelKey,
       alignment: Alignment.topCenter,
-        padding: EdgeInsets.only(left: 8.0,right: 8.0,bottom: 5.0,top: 5.0),
+        padding: const EdgeInsets.only(left: 8.0,right: 8.0,bottom: 5.0,top: 5.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

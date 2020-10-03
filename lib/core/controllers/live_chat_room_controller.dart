@@ -10,10 +10,9 @@ class LiveChatRoomController extends GetxController {
   final liveStreamService = Get.find<LiveStreamService>();
   final chatRoomService = Get.find<ChatRoomService>();
 
-  /// 系統資料
-  double bottomPanelHeight; // 底部按鈕的高
-  RxBool openChatInput = false.obs; //開啟聊天輸入框
+
   /// 屬性
+  RxBool openChatInput = false.obs; //開啟聊天輸入框
   TextEditingController inputController; // 輸入框textField控制器
   List<GiftDetailPart> gifts; //禮物列表
   List<VideoDetailPart> videos; //直播影片

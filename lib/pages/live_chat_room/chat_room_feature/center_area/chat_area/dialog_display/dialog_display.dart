@@ -187,8 +187,8 @@ class MessageItem extends StatelessWidget {
             decoration: BoxDecoration(
                 color: backgroundColor,
                 borderRadius: BorderRadius.circular(4.0)),
-            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
-            margin: EdgeInsets.symmetric(vertical: 2),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
+            margin: const EdgeInsets.symmetric(vertical: 2),
             child: Wrap(
               crossAxisAlignment: WrapCrossAlignment.end,
               children: [
@@ -330,7 +330,7 @@ class _VipRankState extends State<VipRank> {
                         color: Colors.white,
                       )
                     : Container(
-                  padding: EdgeInsets.symmetric(horizontal: 1.5),
+                  padding: const EdgeInsets.symmetric(horizontal: 1.5),
                       child: SvgPicture.asset(
                           'assets/images/vip/vip-diamond.svg',
                           color: Colors.white,

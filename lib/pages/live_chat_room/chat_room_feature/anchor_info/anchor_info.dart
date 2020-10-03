@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_live_stream/core/services/service_module.dart';
 
 class AnchorInfo extends StatefulWidget {
   @override
@@ -9,6 +9,9 @@ class AnchorInfo extends StatefulWidget {
 }
 
 class _AnchorInfoState extends State<AnchorInfo> {
+
+  final systemInfoService = Get.find<SystemInfoService>();
+
   var _anchorInfoPageController; // 在線人數,人氣值,輪播控制器
   Timer _switchInfoTimer; // 切換在線人數,人氣值的timer
   int _infoPageIndex = 0; // 在線人數 = 0, 人氣值 = 1
@@ -97,15 +100,15 @@ class _AnchorInfoState extends State<AnchorInfo> {
 
   @override
   Widget build(BuildContext context) {
-   final maxWidth =  MediaQuery.of(context).size.width;
+    final maxWidth =  systemInfoService.screenMaxWidth;
     const containerHeight = 45.0;
     const paddingValue = 4.0; // 整個主播資訊容器的padding
     const borderRadiusValue = 12.0; // 邊框圓角
     return Container(
           alignment: Alignment.centerLeft,
-          margin: EdgeInsets.only(left: 8.0,top: 8.0),
+          margin: const EdgeInsets.only(left: 8.0,top: 8.0),
           child: Container(
-            padding: EdgeInsets.all(paddingValue),
+            padding:const EdgeInsets.all(paddingValue),
             width: maxWidth * 0.45,
             height: containerHeight,
             decoration: BoxDecoration(
@@ -129,7 +132,7 @@ class _AnchorInfoState extends State<AnchorInfo> {
                 Expanded(
                   flex: 8,
                   child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 2.0),
+                    margin: const EdgeInsets.symmetric(horizontal: 2.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
@@ -138,7 +141,7 @@ class _AnchorInfoState extends State<AnchorInfo> {
                           child: Container(
                             key: _keyAnchorName,
                             alignment: Alignment.centerLeft,
-                            padding: EdgeInsets.only(left: 2.0),
+                            padding: const EdgeInsets.only(left: 2.0),
                             child: Stack(
                               alignment: Alignment.center,
                               children: [

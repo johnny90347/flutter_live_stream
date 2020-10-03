@@ -8,7 +8,7 @@ class QuickMessage extends StatelessWidget {
     return Container(
       height: 30.0,
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 8.0),
+      padding:const EdgeInsets.symmetric(horizontal: 8.0),
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: [

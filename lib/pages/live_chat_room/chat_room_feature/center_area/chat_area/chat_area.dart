@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_live_stream/core/services/system_info_service/system_info_service.dart';
 import 'package:flutter_live_stream/pages/live_chat_room/chat_room_feature/center_area/chat_area/chat_input/chat_input.dart';
 import 'package:flutter_live_stream/core/controllers/global_controller.dart';
 import 'package:flutter_live_stream/core/controllers/live_chat_room_controller.dart';
@@ -16,6 +17,7 @@ class ChatArea extends StatefulWidget {
 class _ChatAreaState extends State<ChatArea>
     with SingleTickerProviderStateMixin {
   final ctr = Get.find<LiveChatRoomController>();
+  final systemInfoService = Get.find<SystemInfoService>();
   // 監聽鍵盤的實體
   KeyboardVisibilityNotification _keyboardVisibility =
       new KeyboardVisibilityNotification();
@@ -43,7 +45,7 @@ class _ChatAreaState extends State<ChatArea>
         Timer(Duration(milliseconds: 500), () {
           // 取的鍵盤高度
           final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
-          _keyboardHeight = keyboardHeight - ctr.bottomPanelHeight;
+          _keyboardHeight = keyboardHeight - systemInfoService.bottomPanelHeight;
           setState(() {});
         });
         //　鍵盤消失

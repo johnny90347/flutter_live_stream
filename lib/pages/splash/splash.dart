@@ -12,6 +12,7 @@ class Splash extends StatefulWidget {
 class _SplashPageState extends State<Splash> {
   final routerService = Get.find<RouterService>();
   final globalController = Get.find<GlobalController>();
+  final systemInfoService = Get.find<SystemInfoService>();
 
   @override
   void initState() {
@@ -19,8 +20,20 @@ class _SplashPageState extends State<Splash> {
     globalController.initAllRequire();
   }
 
+  ///取得系統資訊
+  _getSystemInfo() {
+    if (systemInfoService.screenMaxWidth == null &&
+        systemInfoService.screenMaxHeight == null &&
+        systemInfoService.statusBarHeight == null) {
+      systemInfoService.screenMaxWidth = MediaQuery.of(context).size.width;
+      systemInfoService.screenMaxHeight = MediaQuery.of(context).size.height;
+      systemInfoService.statusBarHeight = MediaQuery.of(context).padding.top;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    _getSystemInfo();
     return Scaffold(
       appBar: AppBar(
         title: Text('Splash'),
@@ -29,10 +42,7 @@ class _SplashPageState extends State<Splash> {
         child: Column(
           children: [
             Obx(() => Text('${globalController.loadingState.value}')),
-            RaisedButton(
-                child: Text('拿資料'),
-                onPressed: () {
-                }),
+            RaisedButton(child: Text('拿資料'), onPressed: () {}),
             RaisedButton(
                 child: Text('去直播'),
                 onPressed: () {

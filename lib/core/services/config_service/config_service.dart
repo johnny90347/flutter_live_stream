@@ -7,7 +7,6 @@ import 'package:flutter_live_stream/models/index.dart';
 class ConfigService extends GetxService {
 
   FishLiveGameInfoModel _fishLiveInfo; // 直播的初始資訊
-
   FishLiveGameInfoModel get getFishLiveInfo => _fishLiveInfo;
 
   // 取得登入token (singular用)
