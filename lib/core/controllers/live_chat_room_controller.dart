@@ -1,4 +1,6 @@
 //套件
+import 'dart:async';
+
 import 'package:get/get.dart';
 export 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -40,17 +42,23 @@ class LiveChatRoomController extends GetxController {
 
   /// 初始化聊天房資訊
   void liveChatRoomInit() async {
-    await liveStreamService.initLiveStreamConnection();
-    await chatRoomService.initChatConnection();
+    liveStreamService.initLiveStreamConnection(callback: (){
+      print('LiveStream連線完成');
+      setupPlayerLobbyConnectListener();
+      getAnchorInfo();
+    });
+    chatRoomService.initChatConnection(callBack: (){
+      print('chatRoom連線完成');
+      setupChatMessageListener();
+    });
+    //TODO: 這裡很奇怪,放進去chatRoom連線完成在做,都會來不及拿到她傳過來的資訊
     setUpChatHistoryListener();
-    setupPlayerLobbyConnectListener();
-    setupChatMessageListener();
-    getAnchorInfo();
   }
 
   ///建立PlayerLobby 監聽 獲得主播資訊
   void setupPlayerLobbyConnectListener() {
     liveStreamService.setupPlayerLobbyConnectListener(callback: (msg) {
+      print('主播資訊$msg');
       // 這裡回來的msg都是list包著
       final resultMsg = PlayerLobbyConnectModel.fromJson(msg[0]);
       gifts = resultMsg.Gifts;
@@ -87,6 +95,9 @@ class LiveChatRoomController extends GetxController {
 
   /// 取得主播資訊
   void getAnchorInfo() {
-    liveStreamService.getAnchorInfo();
+    // 讓他晚點才開始拿資料
+    Timer(Duration(seconds: 1), (){
+      liveStreamService.getAnchorInfo();
+    });
   }
 }

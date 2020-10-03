@@ -37,7 +37,7 @@ class SignalRService extends GetxService {
               logging: (level, message) => print(message),
             ))
         .build();
-    return chatConnect.start().then((value) {
+    return  chatConnect.start().then((value) {
       callback();
     });
   }

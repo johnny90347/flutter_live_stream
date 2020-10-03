@@ -32,7 +32,7 @@ class _ChatAreaState extends State<ChatArea>
   @override
   void initState() {
     _setKeyboardListener();
-    _setupOpacityWithChane();
+    // _setupOpacityWithChane();
     super.initState();
   }
 
@@ -59,28 +59,28 @@ class _ChatAreaState extends State<ChatArea>
   }
 
   // 設定切換高度時,有透明動畫
-  _setupOpacityWithChane() {
-    ctr.openChatInput.listen((value) {
-      // 第一筆資料忽略
-      if(!_canStartListen){
-        _canStartListen =true;
-        return;
-      }
-
-      // 馬上先變透明
-      _opacityDuration = 0;
-      setState(() {
-        _opacity = 0;
-      });
-      // 300毫秒後 漸變還原
-      Timer(Duration(milliseconds: 200), () {
-        _opacityDuration = 200;
-        setState(() {
-          _opacity = 1;
-        });
-      });
-    });
-  }
+  // _setupOpacityWithChane() {
+  //   ctr.openChatInput.listen((value) {
+  //     // 第一筆資料忽略
+  //     if(!_canStartListen){
+  //       _canStartListen =true;
+  //       return;
+  //     }
+  //
+  //     // 馬上先變透明
+  //     _opacityDuration = 0;
+  //     setState(() {
+  //       _opacity = 0;
+  //     });
+  //     // 300毫秒後 漸變還原
+  //     Timer(Duration(milliseconds: 200), () {
+  //       _opacityDuration = 200;
+  //       setState(() {
+  //         _opacity = 1;
+  //       });
+  //     });
+  //   });
+  // }
 
   @override
   void dispose() {

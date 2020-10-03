@@ -9,19 +9,16 @@ class LiveStreamService extends GetxService{
   final configService = Get.find<ConfigService>();
 
   // 建立liveStream連線
-  Future initLiveStreamConnection() async {
+  void initLiveStreamConnection({@required callback}){
     print('開始initLiveStreamConnection');
-
     //liveStream連線區
-   return signalRService.liveStreamConnectHub(
-      callback: (() {
-        print('liveStream連線成功');
-      }),
+    signalRService.liveStreamConnectHub(
+      callback: callback,
     );
   }
 
   // 建立初始化資料監聽
-  setupPlayerLobbyConnectListener({@required callback}) async{
+  setupPlayerLobbyConnectListener({@required callback}){
     return signalRService.addListener(url: 'livestreamapi', id: 'PlayerLobbyConnect', callback: callback);
   }
 

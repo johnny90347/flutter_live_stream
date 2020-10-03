@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_live_stream/core/controllers/live_chat_room_controller.dart';
+import 'package:get/get.dart';
 
 
 class QuickMessage extends StatelessWidget {
@@ -28,26 +29,32 @@ class QuickMessage extends StatelessWidget {
 class MessageItem extends StatelessWidget {
 
   final text;
-
   MessageItem({@required this.text});
+
+  final ctr = Get.find<LiveChatRoomController>();
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Container(
-          alignment: Alignment.center,
-          margin: EdgeInsets.only(right: 4.0),
-          padding: EdgeInsets.symmetric(vertical: 3.0,horizontal: 8.0),
-          decoration: BoxDecoration(
-            color: Colors.black38,
-            borderRadius: BorderRadius.circular(6.0)
+        InkWell(
+          onTap: (){
+            ctr.sendChatMessage(msg: text);
+          },
+          child: Container(
+            alignment: Alignment.center,
+            margin: EdgeInsets.only(right: 4.0),
+            padding: EdgeInsets.symmetric(vertical: 3.0,horizontal: 8.0),
+            decoration: BoxDecoration(
+              color: Colors.black38,
+              borderRadius: BorderRadius.circular(6.0)
+            ),
+            child: Text(text,style: TextStyle(
+              fontSize: 12.0,
+              color: Colors.white,
+            ),),
           ),
-          child: Text(text,style: TextStyle(
-            fontSize: 12.0,
-            color: Colors.white,
-          ),),
         ),
       ],
     );

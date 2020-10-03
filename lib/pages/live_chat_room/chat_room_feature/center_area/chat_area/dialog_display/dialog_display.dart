@@ -105,6 +105,29 @@ class _DialogDisplayState extends State<DialogDisplay> {
     }
   }
 
+  //切割tag 與一般訊息
+  List<TextSpan> _splitMessage({@required String message}){
+
+    // 回傳出去textSpanList
+    List<TextSpan> textSpanList = [];
+
+    // 篩選@XXX+(空白);
+    RegExp exp = new RegExp(r"(^[@]\S+,)");
+    // 如果有符合tag檢查
+    print(exp.hasMatch(message));
+    if(exp.hasMatch(message)){
+
+      final idx = message.indexOf(",");
+      final List msgList = [message.substring(0,idx).trim()+' ', message.substring(idx+1).trim()];
+      textSpanList.add(TextSpan(text: msgList[0],style: TextStyle(color: Color(0xfffdac33))));
+      textSpanList.add(TextSpan(text: msgList[1]));
+    }else{
+      textSpanList.add(TextSpan(text: message));
+    }
+
+    return textSpanList;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -126,7 +149,7 @@ class _DialogDisplayState extends State<DialogDisplay> {
                         isAnchor: ctr.chatList[index].IsAnchor,
                         level: ctr.chatList[index].Level,
                         name: ctr.chatList[index].NickName,
-                        message: ctr.chatList[index].Body);
+                        textSpanList:_splitMessage(message:  ctr.chatList[index].Body));
                   }),
             ),
           ),
@@ -163,15 +186,16 @@ class _DialogDisplayState extends State<DialogDisplay> {
 class MessageItem extends StatelessWidget {
   final int level;
   final String name;
-  final String message;
+  final List<TextSpan> textSpanList;
   final bool isAnchor;
 
   MessageItem(
       {@required this.level,
       @required this.isAnchor,
       @required this.name,
-      @required this.message});
+      @required this.textSpanList});
 
+  final ctr = Get.find<LiveChatRoomController>();
   final backgroundColor = Colors.black38;
   final messageFontSize = 12.0;
   // 由於 listView 直向,寬度會被強制擴展,為了讓對話有彈性的背景顏色,所以我嘗試後選擇
@@ -183,43 +207,51 @@ class MessageItem extends StatelessWidget {
     return Row(
       children: [
         Flexible(
-          child: Container(
-            decoration: BoxDecoration(
-                color: backgroundColor,
-                borderRadius: BorderRadius.circular(4.0)),
-            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
-            margin: const EdgeInsets.symmetric(vertical: 2),
-            child: Wrap(
-              crossAxisAlignment: WrapCrossAlignment.end,
-              children: [
-                ConstrainedBox(
-                    constraints: BoxConstraints(minHeight: 16.0), // 給個最小高度
-                    child: VipRank(
-                      rank: level,
-                      isAnchor: isAnchor,
-                    )),
-                SizedBox(
-                  width: 4.0,
-                ),
-                Text(
-                  name,
-                  style: TextStyle(
-                      fontSize: messageFontSize,
-                      color: Color(0xffdbdbdb),
-                      fontWeight: FontWeight.w700),
-                ),
-                SizedBox(
-                  width: 2.0,
-                ),
-                RichText(
-                  textAlign: TextAlign.start,
-                  text: TextSpan(
-                      style: TextStyle(
-                          fontSize: messageFontSize,
-                          fontWeight: FontWeight.w500),
-                      children: [TextSpan(text: message)]),
-                ),
-              ],
+          child: InkWell(
+            onTap: (){
+              print('tag功能');
+              // 目前測試內部含有@的文字有些會被阻擋
+              ctr.openChatInput.value = true;
+              ctr.inputController.text = '@$name, ';
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                  color: backgroundColor,
+                  borderRadius: BorderRadius.circular(4.0)),
+              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
+              margin: const EdgeInsets.symmetric(vertical: 2),
+              child: Wrap(
+                crossAxisAlignment: WrapCrossAlignment.end,
+                children: [
+                  ConstrainedBox(
+                      constraints: BoxConstraints(minHeight: 16.0), // 給個最小高度
+                      child: VipRank(
+                        rank: level,
+                        isAnchor: isAnchor,
+                      )),
+                  SizedBox(
+                    width: 4.0,
+                  ),
+                  Text(
+                    name,
+                    style: TextStyle(
+                        fontSize: messageFontSize,
+                        color: Color(0xffdbdbdb),
+                        fontWeight: FontWeight.w700),
+                  ),
+                  SizedBox(
+                    width: 2.0,
+                  ),
+                  RichText(
+                    textAlign: TextAlign.start,
+                    text: TextSpan(
+                        style: TextStyle(
+                            fontSize: messageFontSize,
+                            fontWeight: FontWeight.w500),
+                        children: textSpanList),
+                  ),
+                ],
+              ),
             ),
           ),
         )
