@@ -14,8 +14,8 @@ class LiveChatRoomController extends GetxController {
 
 
   /// 屬性
-  RxBool openChatInput = false.obs; //開啟聊天輸入框
   TextEditingController inputController; // 輸入框textField控制器
+  FocusNode inputFocusNode; // 輸入框的聚焦
   List<GiftDetailPart> gifts; //禮物列表
   List<VideoDetailPart> videos; //直播影片
   AnchorLobbyInfoDetailPart anchorLobbyInfo; //主播資訊

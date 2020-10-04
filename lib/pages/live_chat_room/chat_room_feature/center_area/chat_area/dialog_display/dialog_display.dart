@@ -211,8 +211,11 @@ class MessageItem extends StatelessWidget {
             onTap: (){
               print('tag功能');
               // 目前測試內部含有@的文字有些會被阻擋
-              ctr.openChatInput.value = true;
-              ctr.inputController.text = '@$name, ';
+              final tagStr = '@$name, ';
+              ctr.inputFocusNode.requestFocus();
+              ctr.inputController.text = tagStr;
+              ctr.inputController.selection = TextSelection.fromPosition(TextPosition(offset: tagStr.length));
+              // 加入tag到input,移動光標到最後一個字
             },
             child: Container(
               decoration: BoxDecoration(

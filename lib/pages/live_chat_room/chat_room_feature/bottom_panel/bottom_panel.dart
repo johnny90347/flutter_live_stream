@@ -63,7 +63,7 @@ class _BottomPanelState extends State<BottomPanel> {
                     icon: Icons.textsms,
                     diameter: circleHeight,
                     onTap: () {
-                      ctr.openChatInput.value = true;
+                      ctr.inputFocusNode.requestFocus();
                     },
                   ),
                   SizedBox(

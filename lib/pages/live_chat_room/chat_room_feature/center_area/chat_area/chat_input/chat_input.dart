@@ -6,42 +6,22 @@ class ChatInput extends StatefulWidget {
   _ChatInputState createState() => _ChatInputState();
 }
 
-class _ChatInputState extends State<ChatInput> {
+class _ChatInputState extends State<ChatInput>{
   final liveChatRoomController = Get.find<LiveChatRoomController>();
-
-  FocusNode _inputFocusNode; // 輸入框的聚焦
-
 
   @override
   void initState() {
-    _listenOpenChatInput();
-    _inputFocusNode = FocusNode(); // node初始化
+    // _listenOpenChatInput();
+    liveChatRoomController.inputFocusNode = FocusNode(); // node初始化
     liveChatRoomController.inputController = TextEditingController(); // 控制器初始化
     super.initState();
   }
 
   @override
   void dispose() {
-    _inputFocusNode.dispose();
+    liveChatRoomController.inputFocusNode.dispose();
     liveChatRoomController.inputController.dispose();
     super.dispose();
-  }
-
-  //監聽是否有人改變開啟聊天的數值
-  _listenOpenChatInput() {
-    liveChatRoomController.openChatInput.listen((isOpen) {
-      if (isOpen) {
-        // 請求焦點
-        _inputFocusNode.requestFocus();
-      }else{
-
-
-        // 取消焦點
-        FocusScope.of(context).requestFocus(FocusNode());
-        liveChatRoomController.inputController.clear();
-      }
-      //TODO : 如果input收起來,要把textFiled內的內容清掉
-    });
   }
 
   @override
@@ -65,7 +45,7 @@ class _ChatInputState extends State<ChatInput> {
           Expanded(
             flex: 8,
             child: TextField(
-              focusNode: _inputFocusNode,
+              focusNode: liveChatRoomController.inputFocusNode,
               textInputAction: TextInputAction.send,
               onSubmitted: (value) {
                 final msg =  liveChatRoomController.inputController.text;

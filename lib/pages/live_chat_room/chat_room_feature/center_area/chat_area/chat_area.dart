@@ -6,7 +6,8 @@ import 'package:flutter_live_stream/core/controllers/global_controller.dart';
 import 'package:flutter_live_stream/core/controllers/live_chat_room_controller.dart';
 import 'package:flutter_live_stream/pages/live_chat_room/chat_room_feature/center_area/chat_area/dialog_display/dialog_display.dart';
 import 'package:flutter_live_stream/pages/live_chat_room/chat_room_feature/center_area/chat_area/quick_message/quick_message.dart';
-import 'package:keyboard_visibility/keyboard_visibility.dart';
+import 'package:keyboard_utils/keyboard_listener.dart';
+import 'package:keyboard_utils/keyboard_utils.dart';
 
 // 沒有動畫的版本 => 好像比較好
 class ChatArea extends StatefulWidget {
@@ -14,77 +15,46 @@ class ChatArea extends StatefulWidget {
   _ChatAreaState createState() => _ChatAreaState();
 }
 
-class _ChatAreaState extends State<ChatArea>
-    with SingleTickerProviderStateMixin {
+class _ChatAreaState extends State<ChatArea> {
   final ctr = Get.find<LiveChatRoomController>();
   final systemInfoService = Get.find<SystemInfoService>();
-  // 監聽鍵盤的實體
-  KeyboardVisibilityNotification _keyboardVisibility =
-      new KeyboardVisibilityNotification();
-  int _keyboardVisibilitySubscriberId;
-  double _keyboardHeight = 0; // 鍵盤高度
+  // 鍵盤監聽實體
+  KeyboardUtils _keyboardUtils = KeyboardUtils();
+  int _idKeyboardListener;
+  double _keyboardPadding; // 鍵盤滑上來的高度高度
   double _chatInputHeight = 40; // 聊天輸入的高,這是死的
-  double _opacity = 1; // 切換高度時的透明度
-  int _opacityDuration = 0; // 透明度的動畫時間 (點擊下去馬上消失)
-  bool _canStartListen = false; // 監聽第一次會先傳預設值過來,但我不要
-
+  double _shiftDistance = 0;
 
   @override
   void initState() {
-    _setKeyboardListener();
-    // _setupOpacityWithChane();
+    //起初,輸入框要躲下去畫面
+    _shiftDistance = -_chatInputHeight;
+    _setUpKeyBoardListener();
     super.initState();
   }
 
-  // 設置鍵盤彈出監聽
-  _setKeyboardListener() {
-    _keyboardVisibilitySubscriberId =
-        _keyboardVisibility.addNewListener(onChange: (bool visible) {
-      //　鍵盤彈出
-      if (visible) {
-        Timer(Duration(milliseconds: 500), () {
-          // 取的鍵盤高度
-          final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
-          _keyboardHeight = keyboardHeight - systemInfoService.bottomPanelHeight;
-          setState(() {});
-        });
-        //　鍵盤消失
-      } else {
-        // 取消焦點
-        FocusScope.of(context).requestFocus(FocusNode());
-        // 關閉chatInput
-        ctr.openChatInput.value = false;
+  //監聽鍵盤高度
+  _setUpKeyBoardListener() {
+    _idKeyboardListener = _keyboardUtils.add(
+        listener: KeyboardListener(willHideKeyboard: () {
+      _shiftDistance = -_chatInputHeight;
+      setState(() {});
+    }, willShowKeyboard: (double keyboardHeight) {
+      if (_keyboardPadding == null) {
+        _keyboardPadding = keyboardHeight - systemInfoService.bottomPanelHeight;
       }
-    });
+      _shiftDistance = _keyboardPadding;
+      setState(() {});
+    }));
   }
-
-  // 設定切換高度時,有透明動畫
-  // _setupOpacityWithChane() {
-  //   ctr.openChatInput.listen((value) {
-  //     // 第一筆資料忽略
-  //     if(!_canStartListen){
-  //       _canStartListen =true;
-  //       return;
-  //     }
-  //
-  //     // 馬上先變透明
-  //     _opacityDuration = 0;
-  //     setState(() {
-  //       _opacity = 0;
-  //     });
-  //     // 300毫秒後 漸變還原
-  //     Timer(Duration(milliseconds: 200), () {
-  //       _opacityDuration = 200;
-  //       setState(() {
-  //         _opacity = 1;
-  //       });
-  //     });
-  //   });
-  // }
 
   @override
   void dispose() {
-    _keyboardVisibility.removeListener(_keyboardVisibilitySubscriberId);
+    // 取消鍵盤監聽
+    _keyboardUtils.unsubscribeListener(subscribingId: _idKeyboardListener);
+    if (_keyboardUtils.canCallDispose()) {
+      _keyboardUtils.dispose();
+    }
     super.dispose();
   }
 
@@ -99,8 +69,6 @@ class _ChatAreaState extends State<ChatArea>
           onTap: () {
             // 取消所有焦點
             FocusScope.of(context).requestFocus(FocusNode());
-            // chatInput 隱藏
-            ctr.openChatInput.value = false;
           },
           child: Container(
             height: maxHeight,
@@ -108,45 +76,31 @@ class _ChatAreaState extends State<ChatArea>
             child: Stack(
               children: [
                 // 照著鍵盤高度 改變位置
-                Obx(
-                  () => Positioned(
-                    bottom: ctr.openChatInput.value
-                        ? _keyboardHeight
-                        : -_chatInputHeight,
-//                    bottom: liveChatRoomController.openChatInput.value
-//                        ? _keyboardHeight
-//                        : 0,
-                    right: 0,
-                    left: 0,
-                    top: ctr.openChatInput.value
-                        ? -_keyboardHeight
-                        : _chatInputHeight,
-//                    top: liveChatRoomController.openChatInput.value
-//                        ? -_keyboardHeight
-//                        : 0,
-                    child: AnimatedOpacity(
-                      duration: Duration(milliseconds: _opacityDuration),
-                      opacity: _opacity,
-                      child: Column(
-                        children: [
-                          Expanded(
-                            flex: 10,
-                            child: Container(),
-                          ),
-                          Expanded(
-                            flex: 4,
-                            child: DialogDisplay(),
-                          ),
-                          SizedBox(
-                            height: 5.0,
-                          ),
-                          QuickMessage(), // 快速訊息
-                          ChatInput(), // 聊天輸入
-                        ],
+                Positioned(
+                  bottom: _shiftDistance,
+                  // bottom: 0,
+                  right: 0,
+                  left: 0,
+                  top: -_shiftDistance,
+                  // top: 0,
+                  child: Column(
+                    children: [
+                      Expanded(
+                        flex: 10,
+                        child: Container(),
                       ),
-                    ),
+                      Expanded(
+                        flex: 4,
+                        child: DialogDisplay(),
+                      ),
+                      SizedBox(
+                        height: 5.0,
+                      ),
+                      QuickMessage(), // 快速訊息
+                      ChatInput(), // 聊天輸入
+                    ],
                   ),
-                )
+                ),
               ],
             ),
           ),
