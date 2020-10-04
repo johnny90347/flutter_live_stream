@@ -36,6 +36,8 @@ class _DialogDisplayState extends State<DialogDisplay> {
 
   // 列表滾動至底部
   _scrollToBottom({@required bool useAnimate}) {
+    print('訊息數量${ctr.chatList.length}');
+    // print('最大高度${_scrollController.position.maxScrollExtent}');
     //分動畫滾動 and 非動畫
     if (useAnimate) {
       _scrollController.animateTo(_scrollController.position.maxScrollExtent,
@@ -106,7 +108,9 @@ class _DialogDisplayState extends State<DialogDisplay> {
   }
 
   //切割tag 與一般訊息
-  List<TextSpan> _splitMessage({@required String message}){
+  List<TextSpan> _splitMessage({@required String message}) {
+    //刪除開頭和結尾空白
+    final okMessage = message.trim();
 
     // 回傳出去textSpanList
     List<TextSpan> textSpanList = [];
@@ -114,15 +118,20 @@ class _DialogDisplayState extends State<DialogDisplay> {
     // 篩選@XXX+(空白);
     RegExp exp = new RegExp(r"(^[@]\S+,)");
     // 如果有符合tag檢查
-    print(exp.hasMatch(message));
-    if(exp.hasMatch(message)){
-
-      final idx = message.indexOf(",");
-      final List msgList = [message.substring(0,idx).trim()+' ', message.substring(idx+1).trim()];
-      textSpanList.add(TextSpan(text: msgList[0],style: TextStyle(color: Color(0xfffdac33))));
+    print('$message檢查是${exp.hasMatch(okMessage)}');
+    if (exp.hasMatch(okMessage)) {
+      final idx = okMessage.indexOf(","); //找出逗號的位置,並切割
+      final firstPart = (okMessage.substring(0, idx)+' ').replaceFirst('@', ''); // 第一段文字的@拿掉
+      final secondPart = okMessage.substring(idx + 1);
+      final List msgList = [
+        firstPart,
+        secondPart
+      ];
+      textSpanList.add(TextSpan(
+          text: msgList[0], style: TextStyle(color: Color(0xfffdac33))));
       textSpanList.add(TextSpan(text: msgList[1]));
-    }else{
-      textSpanList.add(TextSpan(text: message));
+    } else {
+      textSpanList.add(TextSpan(text: okMessage));
     }
 
     return textSpanList;
@@ -149,7 +158,8 @@ class _DialogDisplayState extends State<DialogDisplay> {
                         isAnchor: ctr.chatList[index].IsAnchor,
                         level: ctr.chatList[index].Level,
                         name: ctr.chatList[index].NickName,
-                        textSpanList:_splitMessage(message:  ctr.chatList[index].Body));
+                        textSpanList:
+                            _splitMessage(message: ctr.chatList[index].Body));
                   }),
             ),
           ),
@@ -208,20 +218,22 @@ class MessageItem extends StatelessWidget {
       children: [
         Flexible(
           child: InkWell(
-            onTap: (){
+            onTap: () {
               print('tag功能');
               // 目前測試內部含有@的文字有些會被阻擋
               final tagStr = '@$name, ';
               ctr.inputFocusNode.requestFocus();
               ctr.inputController.text = tagStr;
-              ctr.inputController.selection = TextSelection.fromPosition(TextPosition(offset: tagStr.length));
+              ctr.inputController.selection = TextSelection.fromPosition(
+                  TextPosition(offset: tagStr.length));
               // 加入tag到input,移動光標到最後一個字
             },
             child: Container(
               decoration: BoxDecoration(
                   color: backgroundColor,
                   borderRadius: BorderRadius.circular(4.0)),
-              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
               margin: const EdgeInsets.symmetric(vertical: 2),
               child: Wrap(
                 crossAxisAlignment: WrapCrossAlignment.end,
@@ -243,7 +255,7 @@ class MessageItem extends StatelessWidget {
                         fontWeight: FontWeight.w700),
                   ),
                   SizedBox(
-                    width: 2.0,
+                    width: 5.0,
                   ),
                   RichText(
                     textAlign: TextAlign.start,
@@ -365,12 +377,12 @@ class _VipRankState extends State<VipRank> {
                         color: Colors.white,
                       )
                     : Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 1.5),
-                      child: SvgPicture.asset(
+                        padding: const EdgeInsets.symmetric(horizontal: 1.5),
+                        child: SvgPicture.asset(
                           'assets/images/vip/vip-diamond.svg',
                           color: Colors.white,
                         ),
-                    ),
+                      ),
               ),
               SizedBox(
                 width: widget.isAnchor ? 1 : 3,
@@ -380,10 +392,10 @@ class _VipRankState extends State<VipRank> {
                 child: Text(
                   widget.isAnchor ? '主播' : '${widget.rank}',
                   style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 10.0,
-                      fontWeight: FontWeight.w700,
-                     ),
+                    color: Colors.white,
+                    fontSize: 10.0,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
               SizedBox(

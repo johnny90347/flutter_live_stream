@@ -6,7 +6,7 @@ class ChatInput extends StatefulWidget {
   _ChatInputState createState() => _ChatInputState();
 }
 
-class _ChatInputState extends State<ChatInput>{
+class _ChatInputState extends State<ChatInput> {
   final liveChatRoomController = Get.find<LiveChatRoomController>();
 
   @override
@@ -35,9 +35,14 @@ class _ChatInputState extends State<ChatInput>{
         children: [
           Expanded(
             flex: 1,
-            child: IconButton(icon: Icon(Icons.record_voice_over,color: Colors.black87,), onPressed: (){
-              print('彈幕');
-            }),
+            child: IconButton(
+                icon: Icon(
+                  Icons.record_voice_over,
+                  color: Colors.black87,
+                ),
+                onPressed: () {
+                  print('彈幕');
+                }),
           ),
           SizedBox(
             width: 2.0,
@@ -48,19 +53,20 @@ class _ChatInputState extends State<ChatInput>{
               focusNode: liveChatRoomController.inputFocusNode,
               textInputAction: TextInputAction.send,
               onSubmitted: (value) {
-                final msg =  liveChatRoomController.inputController.text;
-                if(msg != ''){
+                final msg = liveChatRoomController.inputController.text;
+                if (msg != '') {
                   liveChatRoomController.sendChatMessage(msg: msg);
-
+                  liveChatRoomController.inputController.clear();
                 }
               },
               textAlign: TextAlign.left,
-               controller: liveChatRoomController.inputController,
+              controller: liveChatRoomController.inputController,
               decoration: InputDecoration(
                 hintText: '开始聊天吧！',
                 fillColor: Colors.white,
                 filled: true,
-                contentPadding: EdgeInsets.symmetric(vertical: 2.0,horizontal: 10.0),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 2.0, horizontal: 10.0),
                 enabledBorder: OutlineInputBorder(
                   borderSide:
                       BorderSide(color: Colors.grey.shade300, width: 1.0),
@@ -77,9 +83,14 @@ class _ChatInputState extends State<ChatInput>{
           ),
           Expanded(
             flex: 1,
-            child: IconButton(icon: Icon(Icons.mic_none,color: Colors.black87,), onPressed: (){
-              print('彈幕');
-            }),
+            child: IconButton(
+                icon: Icon(
+                  Icons.mic_none,
+                  color: Colors.black87,
+                ),
+                onPressed: () {
+                  print('彈幕');
+                }),
           ),
         ],
       ),
