@@ -18,6 +18,7 @@ class _DialogDisplayState extends State<DialogDisplay> {
   ScrollController _scrollController;
   bool _isOnBottom = true;
   bool _showScrollButton = false;
+  double _scrollCurrentPosition = 0; // 向上滑時,記下位置(為了解決無法滑到最底的問題workaround)
 
   @override
   void initState() {
@@ -36,8 +37,6 @@ class _DialogDisplayState extends State<DialogDisplay> {
 
   // 列表滾動至底部
   _scrollToBottom({@required bool useAnimate}) {
-    print('訊息數量${ctr.chatList.length}');
-    // print('最大高度${_scrollController.position.maxScrollExtent}');
     //分動畫滾動 and 非動畫
     if (useAnimate) {
       _scrollController.animateTo(_scrollController.position.maxScrollExtent,
@@ -61,6 +60,17 @@ class _DialogDisplayState extends State<DialogDisplay> {
         // 如果在底部才允許字幕自動滾動
         if (_isOnBottom) {
           _scrollToBottom(useAnimate: true);
+        } else {
+          // 如果不在底部要微微的滾動,他才會更新到最新的maxScrollExtent ,原因不明
+          _scrollCurrentPosition += 0.01;
+          _scrollController.animateTo(_scrollCurrentPosition,
+              duration: const Duration(milliseconds: 10), curve: Curves.linear);
+
+          // 顯示滾動到最下面的按鈕
+          if (_showScrollButton != true) {
+            _showScrollButton = true;
+            setState(() {});
+          }
         }
       });
     });
@@ -72,9 +82,11 @@ class _DialogDisplayState extends State<DialogDisplay> {
       // 向上滾就顯示滾到底部按鈕 , 並且一定不是在底部
       if (_scrollController.position.userScrollDirection ==
           ScrollDirection.forward) {
-        if (_isOnBottom != false && _showScrollButton != true) {
+        //如果往上滾,存下位置
+        _scrollCurrentPosition = _scrollController.position.pixels;
+
+        if (_isOnBottom != false) {
           _isOnBottom = false;
-          _showScrollButton = true;
           setState(() {});
         }
       }
@@ -118,15 +130,13 @@ class _DialogDisplayState extends State<DialogDisplay> {
     // 篩選@XXX+(空白);
     RegExp exp = new RegExp(r"(^[@]\S+,)");
     // 如果有符合tag檢查
-    print('$message檢查是${exp.hasMatch(okMessage)}');
+
     if (exp.hasMatch(okMessage)) {
       final idx = okMessage.indexOf(","); //找出逗號的位置,並切割
-      final firstPart = (okMessage.substring(0, idx)+' ').replaceFirst('@', ''); // 第一段文字的@拿掉
+      final firstPart = (okMessage.substring(0, idx) + ' ')
+          .replaceFirst('@', ''); // 第一段文字的@拿掉
       final secondPart = okMessage.substring(idx + 1);
-      final List msgList = [
-        firstPart,
-        secondPart
-      ];
+      final List msgList = [firstPart, secondPart];
       textSpanList.add(TextSpan(
           text: msgList[0], style: TextStyle(color: Color(0xfffdac33))));
       textSpanList.add(TextSpan(text: msgList[1]));
@@ -168,22 +178,30 @@ class _DialogDisplayState extends State<DialogDisplay> {
           // 滾動至底部按鈕
           bottom: 10,
           child: _showScrollButton
-              ? Container(
-                  width: 40.0,
-                  height: 20.0,
-                  decoration: BoxDecoration(
-                      color: Colors.black26,
-                      borderRadius: BorderRadius.circular(4.0)),
-                  child: IconButton(
-                      padding: EdgeInsets.zero,
-                      icon: Icon(
-                        Icons.keyboard_arrow_down,
-                        size: 20.0,
+              ? InkWell(
+                  onTap: () {
+                    _scrollToBottom(useAnimate: true);
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 6.0, horizontal: 10.0),
+                    decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey,
+                            spreadRadius: 1,
+                            blurRadius: 1,
+                            offset: Offset(1, 1), // changes position of shadow
+                          ),
+                        ],
                         color: Colors.white,
-                      ),
-                      onPressed: () {
-                        _scrollToBottom(useAnimate: true);
-                      }),
+                        borderRadius: BorderRadius.circular(4.0)),
+                    child: Text(
+                      '有新的讯息',
+                      style: TextStyle(color: Colors.black, fontSize: 12.0),
+                    ),
+                  ),
                 )
               : SizedBox(),
         )
