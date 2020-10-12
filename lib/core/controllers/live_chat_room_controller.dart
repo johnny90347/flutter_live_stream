@@ -12,7 +12,6 @@ class LiveChatRoomController extends GetxController {
   final liveStreamService = Get.find<LiveStreamService>();
   final chatRoomService = Get.find<ChatRoomService>();
 
-
   /// 屬性
   TextEditingController inputController; // 輸入框textField控制器
   FocusNode inputFocusNode; // 輸入框的聚焦
@@ -22,32 +21,14 @@ class LiveChatRoomController extends GetxController {
 
   var chatList = RxList<CommonMessageModel>([]);
 
-  ///測試資料
-  RxList<String> listItems = [
-    '這是開頭',
-    '主播好',
-    '主播棒',
-    '安安安安',
-    '早安',
-    '晚安',
-    '吃飯沒',
-    '主播好主播好主播好主播好主播好主播好主播好主播好主播好主播好主播好主播好主播好主播好主播好主播好主播好主播好',
-    '主播棒',
-    '安安安安',
-    '早安',
-    '晚安',
-    '吃飯沒',
-    '這是結尾'
-  ].obs;
-
   /// 初始化聊天房資訊
   void liveChatRoomInit() async {
-    liveStreamService.initLiveStreamConnection(callback: (){
+    liveStreamService.initLiveStreamConnection(callback: () {
       print('LiveStream連線完成');
       setupPlayerLobbyConnectListener();
       getAnchorInfo();
     });
-    chatRoomService.initChatConnection(callBack: (){
+    chatRoomService.initChatConnection(callBack: () {
       print('chatRoom連線完成');
       setupChatMessageListener();
     });
@@ -61,7 +42,11 @@ class LiveChatRoomController extends GetxController {
       print('主播資訊$msg');
       // 這裡回來的msg都是list包著
       final resultMsg = PlayerLobbyConnectModel.fromJson(msg[0]);
-      gifts = resultMsg.Gifts;
+      // 禮物只留下簡體名稱
+      gifts = resultMsg.Gifts.map((item) {
+        item.Name = _giftNameFilter(originName: item.Name);
+        return item;
+      }).toList();
       videos = resultMsg.Videos;
       anchorLobbyInfo = resultMsg.AnchorLobbyInfo;
     });
@@ -88,16 +73,21 @@ class LiveChatRoomController extends GetxController {
   }
 
   /// 發送聊天訊息
-  void sendChatMessage({@required String msg}){
+  void sendChatMessage({@required String msg}) {
     chatRoomService.sendMessage(msg);
-    
   }
 
   /// 取得主播資訊
   void getAnchorInfo() {
     // 讓他晚點才開始拿資料
-    Timer(Duration(seconds: 1), (){
+    Timer(Duration(seconds: 1), () {
       liveStreamService.getAnchorInfo();
     });
+  }
+
+  /// 禮物名稱過濾
+  String _giftNameFilter({@required String originName}) {
+    final strArray = originName.split('#');
+    return strArray[0]; // 簡體
   }
 }

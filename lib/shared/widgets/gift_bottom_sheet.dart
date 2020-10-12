@@ -1,12 +1,6 @@
 import 'package:flutter/material.dart';
-
-class MarkModel {
-  final name;
-  final value;
-  final path;
-  final id;
-  MarkModel(this.name, this.id, this.value, this.path);
-}
+import 'package:flutter_live_stream/core/controllers/live_chat_room_controller.dart';
+import 'package:flutter_live_stream/models/index.dart';
 
 /// 使用 Get.bottomSheet() 開啟
 class GiftBottomSheet extends StatefulWidget {
@@ -15,20 +9,10 @@ class GiftBottomSheet extends StatefulWidget {
 }
 
 class _GiftBottomSheetState extends State<GiftBottomSheet> {
-  final giftList = [
-    MarkModel('棒棒糖', 1, 10, 'assets/images/gift/icon/gift_1.png'),
-    MarkModel('棒棒糖', 1, 10, 'assets/images/gift/icon/gift_1.png'),
-    MarkModel('棒棒糖', 1, 10, 'assets/images/gift/icon/gift_1.png'),
-    MarkModel('棒棒糖', 1, 10, 'assets/images/gift/icon/gift_1.png'),
-    MarkModel('棒棒糖', 1, 10, 'assets/images/gift/icon/gift_1.png'),
-    MarkModel('棒棒糖', 1, 10, 'assets/images/gift/icon/gift_1.png'),
-    MarkModel('棒棒糖', 1, 10, 'assets/images/gift/icon/gift_1.png'),
-    MarkModel('棒棒糖', 1, 10, 'assets/images/gift/icon/gift_1.png'),
-    MarkModel('棒棒糖', 1, 10, 'assets/images/gift/icon/gift_1.png'),
-    MarkModel('棒棒糖', 1, 10, 'assets/images/gift/icon/gift_1.png'),
-  ];
+  final ctr = Get.find<LiveChatRoomController>();
+  GiftDetailPart _selectedItem; // 是否有選取到
 
-  MarkModel _selectedItem; // 是否有選取到
+
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +46,7 @@ class _GiftBottomSheetState extends State<GiftBottomSheet> {
                 width: screenMaxWidth,
                 decoration: BoxDecoration(color: Colors.grey.shade100),
                 child: Wrap(
-                  children: giftList
+                  children: ctr.gifts
                       .map((item) => InkWell(
                             onTap: () {
                               _selectedItem = item;
@@ -79,7 +63,7 @@ class _GiftBottomSheetState extends State<GiftBottomSheet> {
                                       height: giftBoxWidth * 0.6,
                                       padding:
                                           EdgeInsets.all(giftBoxWidth * 0.05),
-                                      child: Image.asset(item.path),
+                                      child: Image.asset('assets/images/${item.Icon}'),
                                       decoration: _selectedItem == item // 是否有選取到
                                           ? BoxDecoration(
                                               border: Border.all(
@@ -91,14 +75,14 @@ class _GiftBottomSheetState extends State<GiftBottomSheet> {
                                           : null,
                                     ),
                                     Text(
-                                      item.name,
+                                      item.Name,
                                       style: TextStyle(
                                           color: Colors.grey.shade700,
                                           fontWeight: FontWeight.w700,
                                           fontSize: 12.0),
                                     ),
                                     Text(
-                                      '${item.value}',
+                                      '${item.Value}',
                                       style: TextStyle(
                                           color: Color(0xffFFBC42),
                                           fontWeight: FontWeight.w700,
@@ -137,7 +121,7 @@ class _GiftBottomSheetState extends State<GiftBottomSheet> {
                     child: Text("送礼"),
                     shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
                     onPressed:_selectedItem != null ? (){
-
+                          print(_selectedItem.Name);
                     }:null
                   ),
                 )

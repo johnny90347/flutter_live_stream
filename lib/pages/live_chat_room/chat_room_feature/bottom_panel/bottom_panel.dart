@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_live_stream/core/controllers/live_chat_room_controller.dart';
 import 'package:flutter_live_stream/core/services/system_info_service/system_info_service.dart';
 import 'package:flutter_live_stream/shared/widgets/gift_bottom_sheet.dart';
-class BottomPanel extends StatefulWidget {
 
+class BottomPanel extends StatefulWidget {
   @override
   _BottomPanelState createState() => _BottomPanelState();
 }
 
 class _BottomPanelState extends State<BottomPanel> {
-
   final Gradient pickGradient = LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
@@ -35,10 +34,12 @@ class _BottomPanelState extends State<BottomPanel> {
     _getBottomPanelSize();
     super.initState();
   }
+
   // 底部選單的高度 給到全域
-  _getBottomPanelSize(){
+  _getBottomPanelSize() {
     Timer(Duration(milliseconds: 1000), () {
-      final RenderBox  object = _bottomPanelKey.currentContext.findRenderObject();
+      final RenderBox object =
+          _bottomPanelKey.currentContext.findRenderObject();
       systemInfoService.bottomPanelHeight = object.size.height;
     });
   }
@@ -50,78 +51,78 @@ class _BottomPanelState extends State<BottomPanel> {
     return Container(
       key: _bottomPanelKey,
       alignment: Alignment.topCenter,
-        padding: const EdgeInsets.only(left: 8.0,right: 8.0,bottom: 5.0,top: 5.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              // 左邊區域 聊天,切換分流,重整,音效
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  CircleButton(
-                    icon: Icons.textsms,
-                    diameter: circleHeight,
-                    onTap: () {
-                      ctr.inputFocusNode.requestFocus();
-                    },
-                  ),
-                  SizedBox(
-                    width: circleHeight * 0.3,
-                  ),
-                  CircleButton(
-                    icon: Icons.wifi,
-                    diameter: circleHeight,
-                    onTap: () {},
-                  ),
-                  SizedBox(
-                    width: circleHeight * 0.3,
-                  ),
-                  CircleButton(
-                    icon: Icons.refresh,
-                    diameter: circleHeight,
-                    onTap: () {},
-                  ),
-                  SizedBox(
-                    width: circleHeight * 0.3,
-                  ),
-                  CircleButton(
-                    icon: Icons.volume_up,
-                    diameter: circleHeight,
-                    onTap: () {},
-                  ),
-                  SizedBox(
-                    width: circleHeight * 0.3,
-                  ),
-                  CircleButton(
-                    icon: Icons.center_focus_strong,
-                    diameter: circleHeight,
-                    onTap: () {
-                      ctr.listItems.add('item ${testNumber+=1}');
-                    },
-                  ),
-                ],
-              ),
+      padding:
+          const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 5.0, top: 5.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            // 左邊區域 聊天,切換分流,重整,音效
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                CircleButton(
+                  icon: Icons.textsms,
+                  diameter: circleHeight,
+                  onTap: () {
+                    ctr.inputFocusNode.requestFocus();
+                  },
+                ),
+                SizedBox(
+                  width: circleHeight * 0.3,
+                ),
+                CircleButton(
+                  icon: Icons.wifi,
+                  diameter: circleHeight,
+                  onTap: () {},
+                ),
+                SizedBox(
+                  width: circleHeight * 0.3,
+                ),
+                CircleButton(
+                  icon: Icons.refresh,
+                  diameter: circleHeight,
+                  onTap: () {},
+                ),
+                SizedBox(
+                  width: circleHeight * 0.3,
+                ),
+                CircleButton(
+                  icon: Icons.volume_up,
+                  diameter: circleHeight,
+                  onTap: () {},
+                ),
+                SizedBox(
+                  width: circleHeight * 0.3,
+                ),
+                CircleButton(
+                  icon: Icons.launch,
+                  diameter: circleHeight,
+                  onTap: () {},
+                ),
+              ],
             ),
-            Container(
-              // 右邊區域 目前只有禮物
-              child: Row(
-                children: [
-                  CircleButton(
-                      icon: Icons.card_giftcard,
-                      diameter: circleHeight,
-                      btnGradientColor: pickGradient,
-                      onTap: () {
-                        Get.bottomSheet(
-                            GiftBottomSheet()
-                        );
-                      }),
-                ],
-              ),
-            )
-          ],
-        ),
-      );
+          ),
+          Container(
+            // 右邊區域 目前只有禮物
+            child: Row(
+              children: [
+                CircleButton(
+                    icon: Icons.card_giftcard,
+                    diameter: circleHeight,
+                    btnGradientColor: pickGradient,
+                    onTap: () {
+                      if (ctr.gifts != null) {
+                        // 禮物有內容才可以打開
+                        Get.bottomSheet(GiftBottomSheet());
+                      }
+                    }),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
   }
 }
 
