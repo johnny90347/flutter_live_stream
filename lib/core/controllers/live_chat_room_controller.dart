@@ -17,9 +17,17 @@ class LiveChatRoomController extends GetxController {
   FocusNode inputFocusNode; // 輸入框的聚焦
   List<GiftDetailPart> gifts; //禮物列表
   List<VideoDetailPart> videos; //直播影片
-  AnchorLobbyInfoDetailPart anchorLobbyInfo; //主播資訊
-
-  var chatList = RxList<CommonMessageModel>([]);
+  var anchorLobbyInfo = Rx<AnchorLobbyInfoDetailPart>( //主播資訊
+    AnchorLobbyInfoDetailPart.fromJson({
+      "CanLike": true,
+      "FollowCount": 0,
+      "LikeCount": 0,
+      "Name": '请稍等',
+      "NickName": '请稍等',
+      "StarValue": 0
+    }),
+  );
+  var chatList = RxList<CommonMessageModel>([]); // 聊天內容
 
   /// 初始化聊天房資訊
   void liveChatRoomInit() async {
@@ -48,7 +56,7 @@ class LiveChatRoomController extends GetxController {
         return item;
       }).toList();
       videos = resultMsg.Videos;
-      anchorLobbyInfo = resultMsg.AnchorLobbyInfo;
+      anchorLobbyInfo.value = resultMsg.AnchorLobbyInfo;
     });
   }
 
