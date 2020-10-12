@@ -22,8 +22,8 @@ class LiveChatRoomController extends GetxController {
       "CanLike": true,
       "FollowCount": 0,
       "LikeCount": 0,
-      "Name": '请稍等',
-      "NickName": '请稍等',
+      "Name": '',
+      "NickName": '载入中',
       "StarValue": 0
     }),
   );

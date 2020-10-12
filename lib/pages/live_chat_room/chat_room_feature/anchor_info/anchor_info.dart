@@ -127,11 +127,11 @@ class _AnchorInfoState extends State<AnchorInfo> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(borderRadiusValue),
                 child: Obx(
-                  () => FadeInImage.assetNetwork(
+                  () => ctr.anchorLobbyInfo.value.Name != '' ?  FadeInImage.assetNetwork(
                     placeholder: 'assets/images/default-avator.jpg',
                     image:
                         '${configService.cdnUrl}${ctr.anchorLobbyInfo.value.Name}_m.jpg',
-                  ),
+                  ):Image.asset('assets/images/default-avator.jpg'),
                 ),
               ),
             ),
