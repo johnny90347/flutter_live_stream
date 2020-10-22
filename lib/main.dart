@@ -1,9 +1,11 @@
 // 套件
 import 'package:flutter/services.dart';
+import 'package:flutter_live_stream/shared/game/demo-game.dart';
 import 'package:flutter_live_stream/shared/game/game.dart';
 import 'package:flutter_live_stream/shared/game/simpleGame.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
+import 'package:flame/util.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_live_stream/pages/splash/splash.dart';
@@ -18,17 +20,19 @@ import 'package:flutter_live_stream/shared/game/simpleGame.dart';
 void main() async  {
   // 初始化所有Service
   await initServices();
-  // 遊戲場景
-  SlotGameScene game = SlotGameScene();
+  // 遊戲
+  // SlotGameScene game = SlotGameScene();
+  //  final MyBox2D box = MyBox2D();
+  //  final MyGame game = MyGame(box);
 
-//  final MyBox2D box = MyBox2D();
-//  final MyGame game = MyGame(box);
-
-
+  WidgetsFlutterBinding.ensureInitialized();
+  // Util flameUtil = Util();
+  // await flameUtil.fullScreen();
+  // await flameUtil.setOrientation(DeviceOrientation.portraitUp);
+  final DemoGame game = DemoGame();
 
 //  final game = MyGameOne();
   runApp(game.widget);
-
 
 
 }
