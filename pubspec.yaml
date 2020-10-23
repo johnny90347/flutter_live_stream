@@ -62,6 +62,10 @@ flutter:
     - assets/images/
     - assets/images/vip/
     - assets/images/gift/icon/
+    - assets/images/games/bg/
+    - assets/images/games/branding/
+    - assets/images/games/flies/
+    - assets/images/games/ui/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
