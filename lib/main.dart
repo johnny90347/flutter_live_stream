@@ -47,6 +47,13 @@ void main() async  {
     'games/flies/macho-fly-1.png',
     'games/flies/macho-fly-2.png',
     'games/flies/macho-fly-dead.png',
+    'games/bg/lose-splash.png',
+    'games/branding/title.png',
+    'games/ui/dialog-credits.png',
+    'games/ui/dialog-help.png',
+    'games/ui/icon-credits.png',
+    'games/ui/icon-help.png',
+    'games/ui/start-button.png',
   ]);
 
   runApp(game.widget);
