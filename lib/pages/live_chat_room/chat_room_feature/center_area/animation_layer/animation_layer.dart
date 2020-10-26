@@ -70,7 +70,8 @@ class _AnimationLayerState extends State<AnimationLayer>
     });
 
     Timer(Duration(seconds: 2), (() {
-      _animationController.forward();
+      //FIXME:執行動畫
+//      _animationController.forward();
     }));
 
     super.initState();

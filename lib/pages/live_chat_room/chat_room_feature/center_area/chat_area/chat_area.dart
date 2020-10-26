@@ -41,7 +41,8 @@ class _ChatAreaState extends State<ChatArea> {
       setState(() {});
     }, willShowKeyboard: (double keyboardHeight) {
       if (_keyboardPadding == null) {
-        _keyboardPadding = keyboardHeight - systemInfoService.bottomPanelHeight;
+//        _keyboardPadding = keyboardHeight - systemInfoService.bottomPanelHeight;
+        _keyboardPadding = keyboardHeight;
       }
       _shiftDistance = _keyboardPadding;
       setState(() {});

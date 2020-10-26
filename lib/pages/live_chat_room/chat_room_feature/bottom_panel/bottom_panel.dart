@@ -40,7 +40,6 @@ class _BottomPanelState extends State<BottomPanel> {
     Timer(Duration(milliseconds: 1000), () {
       final RenderBox object =
           _bottomPanelKey.currentContext.findRenderObject();
-      systemInfoService.bottomPanelHeight = object.size.height;
     });
   }
 
@@ -52,14 +51,12 @@ class _BottomPanelState extends State<BottomPanel> {
       key: _bottomPanelKey,
       alignment: Alignment.topCenter,
       padding:
-          const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 5.0, top: 5.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
+          const EdgeInsets.only(left: 5.0, right: 5.0, bottom: 5.0, top: 5.0),
+      child:
           Container(
             // 左邊區域 聊天,切換分流,重整,音效
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 CircleButton(
                   icon: Icons.textsms,
@@ -69,7 +66,7 @@ class _BottomPanelState extends State<BottomPanel> {
                   },
                 ),
                 SizedBox(
-                  width: circleHeight * 0.3,
+                  height: circleHeight * 0.3,
                 ),
                 CircleButton(
                   icon: Icons.wifi,
@@ -77,7 +74,7 @@ class _BottomPanelState extends State<BottomPanel> {
                   onTap: () {},
                 ),
                 SizedBox(
-                  width: circleHeight * 0.3,
+                  height: circleHeight * 0.3,
                 ),
                 CircleButton(
                   icon: Icons.refresh,
@@ -85,7 +82,7 @@ class _BottomPanelState extends State<BottomPanel> {
                   onTap: () {},
                 ),
                 SizedBox(
-                  width: circleHeight * 0.3,
+                  height: circleHeight * 0.3,
                 ),
                 CircleButton(
                   icon: Icons.volume_up,
@@ -93,20 +90,16 @@ class _BottomPanelState extends State<BottomPanel> {
                   onTap: () {},
                 ),
                 SizedBox(
-                  width: circleHeight * 0.3,
+                  height: circleHeight * 0.3,
                 ),
                 CircleButton(
                   icon: Icons.launch,
                   diameter: circleHeight,
                   onTap: () {},
                 ),
-              ],
-            ),
-          ),
-          Container(
-            // 右邊區域 目前只有禮物
-            child: Row(
-              children: [
+                SizedBox(
+                  height: circleHeight * 0.3,
+                ),
                 CircleButton(
                     icon: Icons.card_giftcard,
                     diameter: circleHeight,
@@ -119,10 +112,8 @@ class _BottomPanelState extends State<BottomPanel> {
                     }),
               ],
             ),
-          )
-        ],
-      ),
-    );
+          ),
+      );
   }
 }
 
