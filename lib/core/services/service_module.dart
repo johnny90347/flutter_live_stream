@@ -20,7 +20,7 @@ export 'package:flutter_live_stream/core/services/system_info_service/system_inf
 
 //先寫死
 final ROUTE_PATH = 'http://192.168.0.164:8002/';
-final USER_NAME = 'HTTW08';
+final USER_NAME = 'HTTW02';
 
 // 全部Service 初始化
 Future<void> initServices() async {

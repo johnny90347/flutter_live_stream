@@ -56,8 +56,8 @@ void main() async  {
     'games/ui/start-button.png',
   ]);
 
-  runApp(game.widget);
-
+//  runApp(game.widget);
+  runApp(MyApp());
 
 }
 

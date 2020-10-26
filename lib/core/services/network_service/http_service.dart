@@ -11,6 +11,9 @@ class HttpService extends GetxService {
     baseUrl: ROUTE_PATH,
     connectTimeout: 15000,
     receiveTimeout: 15000,
+//    headers: {
+//      Headers.contentLengthHeader: 2
+//    }
   ));
 
   Future httpGet({@required String url}) async {
@@ -22,7 +25,7 @@ class HttpService extends GetxService {
 
       print('錯誤的 statusCode: ${e.response.statusCode}');
       print('錯誤 data: ${e.response.data}'); //ex:{Code: 101503, Message: Dev only => :LSG....
-
+      print('HEADER: ${dio.options.headers}');
       //自己做一個 訊息 return 出去
       final errorMsg = e.response.data;
 

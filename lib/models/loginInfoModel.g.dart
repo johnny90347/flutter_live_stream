@@ -15,7 +15,9 @@ LoginInfoModel _$LoginInfoModelFromJson(Map<String, dynamic> json) {
     ..Level = json['Level'] as num
     ..Pid = json['Pid'] as String
     ..Token = json['Token'] as String
-    ..UserFlag = json['UserFlag'] as num;
+    ..UserFlag = json['UserFlag'] as num
+    ..SrcPlatform = json['SrcPlatform'] as String
+    ..Origin = json['Origin'] as String;
 }
 
 Map<String, dynamic> _$LoginInfoModelToJson(LoginInfoModel instance) =>
@@ -27,5 +29,7 @@ Map<String, dynamic> _$LoginInfoModelToJson(LoginInfoModel instance) =>
       'Level': instance.Level,
       'Pid': instance.Pid,
       'Token': instance.Token,
-      'UserFlag': instance.UserFlag
+      'UserFlag': instance.UserFlag,
+      'SrcPlatform': instance.SrcPlatform,
+      'Origin': instance.Origin
     };

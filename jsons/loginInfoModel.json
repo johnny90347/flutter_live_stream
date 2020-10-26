@@ -6,5 +6,7 @@
   "Level": 0,
   "Pid": "TST",
   "Token": "8695c4bdb6b80d7a3c5f58671f99373a",
-  "UserFlag": 0
+  "UserFlag": 0,
+  "SrcPlatform": "ANCHOR",
+  "Origin": "http://gci.ggdemo"
 }

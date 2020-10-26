@@ -14,6 +14,8 @@ class LoginInfoModel {
     String Pid;
     String Token;
     num UserFlag;
+    String SrcPlatform;
+    String Origin;
     
     factory LoginInfoModel.fromJson(Map<String,dynamic> json) => _$LoginInfoModelFromJson(json);
     Map<String, dynamic> toJson() => _$LoginInfoModelToJson(this);
