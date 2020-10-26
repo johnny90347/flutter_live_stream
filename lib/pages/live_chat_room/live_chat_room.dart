@@ -20,26 +20,26 @@ class _LiveChatRoomState extends State<LiveChatRoom> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomPadding:false,
-        resizeToAvoidBottomInset: false,
-        body: Stack(
-          children: [
-            Positioned(
-              top: 0,
-              right: 0,
-              bottom: 0,
-              left: 0,
-              child: LiveStream(), //直播畫面
-            ),
-            Positioned(
-              top: 0,
-              right: 0,
-              bottom: 0,
-              left: 0,
-              child: ChatRoomFeature(), //聊天房功能
-            )
-          ],
-        ),
-      );
+      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
+      body: Stack(
+        children: [
+          Positioned(
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+            child: LiveStream(),
+          ),
+          Positioned(
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+            child: ChatRoomFeature(), //聊天房功能
+          )
+        ],
+      ),
+    );
   }
 }
