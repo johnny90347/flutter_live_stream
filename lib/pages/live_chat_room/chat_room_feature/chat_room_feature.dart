@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import './anchor_info/anchor_info.dart';
-import './bottom_panel/bottom_panel.dart';
+import './right_panel/right_panel.dart';
 import './center_area/center_area.dart';
 import 'package:flutter_live_stream/core/services/service_module.dart';
 
@@ -29,7 +29,7 @@ class ChatRoomFeature extends StatelessWidget {
             ],
           ),
         ),
-                      BottomPanel(),// 底部按鈕
+                      RightPanel(),// 底部按鈕
       ],
     );
   }

@@ -4,12 +4,12 @@ import 'package:flutter_live_stream/core/controllers/live_chat_room_controller.d
 import 'package:flutter_live_stream/core/services/system_info_service/system_info_service.dart';
 import 'package:flutter_live_stream/shared/widgets/gift_bottom_sheet.dart';
 
-class BottomPanel extends StatefulWidget {
+class RightPanel extends StatefulWidget {
   @override
-  _BottomPanelState createState() => _BottomPanelState();
+  _RightPanelState createState() => _RightPanelState();
 }
 
-class _BottomPanelState extends State<BottomPanel> {
+class _RightPanelState extends State<RightPanel> {
   final Gradient pickGradient = LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
