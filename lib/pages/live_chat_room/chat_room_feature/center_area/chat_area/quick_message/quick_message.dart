@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_live_stream/core/controllers/live_chat_room_controller.dart';
+import 'package:flutter_live_stream/core/services/service_module.dart';
+
 import 'package:get/get.dart';
 
 
 class QuickMessage extends StatelessWidget {
+  final systemInfoService = Get.find<SystemInfoService>();//系統資訊
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 30.0,
-      width: double.infinity,
+      width: systemInfoService.screenMaxWidth - systemInfoService.rightPanelDiameter,
       padding:const EdgeInsets.symmetric(horizontal: 8.0),
       child: ListView(
         scrollDirection: Axis.horizontal,

@@ -28,6 +28,7 @@ class _SplashPageState extends State<Splash> {
       systemInfoService.screenMaxWidth = MediaQuery.of(context).size.width;
       systemInfoService.screenMaxHeight = MediaQuery.of(context).size.height;
       systemInfoService.statusBarHeight = MediaQuery.of(context).padding.top;
+      systemInfoService.rightPanelDiameter = systemInfoService.screenMaxWidth * 0.08;
     }
   }
 

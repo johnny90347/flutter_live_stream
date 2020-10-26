@@ -33,10 +33,11 @@ class _ChatAreaState extends State<ChatArea> {
     super.initState();
   }
 
-  //監聽鍵盤高度
+  //監聽鍵盤
   _setUpKeyBoardListener() {
     _idKeyboardListener = _keyboardUtils.add(
         listener: KeyboardListener(willHideKeyboard: () {
+          // 鍵盤影藏時,輸入框要被收起來
       _shiftDistance = -_chatInputHeight;
       setState(() {});
     }, willShowKeyboard: (double keyboardHeight) {
@@ -44,7 +45,8 @@ class _ChatAreaState extends State<ChatArea> {
 //        _keyboardPadding = keyboardHeight - systemInfoService.bottomPanelHeight;
         _keyboardPadding = keyboardHeight;
       }
-      _shiftDistance = _keyboardPadding;
+      print(keyboardHeight);
+      _shiftDistance = keyboardHeight;
       setState(() {});
     }));
   }
@@ -79,19 +81,20 @@ class _ChatAreaState extends State<ChatArea> {
                 // 照著鍵盤高度 改變位置
                 Positioned(
                   bottom: _shiftDistance,
-                  // bottom: 0,
+//                   bottom: 0,
                   right: 0,
                   left: 0,
                   top: -_shiftDistance,
                   // top: 0,
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
                         flex: 10,
                         child: Container(),
                       ),
                       Expanded(
-                        flex: 4,
+                        flex: 3,
                         child: DialogDisplay(),
                       ),
                       SizedBox(

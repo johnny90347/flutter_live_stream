@@ -3,42 +3,38 @@ PODS:
   - flutter_vlc_player (3.0.2):
     - Flutter
     - MobileVLCKit (~> 3.3.12)
-  - keyboard_visibility (0.5.0):
+  - keyboard_utils (0.0.1):
     - Flutter
-    - Reachability
   - MobileVLCKit (3.3.13)
   - path_provider (0.0.1):
     - Flutter
-  - Reachability (3.2)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_vlc_player (from `.symlinks/plugins/flutter_vlc_player/ios`)
-  - keyboard_visibility (from `.symlinks/plugins/keyboard_visibility/ios`)
+  - keyboard_utils (from `.symlinks/plugins/keyboard_utils/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
 
 SPEC REPOS:
   trunk:
     - MobileVLCKit
-    - Reachability
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
   flutter_vlc_player:
     :path: ".symlinks/plugins/flutter_vlc_player/ios"
-  keyboard_visibility:
-    :path: ".symlinks/plugins/keyboard_visibility/ios"
+  keyboard_utils:
+    :path: ".symlinks/plugins/keyboard_utils/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
 
 SPEC CHECKSUMS:
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_vlc_player: 64a2c27b2c99bc4fb954c5ff9d1cc278c87702ee
-  keyboard_visibility: 96a24de806fe6823c3ad956c01ba2ec6d056616f
+  keyboard_utils: ab24bc711be9e91a5937c20489056b8dd650fecc
   MobileVLCKit: 92e1ea43124259417f481c890821efb2399d25e3
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
-  Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
 
 PODFILE CHECKSUM: a75497545d4391e2d394c3668e20cfb1c2bbd4aa
 

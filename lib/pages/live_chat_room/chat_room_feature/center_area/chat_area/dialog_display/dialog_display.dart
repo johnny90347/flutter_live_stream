@@ -1,6 +1,8 @@
 //套件
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_live_stream/core/services/service_module.dart';
+
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'dart:async';
@@ -14,6 +16,7 @@ class DialogDisplay extends StatefulWidget {
 
 class _DialogDisplayState extends State<DialogDisplay> {
   final ctr = Get.find<LiveChatRoomController>();
+  final systemInfoService = Get.find<SystemInfoService>();//系統資訊
 
   ScrollController _scrollController;
   bool _isOnBottom = true;
@@ -153,6 +156,8 @@ class _DialogDisplayState extends State<DialogDisplay> {
       alignment: Alignment.center,
       children: [
         Container(
+          // 為了躲掉右邊的right panel
+          width: systemInfoService.screenMaxWidth - systemInfoService.rightPanelDiameter,
           child: Obx(
             () => NotificationListener<ScrollNotification>(
               onNotification: (ScrollNotification notification) {
