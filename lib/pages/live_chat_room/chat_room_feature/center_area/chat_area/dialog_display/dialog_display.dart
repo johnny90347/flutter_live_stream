@@ -156,6 +156,7 @@ class _DialogDisplayState extends State<DialogDisplay> {
       alignment: Alignment.center,
       children: [
         Container(
+          height: 120,//固定大概顯示5則的訊息
           // 為了躲掉右邊的right panel
           width: systemInfoService.screenMaxWidth - systemInfoService.rightPanelDiameter,
           child: Obx(

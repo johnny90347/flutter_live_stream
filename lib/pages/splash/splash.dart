@@ -20,7 +20,7 @@ class _SplashPageState extends State<Splash> {
     globalController.initAllRequire();
   }
 
-  ///取得系統資訊
+  ///賦予系統資訊數值
   _getSystemInfo() {
     if (systemInfoService.screenMaxWidth == null &&
         systemInfoService.screenMaxHeight == null &&
@@ -29,6 +29,7 @@ class _SplashPageState extends State<Splash> {
       systemInfoService.screenMaxHeight = MediaQuery.of(context).size.height;
       systemInfoService.statusBarHeight = MediaQuery.of(context).padding.top;
       systemInfoService.rightPanelDiameter = systemInfoService.screenMaxWidth * 0.08;
+      systemInfoService.bottomSafeRetain = 10;//FIXME:到時候一照手機型號,要有不同的數值
     }
   }
 

@@ -21,7 +21,6 @@ class _ChatAreaState extends State<ChatArea> {
   // 鍵盤監聽實體
   KeyboardUtils _keyboardUtils = KeyboardUtils();
   int _idKeyboardListener;
-  double _keyboardPadding; // 鍵盤滑上來的高度高度
   double _chatInputHeight = 40; // 聊天輸入的高,這是死的
   double _shiftDistance = 0;
 
@@ -41,12 +40,7 @@ class _ChatAreaState extends State<ChatArea> {
       _shiftDistance = -_chatInputHeight;
       setState(() {});
     }, willShowKeyboard: (double keyboardHeight) {
-      if (_keyboardPadding == null) {
-//        _keyboardPadding = keyboardHeight - systemInfoService.bottomPanelHeight;
-        _keyboardPadding = keyboardHeight;
-      }
-      print(keyboardHeight);
-      _shiftDistance = keyboardHeight;
+      _shiftDistance = keyboardHeight - systemInfoService.bottomSafeRetain;
       setState(() {});
     }));
   }
@@ -93,10 +87,7 @@ class _ChatAreaState extends State<ChatArea> {
                         flex: 10,
                         child: Container(),
                       ),
-                      Expanded(
-                        flex: 3,
-                        child: DialogDisplay(),
-                      ),
+                      DialogDisplay(), // 對話內容
                       SizedBox(
                         height: 5.0,
                       ),

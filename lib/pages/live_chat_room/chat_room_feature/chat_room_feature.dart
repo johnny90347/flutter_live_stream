@@ -36,6 +36,7 @@ class ChatRoomFeature extends StatelessWidget {
             ],
           ),
         ),
+        SizedBox(height: systemService.bottomSafeRetain,)
       ],
     );
   }

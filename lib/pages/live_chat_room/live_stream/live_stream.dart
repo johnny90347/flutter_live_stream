@@ -69,18 +69,24 @@ class _LiveStreamState extends State<LiveStream> {
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-//      width: systemService.screenMaxWidth,
-//    height: systemService.screenMaxHeight,
-      child: VlcPlayer(
-        aspectRatio: 1 / 1.63,
-        url: 'rtmp:$_currentUrl',
-        controller: _videoViewController,
-        isLocalMedia: false,
-        placeholder: Center(child: CircularProgressIndicator()),
-      ),
+//  @override
+//  Widget build(BuildContext context) {
+//    return Container(
+//      child: VlcPlayer(
+//        aspectRatio: 1 / 1.63,
+//        url: 'rtmp:$_currentUrl',
+//        controller: _videoViewController,
+//        isLocalMedia: false,
+//        placeholder: Center(child: CircularProgressIndicator()),
+//      ),
+//    );
+//  }
+
+ @override
+  Widget build(BuildContext context){
+
+    return Image(image: AssetImage('assets/images/girl.jpg'),
+    fit: BoxFit.fitHeight,
     );
-  }
+ }
 }
