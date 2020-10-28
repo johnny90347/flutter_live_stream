@@ -17,17 +17,25 @@ class LiveChatRoomController extends GetxController {
   FocusNode inputFocusNode; // 輸入框的聚焦
   List<GiftDetailPart> gifts; //禮物列表
   List<VideoDetailPart> videos; //直播影片
-  var anchorLobbyInfo = Rx<AnchorLobbyInfoDetailPart>( //主播資訊
-    AnchorLobbyInfoDetailPart.fromJson({
-      "CanLike": true,
-      "FollowCount": 0,
-      "LikeCount": 0,
-      "Name": '',
-      "NickName": '载入中',
-      "StarValue": 0
-    }),
-  );
+//  var anchorLobbyInfo = Rx<AnchorLobbyInfoDetailPart>( //主播資訊
+//    AnchorLobbyInfoDetailPart.fromJson({
+//      "CanLike": true,
+//      "FollowCount": 0,
+//      "LikeCount": 0,
+//      "Name": '',
+//      "NickName": '载入中',
+//      "StarValue": 0
+//    }),
+//  );
   var chatList = RxList<CommonMessageModel>([]); // 聊天內容
+  // --主播資訊--
+  var anchorCanLike = true.obs;  // 可不可以訂閱
+  var anchorFollowCount = 0.obs; // 在線人數
+  var anchorLikeCount = 0.obs;
+  var anchorName = ''.obs; // 主播英文名字
+  var anchorNickName = '载入中'.obs;//主播中文名字
+  var anchorStarValue = 0.obs;// 主播人氣值
+  // --主播資訊--
 
   /// 初始化聊天房資訊
   void liveChatRoomInit() async {
@@ -35,6 +43,8 @@ class LiveChatRoomController extends GetxController {
       print('LiveStream連線完成');
       setupPlayerLobbyConnectListener();
       getAnchorInfo();
+      setUpLikeAnchorListener();
+      setUpUnlikeAnchorListener();
     });
     chatRoomService.initChatConnection(callBack: () {
       print('chatRoom連線完成');
@@ -56,7 +66,14 @@ class LiveChatRoomController extends GetxController {
         return item;
       }).toList();
       videos = resultMsg.Videos;
-      anchorLobbyInfo.value = resultMsg.AnchorLobbyInfo;
+      // 這裡,因為一直會持續更新線上人數or人氣值..等,發現如果是更新 anchorLobbyInfo 內的屬性,他的obs不會響應有發生改變,所以只好每個都拿出來
+      final anchorInfo = resultMsg.AnchorLobbyInfo;
+       anchorCanLike.value = anchorInfo.CanLike;
+       anchorFollowCount.value = anchorInfo.FollowCount;
+       anchorLikeCount.value = anchorInfo.LikeCount;
+       anchorName.value = anchorInfo.Name;
+       anchorNickName.value = anchorInfo.NickName;
+      anchorStarValue.value = anchorInfo.StarValue;
     });
   }
 
@@ -78,6 +95,34 @@ class LiveChatRoomController extends GetxController {
       final resultMsg = CommonMessageModel.fromJson(msg[0]);
       chatList.add(resultMsg);
     });
+  }
+
+  /// 建立關注主播監聽
+  void setUpLikeAnchorListener(){
+    liveStreamService.likeAnchorListener(callback: (msg){
+      final resultMsg = PlayerLikeModel.fromJson(msg[0]);
+      anchorCanLike.value = false;
+    });
+  }
+
+  /// 建立取消關注主播監聽
+  void setUpUnlikeAnchorListener(){
+    liveStreamService.unLikeAnchorListener(callback: (msg){
+      print('取消關注監聽, $msg');
+      final resultMsg = PlayerLikeModel.fromJson(msg[0]);
+      anchorCanLike.value = true;
+      update();
+    });
+  }
+
+  /// 送出關注主播
+  void sendLikeAnchor(){
+    liveStreamService.likeAnchor();
+  }
+
+  /// 送出取消關注主播
+  void sendUnlikeAnchor(){
+    liveStreamService.unLikeAnchor();
   }
 
   /// 發送聊天訊息

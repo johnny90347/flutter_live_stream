@@ -67,9 +67,8 @@ class _AnchorInfoState extends State<AnchorInfo> {
 
   ///監聽主播資訊
   void _listenAnchorLobbyInfo() {
-    ctr.anchorLobbyInfo.listen((obj) {
-      final anchorName = obj.NickName;
-      _computedScrollNameNeeded(name: anchorName);
+    ctr.anchorNickName.listen((anchorNickName) {
+      _computedScrollNameNeeded(name: anchorNickName);
     });
   }
 
@@ -127,11 +126,13 @@ class _AnchorInfoState extends State<AnchorInfo> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(borderRadiusValue),
                 child: Obx(
-                  () => ctr.anchorLobbyInfo.value.Name != '' ?  FadeInImage.assetNetwork(
-                    placeholder: 'assets/images/default-avator.jpg',
-                    image:
-                        '${configService.cdnUrl}${ctr.anchorLobbyInfo.value.Name}_m.jpg',
-                  ):Image.asset('assets/images/default-avator.jpg'),
+                  () => ctr.anchorName.value != ''
+                      ? FadeInImage.assetNetwork(
+                          placeholder: 'assets/images/default-avator.jpg',
+                          image:
+                              '${configService.cdnUrl}${ctr.anchorName.value}_m.jpg',
+                        )
+                      : Image.asset('assets/images/default-avator.jpg'),
                 ),
               ),
             ),
@@ -158,7 +159,7 @@ class _AnchorInfoState extends State<AnchorInfo> {
                                     : 0,
                                 child: Obx(
                                   () => Text(
-                                    ctr.anchorLobbyInfo.value.NickName,
+                                    ctr.anchorNickName.value,
                                     softWrap: false,
                                     style: TextStyle(
                                         fontSize: 12.0, color: Colors.white),
@@ -186,26 +187,24 @@ class _AnchorInfoState extends State<AnchorInfo> {
             ),
             Expanded(
               flex: 5,
-              child: InkWell(
-                onTap: () {
-                  print('訂閱');
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(borderRadiusValue),
-                  ),
-                  child: Text(
-                    '关注',
-                    style: TextStyle(
-                        color: Colors.grey.shade700,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 12.0),
-                  ),
-                ),
-              ),
-            )
+              child: Obx(() => ctr.anchorCanLike.value
+                  ? FollowButton(
+                      borderRadius: borderRadiusValue,
+                      title: '关注',
+                      onTap: () {
+                        // 關注主播
+                        ctr.sendLikeAnchor();
+                      },
+                    )
+                  : FollowButton(
+                      borderRadius: borderRadiusValue,
+                      title: '取消',
+                      onTap: () {
+                        // 關注主播
+                        ctr.sendUnlikeAnchor();
+                      },
+                    )),
+            ),
           ],
         ),
       ),
@@ -231,7 +230,7 @@ class OnlineUser extends StatelessWidget {
           Expanded(
             child: Obx(
               () => Text(
-                '${ctr.anchorLobbyInfo.value.FollowCount}',
+                '${ctr.anchorFollowCount.value}',
                 softWrap: false,
                 style: TextStyle(
                     fontSize: 10.0, color: Colors.white, letterSpacing: 1.0),
@@ -262,7 +261,7 @@ class StartValue extends StatelessWidget {
           Expanded(
             child: Obx(
               () => Text(
-                '${ctr.anchorLobbyInfo.value.StarValue}',
+                '${ctr.anchorStarValue.value}',
                 softWrap: false,
                 style: TextStyle(
                     fontSize: 10.0, color: Colors.white, letterSpacing: 1.0),
@@ -270,6 +269,39 @@ class StartValue extends StatelessWidget {
             ),
           )
         ],
+      ),
+    );
+  }
+}
+
+/// 關注 or 取消關注按鈕
+class FollowButton extends StatelessWidget {
+  final double borderRadius;
+  final String title;
+  final Function onTap;
+
+  FollowButton(
+      {@required this.borderRadius,
+      @required this.title,
+      @required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(borderRadius),
+        ),
+        child: Text(
+          title,
+          style: TextStyle(
+              color: Colors.grey.shade700,
+              fontWeight: FontWeight.w700,
+              fontSize: 12.0),
+        ),
       ),
     );
   }

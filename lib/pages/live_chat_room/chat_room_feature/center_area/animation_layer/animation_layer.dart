@@ -2,12 +2,25 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-class AnimationLayer extends StatefulWidget {
+class AnimationLayer extends StatelessWidget {
   @override
-  _AnimationLayerState createState() => _AnimationLayerState();
+  Widget build(BuildContext context) {
+    return Container(
+      child: Stack(
+        children: [
+          Positioned(top: 5, left: 5, child: SpecialNotice()),//特殊通知
+        ],
+      ),
+    );
+  }
 }
 
-class _AnimationLayerState extends State<AnimationLayer>
+class SpecialNotice extends StatefulWidget {
+  @override
+  _SpecialNoticeState createState() => _SpecialNoticeState();
+}
+
+class _SpecialNoticeState extends State<SpecialNotice>
     with TickerProviderStateMixin {
   //滑動動畫控制
   AnimationController _animationController;
@@ -49,9 +62,10 @@ class _AnimationLayerState extends State<AnimationLayer>
     ));
 
     // Interval 可以依據controller來定義操作時間
-    _flashSlideAnimation = Tween(begin: Offset(-1.0, 0.0), end: Offset(1.0, 0.0))
-        .animate(CurveTween(curve: Interval(0.4, 0.6, curve: Curves.linear))
-            .animate(_animationController));
+    _flashSlideAnimation =
+        Tween(begin: Offset(-1.0, 0.0), end: Offset(1.0, 0.0)).animate(
+            CurveTween(curve: Interval(0.4, 0.6, curve: Curves.linear))
+                .animate(_animationController));
     _widthAnimationOne = Tween(begin: 10.0, end: 30.0).animate(
         CurveTween(curve: Interval(0.4, 0.6, curve: Curves.linear))
             .animate(_animationController));
@@ -69,9 +83,9 @@ class _AnimationLayerState extends State<AnimationLayer>
       }
     });
 
-    Timer(Duration(seconds: 2), (() {
+    Timer(Duration(seconds: 1), (() {
       //FIXME:執行動畫
-//      _animationController.forward();
+      _animationController.forward();
     }));
 
     super.initState();
@@ -85,87 +99,82 @@ class _AnimationLayerState extends State<AnimationLayer>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Stack(
-        children: [
-          Positioned(
-            top: 5,
-            left: 5,
-            child: SlideTransition(
-              position: _containerSlideAnimation,
-              child: ClipRect(
-                child: Container(
-                  width: 150,
-                  height: 20,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4.0),
-                      gradient: LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: [
-                      Color(0xff8eb9e2),
-                      Color(0xff6985fd),
-                      Color(0xff7572fe)
-                    ],
-                  )),
-                  child: Stack(
+    return SlideTransition(
+      position: _containerSlideAnimation,
+      child: ClipRect(
+        child: Container(
+          width: 150,
+          height: 20,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4.0),
+              gradient: LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: [
+                  Color(0xff8eb9e2),
+                  Color(0xff6985fd),
+                  Color(0xff7572fe)
+                ],
+              )),
+          child: Stack(
+            children: [
+              Positioned(
+                left: 0,
+                bottom: 0,
+                right: 0,
+                child: SlideTransition(
+                  position: _flashSlideAnimation,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Positioned(
-                        left: 0,
-                        bottom: 0,
-                        right: 0,
-                        child: SlideTransition(
-                          position: _flashSlideAnimation,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Transform(
-                                transform: Matrix4.skewX(-0.2),
-                                child: Container(
-                                  width: _widthAnimationOne.value,
-                                  height: 20,
-                                  color: Colors.white70,
-                                ),
-                              ),
-                              Transform(
-                                transform: Matrix4.skewX(-0.2),
-                                child: Container(
-                                  width: _widthAnimationTwo.value,
-                                  height: 20,
-                                  color: Colors.white70,
-                                ),
-                              ),
-                              Transform(
-                                transform: Matrix4.skewX(-0.2),
-                                child: Container(
-                                  width: _widthAnimationOne.value,
-                                  height: 20,
-                                  color: Colors.white70,
-                                ),
-                              ),
-                              Transform(
-                                transform: Matrix4.skewX(-0.2),
-                                child: Container(
-                                  width: _widthAnimationTwo.value,
-                                  height: 20,
-                                  color: Colors.white70,
-                                ),
-                              ),
-                            ],
-                          ),
+                      Transform(
+                        transform: Matrix4.skewX(-0.2),
+                        child: Container(
+                          width: _widthAnimationOne.value,
+                          height: 20,
+                          color: Colors.white70,
                         ),
-                      )
+                      ),
+                      Transform(
+                        transform: Matrix4.skewX(-0.2),
+                        child: Container(
+                          width: _widthAnimationTwo.value,
+                          height: 20,
+                          color: Colors.white70,
+                        ),
+                      ),
+                      Transform(
+                        transform: Matrix4.skewX(-0.2),
+                        child: Container(
+                          width: _widthAnimationOne.value,
+                          height: 20,
+                          color: Colors.white70,
+                        ),
+                      ),
+                      Transform(
+                        transform: Matrix4.skewX(-0.2),
+                        child: Container(
+                          width: _widthAnimationTwo.value,
+                          height: 20,
+                          color: Colors.white70,
+                        ),
+                      ),
                     ],
                   ),
                 ),
               ),
-            ),
+              Positioned(
+                top: 0,
+                right: 0,
+                bottom: 0,
+                left: 0,
+                child: Text('xxxx關注了XX',textAlign: TextAlign.center,style: TextStyle(color: Colors.white,fontSize: 12.0),),
+              )
+
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
 }
-
-//Transform(
-//transform: Matrix4.skewX(-0.1),
