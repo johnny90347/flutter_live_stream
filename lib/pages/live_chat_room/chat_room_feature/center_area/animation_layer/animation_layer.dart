@@ -52,7 +52,7 @@ class _SpecialNoticeState extends State<SpecialNotice>
           weight: 2), //提示滑出來-2
       TweenSequenceItem(
           tween: ConstantTween<Offset>(Offset(0, 0.0)),
-          weight: 90), // 總動畫時間* 40/100; 做別的動畫
+          weight: 90), // 總動畫時間* 90/100; 做別的動畫
       TweenSequenceItem(
           tween: Tween(begin: Offset(0.0, 0.0), end: Offset(0.1, 0.0)),
           weight: 2), //提示收起來 -1
@@ -66,13 +66,13 @@ class _SpecialNoticeState extends State<SpecialNotice>
 
     // Interval 可以依據controller來定義操作時間
     _flashSlideAnimation =
-        Tween(begin: Offset(-1.0, 0.0), end: Offset(1.0, 0.0)).animate(
+        Tween(begin: Offset(-1.0, 0.0), end: Offset(1.0, 0.0)).animate( // 平移動畫 左->右
             CurveTween(curve: Interval(0.4, 0.6, curve: Curves.linear))
                 .animate(_animationController));
-    _widthAnimationOne = Tween(begin: 10.0, end: 30.0).animate(
+    _widthAnimationOne = Tween(begin: 10.0, end: 30.0).animate( // 寬度動畫 小->大
         CurveTween(curve: Interval(0.4, 0.6, curve: Curves.linear))
             .animate(_animationController));
-    _widthAnimationTwo = Tween(begin: 30.0, end: 10.0).animate(
+    _widthAnimationTwo = Tween(begin: 30.0, end: 10.0).animate( // 寬度動畫 大->小
         CurveTween(curve: Interval(0.4, 0.6, curve: Curves.linear))
             .animate(_animationController));
 
@@ -83,7 +83,6 @@ class _SpecialNoticeState extends State<SpecialNotice>
     });
 
     _specialNoticeListener();
-
     super.initState();
   }
 
@@ -137,7 +136,7 @@ class _SpecialNoticeState extends State<SpecialNotice>
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Transform(
-                        transform: Matrix4.skewX(-0.2),
+                        transform: Matrix4.skewX(-0.2), // 第一片反光
                         child: Container(
                           width: _widthAnimationOne.value,
                           height: containerHeight,
@@ -145,7 +144,7 @@ class _SpecialNoticeState extends State<SpecialNotice>
                         ),
                       ),
                       Transform(
-                        transform: Matrix4.skewX(-0.2),
+                        transform: Matrix4.skewX(-0.2), // 第二片反光
                         child: Container(
                           width: _widthAnimationTwo.value,
                           height: containerHeight,
@@ -153,7 +152,7 @@ class _SpecialNoticeState extends State<SpecialNotice>
                         ),
                       ),
                       Transform(
-                        transform: Matrix4.skewX(-0.2),
+                        transform: Matrix4.skewX(-0.2), // 第三片反光
                         child: Container(
                           width: _widthAnimationOne.value,
                           height: containerHeight,
@@ -161,7 +160,7 @@ class _SpecialNoticeState extends State<SpecialNotice>
                         ),
                       ),
                       Transform(
-                        transform: Matrix4.skewX(-0.2),
+                        transform: Matrix4.skewX(-0.2), // 第四片反光
                         child: Container(
                           width: _widthAnimationTwo.value,
                           height: containerHeight,
@@ -172,7 +171,7 @@ class _SpecialNoticeState extends State<SpecialNotice>
                   ),
                 ),
               ),
-              Positioned(
+              Positioned( // 內文
                 top: 0,
                 right: 0,
                 bottom: 0,

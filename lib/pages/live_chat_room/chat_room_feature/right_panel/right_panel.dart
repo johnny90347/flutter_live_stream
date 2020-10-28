@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_live_stream/core/controllers/live_chat_room_controller.dart';
 import 'package:flutter_live_stream/core/services/system_info_service/system_info_service.dart';
+import 'package:flutter_live_stream/shared/widgets/common_dialog_content.dart';
 import 'package:flutter_live_stream/shared/widgets/gift_bottom_sheet.dart';
 
 class RightPanel extends StatefulWidget {
@@ -95,7 +96,10 @@ class _RightPanelState extends State<RightPanel> {
                 CircleButton(
                   icon: Icons.launch,
                   diameter: circleHeight,
-                  onTap: () {},
+                  onTap: () {
+                    /// 測試code
+
+                  },
                 ),
                 SizedBox(
                   height: circleHeight * 0.3,

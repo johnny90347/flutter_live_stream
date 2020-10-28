@@ -1,11 +1,10 @@
 //套件
-import 'dart:async';
-
+import 'package:flutter_live_stream/shared/widgets/common_dialog_content.dart';
 import 'package:get/get.dart';
 export 'package:get/get.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_live_stream/core/services/service_module.dart';
-
 import 'package:flutter_live_stream/models/index.dart';
 
 class LiveChatRoomController extends GetxController {
@@ -87,7 +86,7 @@ class LiveChatRoomController extends GetxController {
   void setUpChatHistoryListener() {
     chatRoomService.setUpChatHistoryListener(callBack: (msg) {
       final historyList = msg[0] as List;
-      print(msg);
+      print('取的最近資料$msg');
       for (var history in historyList) {
         final resultMsg = CommonMessageModel.fromJson(history);
         chatList.add(resultMsg);
@@ -108,6 +107,10 @@ class LiveChatRoomController extends GetxController {
     liveStreamService.likeAnchorListener(callback: (msg){
       print('關注監聽, $msg');
       final resultMsg = PlayerLikeModel.fromJson(msg[0]);
+
+      if(resultMsg.Code != 0){
+        Get.defaultDialog(title: '提示',content: CommonDialogContent(content: '关注失败,请稍后再试',));
+      }
       // 更新 人氣值,可關注
       anchorStarValue.value = resultMsg.StarValue;
       anchorLikeCount.value = resultMsg.LikeCount;
@@ -126,6 +129,9 @@ class LiveChatRoomController extends GetxController {
     liveStreamService.unLikeAnchorListener(callback: (msg){
       print('取消關注監聽, $msg');
       final resultMsg = PlayerLikeModel.fromJson(msg[0]);
+      if(resultMsg.Code != 0){
+        Get.defaultDialog(title: '提示',content: CommonDialogContent(content: '取消关注失败,请稍后再试',));
+      }
       // 更新 人氣值,可關注
       anchorStarValue.value = resultMsg.StarValue;
       anchorLikeCount.value = resultMsg.LikeCount;
@@ -173,7 +179,7 @@ class LiveChatRoomController extends GetxController {
      _specialNoticeTimer = Timer.periodic(const Duration(seconds: 5), (Timer timer) {
         // 還有資料在暫存區
        if(_specialNoticeContentTemp.length > 0){
-         specialNoticeContent.value = '';
+         specialNoticeContent.value = ''; // 要先變成空白,不然如果是同一個人關注,他會認為資料沒變,而不更新內容
          specialNoticeContent.value = _specialNoticeContentTemp[0];
          _specialNoticeContentTemp.removeAt(0);
        }else{
