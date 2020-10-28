@@ -150,7 +150,7 @@ class LiveChatRoomController extends GetxController {
     liveStreamService.playerSendGiftListener(callback: (msg) {
       print('送禮訊息 $msg');
       //FIXME:Xcode沒裝好,不能執行 flutter packages pub run json_model 指令
-      
+
     });
   }
 

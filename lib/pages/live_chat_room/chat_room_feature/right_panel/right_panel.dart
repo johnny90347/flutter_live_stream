@@ -94,7 +94,7 @@ class _RightPanelState extends State<RightPanel> {
                   height: circleHeight * 0.3,
                 ),
                 CircleButton(
-                  icon: Icons.launch,
+                  icon: Icons.close,
                   diameter: circleHeight,
                   onTap: () {
                     /// 測試code
