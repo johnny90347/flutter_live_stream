@@ -17,17 +17,8 @@ class LiveChatRoomController extends GetxController {
   FocusNode inputFocusNode; // 輸入框的聚焦
   List<GiftDetailPart> gifts; //禮物列表
   List<VideoDetailPart> videos; //直播影片
-//  var anchorLobbyInfo = Rx<AnchorLobbyInfoDetailPart>( //主播資訊
-//    AnchorLobbyInfoDetailPart.fromJson({
-//      "CanLike": true,
-//      "FollowCount": 0,
-//      "LikeCount": 0,
-//      "Name": '',
-//      "NickName": '载入中',
-//      "StarValue": 0
-//    }),
-//  );
   var chatList = RxList<CommonMessageModel>([]); // 聊天內容
+
   // --主播資訊--
   var anchorCanLike = true.obs;  // 可不可以訂閱
   var anchorFollowCount = 0.obs; // 在線人數
@@ -36,6 +27,8 @@ class LiveChatRoomController extends GetxController {
   var anchorNickName = '载入中'.obs;//主播中文名字
   var anchorStarValue = 0.obs;// 主播人氣值
   // --主播資訊--
+
+  var specialNoticeContent = ''.obs; // 特殊通知的內容(放進來就會出現提示動畫)
 
   /// 初始化聊天房資訊
   void liveChatRoomInit() async {
@@ -101,6 +94,9 @@ class LiveChatRoomController extends GetxController {
   void setUpLikeAnchorListener(){
     liveStreamService.likeAnchorListener(callback: (msg){
       final resultMsg = PlayerLikeModel.fromJson(msg[0]);
+      // 更新 人氣值,可關注
+      anchorStarValue.value = resultMsg.StarValue;
+      anchorLikeCount.value = resultMsg.LikeCount;
       anchorCanLike.value = false;
     });
   }
@@ -110,6 +106,9 @@ class LiveChatRoomController extends GetxController {
     liveStreamService.unLikeAnchorListener(callback: (msg){
       print('取消關注監聽, $msg');
       final resultMsg = PlayerLikeModel.fromJson(msg[0]);
+      // 更新 人氣值,可關注
+      anchorStarValue.value = resultMsg.StarValue;
+      anchorLikeCount.value = resultMsg.LikeCount;
       anchorCanLike.value = true;
       update();
     });

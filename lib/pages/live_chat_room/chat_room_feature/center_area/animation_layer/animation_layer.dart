@@ -15,6 +15,7 @@ class AnimationLayer extends StatelessWidget {
   }
 }
 
+/// 特別提示(關注主播提示)
 class SpecialNotice extends StatefulWidget {
   @override
   _SpecialNoticeState createState() => _SpecialNoticeState();
