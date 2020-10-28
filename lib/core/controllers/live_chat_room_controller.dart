@@ -1,4 +1,5 @@
 //套件
+import 'package:flutter_live_stream/core/enum/response.dart';
 import 'package:flutter_live_stream/shared/widgets/common_dialog_content.dart';
 import 'package:get/get.dart';
 export 'package:get/get.dart';
@@ -49,6 +50,7 @@ class LiveChatRoomController extends GetxController {
       getAnchorInfo();
       setUpLikeAnchorListener();
       setUpUnlikeAnchorListener();
+      setUpPlayerSendGiftListener();
     });
     chatRoomService.initChatConnection(callBack: () {
       print('chatRoom連線完成');
@@ -130,7 +132,7 @@ class LiveChatRoomController extends GetxController {
       print('取消關注監聽, $msg');
       final resultMsg = PlayerLikeModel.fromJson(msg[0]);
       if(resultMsg.Code != 0){
-        Get.defaultDialog(title: '提示',content: CommonDialogContent(content: '取消关注失败,请稍后再试',));
+        Get.defaultDialog(title: '提醒',content: CommonDialogContent(content: '取消关注失败,请稍后再试',));
       }
       // 更新 人氣值,可關注
       anchorStarValue.value = resultMsg.StarValue;
@@ -139,6 +141,16 @@ class LiveChatRoomController extends GetxController {
       if(playerName == resultMsg.NickName){
         anchorCanLike.value = true;
       }
+    });
+  }
+
+
+  /// 建立送禮是否成功監聽
+  void setUpPlayerSendGiftListener(){
+    liveStreamService.playerSendGiftListener(callback: (msg) {
+      print('送禮訊息 $msg');
+      //FIXME:Xcode沒裝好,不能執行 flutter packages pub run json_model 指令
+      
     });
   }
 
@@ -165,6 +177,10 @@ class LiveChatRoomController extends GetxController {
     });
   }
 
+  /// 送出禮物
+  void sendGift({@required int giftId,@required int  giftValue}){
+    liveStreamService.sendGift(giftId: giftId, giftValue: giftValue);
+  }
 
   /// 處理特殊訊息的內容
   void _specialNoticeSequence({@required String content}){

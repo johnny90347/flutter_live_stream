@@ -121,7 +121,7 @@ class _GiftBottomSheetState extends State<GiftBottomSheet> {
                     child: Text("送礼"),
                     shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
                     onPressed:_selectedItem != null ? (){
-                          print(_selectedItem.Name);
+                          ctr.sendGift(giftId: _selectedItem.Id, giftValue: _selectedItem.Value);
                     }:null
                   ),
                 )

@@ -1,0 +1,11 @@
+{
+  "Id": "string",
+  "NickName": "string",
+  "MessageId": "string",
+  "Code": 0,
+  "CorrelationId": "string",
+  "GiftId": 0,
+  "StarValue": 0,
+  "GiftUrl": "string",
+  "GiftName": "string"
+}

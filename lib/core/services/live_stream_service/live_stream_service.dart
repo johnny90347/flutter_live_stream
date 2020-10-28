@@ -37,6 +37,11 @@ class LiveStreamService extends GetxService{
     return signalRService.addListener(url: 'livestreamapi', id: 'PlayerUnlike', callback: callback);
   }
 
+  /// 送禮是否成功監聽
+  void playerSendGiftListener({@required callback}){
+    return signalRService.addListener(url: 'livestreamapi', id: 'PlayerSendGift', callback: callback);
+  }
+
   /// 送出關注主播
   void likeAnchor(){
     signalRService.send(url: 'livestreamapi', id: 'PlayerLike', msg:null);
@@ -45,6 +50,15 @@ class LiveStreamService extends GetxService{
   /// 送出取消關注主播
   void unLikeAnchor(){
     signalRService.send(url: 'livestreamapi', id: 'PlayerUnlike', msg:null);
+  }
+
+  /// 送出禮物(參數:禮物id,禮物value)
+  void sendGift({@required int giftId,@required int giftValue}){
+    final paramObj = {
+      "GiftId":giftId,
+      "GiftValue":giftValue
+    };
+    signalRService.send(url: 'livestreamapi', id: 'PlayerSendGift', msg:paramObj);
   }
 
   /// service 初始化
