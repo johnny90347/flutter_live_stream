@@ -19,7 +19,7 @@ export 'package:flutter_live_stream/core/services/live_stream_service/live_strea
 export 'package:flutter_live_stream/core/services/system_info_service/system_info_service.dart';
 
 //先寫死
-final ROUTE_PATH = 'http://192.168.0.164:8002/';
+final ROUTE_PATH = 'http://172.24.10.63:8002/';
 final USER_NAME = 'HTTW02';
 
 // 全部Service 初始化

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_live_stream/core/controllers/live_chat_room_controller.dart';
 
 class AnimationLayer extends StatelessWidget {
   @override
@@ -8,7 +9,7 @@ class AnimationLayer extends StatelessWidget {
     return Container(
       child: Stack(
         children: [
-          Positioned(top: 5, left: 5, child: SpecialNotice()),//特殊通知
+          Positioned(top: 5, left: 5, child: SpecialNotice()), //特殊通知
         ],
       ),
     );
@@ -23,6 +24,7 @@ class SpecialNotice extends StatefulWidget {
 
 class _SpecialNoticeState extends State<SpecialNotice>
     with TickerProviderStateMixin {
+  final ctr = Get.find<LiveChatRoomController>();
   //滑動動畫控制
   AnimationController _animationController;
   Animation _containerSlideAnimation; //容器文字移動動畫
@@ -35,7 +37,7 @@ class _SpecialNoticeState extends State<SpecialNotice>
       duration: const Duration(seconds: 4),
       vsync: this,
     )..addListener(() {
-        setState(() {});
+//        setState(() {});
       });
 
     // 同一個controller 可以,同時控制很多個animation, Sequence 內的weight 代表權重,例如第一個他的動畫時間就是 總時間* 10/100;
@@ -43,23 +45,23 @@ class _SpecialNoticeState extends State<SpecialNotice>
     // 用這樣的方式來組合各種動畫,所以動畫可以併排,也可以依序展示
     _containerSlideAnimation = TweenSequence<Offset>([
       TweenSequenceItem(
-          tween: Tween(begin: Offset(-1.1, 0.0), end: Offset(0.2, 0.0)),
+          tween: Tween(begin: Offset(-1.1, 0.0), end: Offset(0.1, 0.0)),
           weight: 3), //提示滑出來-1
       TweenSequenceItem(
-          tween: Tween(begin: Offset(0.2, 0.0), end: Offset(0, 0.0)),
+          tween: Tween(begin: Offset(0.1, 0.0), end: Offset(0, 0.0)),
           weight: 2), //提示滑出來-2
       TweenSequenceItem(
           tween: ConstantTween<Offset>(Offset(0, 0.0)),
           weight: 90), // 總動畫時間* 40/100; 做別的動畫
       TweenSequenceItem(
-          tween: Tween(begin: Offset(0.0, 0.0), end: Offset(0.2, 0.0)),
+          tween: Tween(begin: Offset(0.0, 0.0), end: Offset(0.1, 0.0)),
           weight: 2), //提示收起來 -1
       TweenSequenceItem(
-          tween: Tween(begin: Offset(0.2, 0.0), end: Offset(-1.1, 0.0)),
+          tween: Tween(begin: Offset(0.1, 0.0), end: Offset(-1.1, 0.0)),
           weight: 3), //提示收起來 -2
     ]).animate(CurvedAnimation(
       parent: _animationController,
-      curve: Curves.easeInOut,
+      curve: Curves.linear,
     ));
 
     // Interval 可以依據controller來定義操作時間
@@ -75,21 +77,25 @@ class _SpecialNoticeState extends State<SpecialNotice>
             .animate(_animationController));
 
     _animationController.addStatusListener((status) {
-      print(status);
       if (status == AnimationStatus.completed) {
-        _animationController.reset(); // 完成後就把動畫拿掉
-        Timer(Duration(seconds: 2), (() {
-          _animationController.forward();
-        }));
+        _animationController.reset(); // 完成後就把動畫重置
       }
     });
 
-    Timer(Duration(seconds: 1), (() {
-      //FIXME:執行動畫
-      _animationController.forward();
-    }));
+    _specialNoticeListener();
 
     super.initState();
+  }
+
+  /// 監聽特殊訊息是否有更新
+  _specialNoticeListener() {
+    ctr.specialNoticeContent.listen((String notice) {
+      if (notice == '') {
+        return;
+      }
+      // 執行動畫
+      _animationController.forward();
+    });
   }
 
   @override
@@ -98,14 +104,16 @@ class _SpecialNoticeState extends State<SpecialNotice>
     super.dispose();
   }
 
+  final containerHeight = 25.0;
+
   @override
   Widget build(BuildContext context) {
     return SlideTransition(
       position: _containerSlideAnimation,
       child: ClipRect(
         child: Container(
-          width: 150,
-          height: 20,
+          width: 170,
+          height: containerHeight,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4.0),
               gradient: LinearGradient(
@@ -132,7 +140,7 @@ class _SpecialNoticeState extends State<SpecialNotice>
                         transform: Matrix4.skewX(-0.2),
                         child: Container(
                           width: _widthAnimationOne.value,
-                          height: 20,
+                          height: containerHeight,
                           color: Colors.white70,
                         ),
                       ),
@@ -140,7 +148,7 @@ class _SpecialNoticeState extends State<SpecialNotice>
                         transform: Matrix4.skewX(-0.2),
                         child: Container(
                           width: _widthAnimationTwo.value,
-                          height: 20,
+                          height: containerHeight,
                           color: Colors.white70,
                         ),
                       ),
@@ -148,7 +156,7 @@ class _SpecialNoticeState extends State<SpecialNotice>
                         transform: Matrix4.skewX(-0.2),
                         child: Container(
                           width: _widthAnimationOne.value,
-                          height: 20,
+                          height: containerHeight,
                           color: Colors.white70,
                         ),
                       ),
@@ -156,7 +164,7 @@ class _SpecialNoticeState extends State<SpecialNotice>
                         transform: Matrix4.skewX(-0.2),
                         child: Container(
                           width: _widthAnimationTwo.value,
-                          height: 20,
+                          height: containerHeight,
                           color: Colors.white70,
                         ),
                       ),
@@ -169,9 +177,17 @@ class _SpecialNoticeState extends State<SpecialNotice>
                 right: 0,
                 bottom: 0,
                 left: 0,
-                child: Text('xxxx關注了XX',textAlign: TextAlign.center,style: TextStyle(color: Colors.white,fontSize: 12.0),),
+                child: Obx(
+                  () => Container(
+                    alignment: Alignment.center,
+                    child: Text(
+                      '${ctr.specialNoticeContent.value}',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white, fontSize: 13.0),
+                    ),
+                  ),
+                ),
               )
-
             ],
           ),
         ),

@@ -15,6 +15,7 @@ class LiveChatRoomController extends GetxController {
   /// 屬性
   TextEditingController inputController; // 輸入框textField控制器
   FocusNode inputFocusNode; // 輸入框的聚焦
+  String playerName; // 玩家名字
   List<GiftDetailPart> gifts; //禮物列表
   List<VideoDetailPart> videos; //直播影片
   var chatList = RxList<CommonMessageModel>([]); // 聊天內容
@@ -29,6 +30,17 @@ class LiveChatRoomController extends GetxController {
   // --主播資訊--
 
   var specialNoticeContent = ''.obs; // 特殊通知的內容(放進來就會出現提示動畫)
+
+
+
+
+
+
+  ///  ---- 私有屬性 ----
+  List<String> _specialNoticeContentTemp = []; //暫時儲存的關注內容
+  Timer _specialNoticeTimer; // 每x秒,更新一筆資料到 specialNoticeContent 中
+
+
 
   /// 初始化聊天房資訊
   void liveChatRoomInit() async {
@@ -53,6 +65,7 @@ class LiveChatRoomController extends GetxController {
       print('主播資訊$msg');
       // 這裡回來的msg都是list包著
       final resultMsg = PlayerLobbyConnectModel.fromJson(msg[0]);
+      playerName = resultMsg.NickName; // 玩家名稱
       // 禮物只留下簡體名稱
       gifts = resultMsg.Gifts.map((item) {
         item.Name = _giftNameFilter(originName: item.Name);
@@ -66,7 +79,7 @@ class LiveChatRoomController extends GetxController {
        anchorLikeCount.value = anchorInfo.LikeCount;
        anchorName.value = anchorInfo.Name;
        anchorNickName.value = anchorInfo.NickName;
-      anchorStarValue.value = anchorInfo.StarValue;
+       anchorStarValue.value = anchorInfo.StarValue;
     });
   }
 
@@ -93,11 +106,18 @@ class LiveChatRoomController extends GetxController {
   /// 建立關注主播監聽
   void setUpLikeAnchorListener(){
     liveStreamService.likeAnchorListener(callback: (msg){
+      print('關注監聽, $msg');
       final resultMsg = PlayerLikeModel.fromJson(msg[0]);
       // 更新 人氣值,可關注
       anchorStarValue.value = resultMsg.StarValue;
       anchorLikeCount.value = resultMsg.LikeCount;
-      anchorCanLike.value = false;
+      // 自己送出去的,才需要去更新訂閱狀態
+      if(playerName == resultMsg.NickName){
+        anchorCanLike.value = false;
+      }
+      // 需要顯示的內容
+      final content = '$playerName 关注了 $anchorNickName';
+      _specialNoticeSequence(content: content);
     });
   }
 
@@ -109,8 +129,10 @@ class LiveChatRoomController extends GetxController {
       // 更新 人氣值,可關注
       anchorStarValue.value = resultMsg.StarValue;
       anchorLikeCount.value = resultMsg.LikeCount;
-      anchorCanLike.value = true;
-      update();
+      // 自己送出去的,才需要去更新訂閱狀態
+      if(playerName == resultMsg.NickName){
+        anchorCanLike.value = true;
+      }
     });
   }
 
@@ -135,6 +157,33 @@ class LiveChatRoomController extends GetxController {
     Timer(Duration(seconds: 1), () {
       liveStreamService.getAnchorInfo();
     });
+  }
+
+
+  /// 處理特殊訊息的內容
+  void _specialNoticeSequence({@required String content}){
+    // 先將內容加到暫存區
+    _specialNoticeContentTemp.add(content);
+    // 如果沒有計時器 = 沒資料在跑
+    if(_specialNoticeTimer == null){
+      // 先馬上更新一筆資料
+      specialNoticeContent.value = _specialNoticeContentTemp[0];
+      _specialNoticeContentTemp.removeAt(0);
+      // 設定計時器,每Ｘ秒,更新一次資訊
+     _specialNoticeTimer = Timer.periodic(const Duration(seconds: 5), (Timer timer) {
+        // 還有資料在暫存區
+       if(_specialNoticeContentTemp.length > 0){
+         specialNoticeContent.value = '';
+         specialNoticeContent.value = _specialNoticeContentTemp[0];
+         _specialNoticeContentTemp.removeAt(0);
+       }else{
+         // 沒有資料在暫存區,清除timer
+         _specialNoticeTimer.cancel();
+         _specialNoticeTimer = null;
+         specialNoticeContent.value = '';
+       }
+      });
+    }
   }
 
   /// 禮物名稱過濾
