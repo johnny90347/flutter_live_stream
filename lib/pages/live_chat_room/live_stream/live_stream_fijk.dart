@@ -20,6 +20,10 @@ class _LiveStreamFijkState extends State<LiveStreamFijk> {
   @override
   void initState() {
     super.initState();
+
+
+//    _videoSrcList = ctr.videos.value;
+
     _videoSrcList = [
       VideoDetailPart.fromJson({
         "Flv": '//tw.2q3k.cn/obs/018.flv',

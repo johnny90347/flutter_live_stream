@@ -17,7 +17,8 @@ class LiveChatRoomController extends GetxController {
   FocusNode inputFocusNode; // 輸入框的聚焦
   String playerName; // 玩家名字
   List<GiftDetailPart> gifts; //禮物列表
-  List<VideoDetailPart> videos; //直播影片
+//  List<VideoDetailPart> videos;
+  var videos = RxList<VideoDetailPart>([]); //直播影片
   var chatList = RxList<CommonMessageModel>([]); // 聊天內容
 
   // --主播資訊--
@@ -75,7 +76,7 @@ class LiveChatRoomController extends GetxController {
         item.Name = _giftNameFilter(originName: item.Name);
         return item;
       }).toList();
-      videos = resultMsg.Videos;
+      videos.value = resultMsg.Videos;
       // 這裡,因為一直會持續更新線上人數or人氣值..等,發現如果是更新 anchorLobbyInfo 內的屬性,他的obs不會響應有發生改變,所以只好每個都拿出來
       final anchorInfo = resultMsg.AnchorLobbyInfo;
        anchorCanLike.value = anchorInfo.CanLike;

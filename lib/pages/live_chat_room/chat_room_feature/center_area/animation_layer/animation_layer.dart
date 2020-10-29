@@ -7,21 +7,23 @@ class AnimationLayer extends StatelessWidget {
   final systemInfoService = Get.find<SystemInfoService>();
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Stack(
-        children: [
-          Positioned(
-            top: 5,
-            left: 5,
-            child: SpecialNotice(),// 特殊通知
-          ),
-          Positioned(
-            left: 0,
-            top: systemInfoService.screenMaxWidth / 2,
-            child: NormalGiftAnimation(), // 一般禮物-動畫
-          )
-        ],
-      ),
-    );
+    return LayoutBuilder(builder: (context, constraints) {
+      return Container(
+        child: Stack(
+          children: [
+            Positioned(
+              top: 5,
+              left: 5,
+              child: SpecialNotice(), // 特殊通知
+            ),
+            Positioned(
+              left: 0,
+              top: constraints.maxHeight / 2,
+              child: NormalGiftAnimation(), // 一般禮物-動畫
+            )
+          ],
+        ),
+      );
+    });
   }
 }

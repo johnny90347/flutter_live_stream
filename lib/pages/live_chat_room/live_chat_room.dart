@@ -26,12 +26,14 @@ class _LiveChatRoomState extends State<LiveChatRoom> {
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-          Positioned(
-            top: 0,
-            right: 0,
-            bottom: 0,
-            left: 0,
-            child: LiveStreamFijk(),
+          Obx(
+            () => Positioned(
+              top: 0,
+              right: 0,
+              bottom: 0,
+              left: 0,
+              child: ctr.videos.length == 0 ? LiveStream() : LiveStreamFijk(), // 影片url沒拿回來時,顯示照片
+            ),
           ),
           Positioned(
             top: 0,
