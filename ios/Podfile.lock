@@ -1,4 +1,8 @@
 PODS:
+  - BIJKPlayer (0.7.8)
+  - fijkplayer (0.8.7):
+    - BIJKPlayer (~> 0.7.8)
+    - Flutter
   - Flutter (1.0.0)
   - flutter_vlc_player (3.0.2):
     - Flutter
@@ -10,6 +14,7 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - fijkplayer (from `.symlinks/plugins/fijkplayer/ios`)
   - Flutter (from `Flutter`)
   - flutter_vlc_player (from `.symlinks/plugins/flutter_vlc_player/ios`)
   - keyboard_utils (from `.symlinks/plugins/keyboard_utils/ios`)
@@ -17,9 +22,12 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - BIJKPlayer
     - MobileVLCKit
 
 EXTERNAL SOURCES:
+  fijkplayer:
+    :path: ".symlinks/plugins/fijkplayer/ios"
   Flutter:
     :path: Flutter
   flutter_vlc_player:
@@ -30,6 +38,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/path_provider/ios"
 
 SPEC CHECKSUMS:
+  BIJKPlayer: 464bcb8d263331228758bfa34b45d00f399c9fb8
+  fijkplayer: 0c8728bf3b222203e1fddb08f6899719d88b2b6d
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_vlc_player: 64a2c27b2c99bc4fb954c5ff9d1cc278c87702ee
   keyboard_utils: ab24bc711be9e91a5937c20489056b8dd650fecc

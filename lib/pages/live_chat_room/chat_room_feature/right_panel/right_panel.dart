@@ -85,11 +85,17 @@ class _RightPanelState extends State<RightPanel> {
                 SizedBox(
                   height: circleHeight * 0.3,
                 ),
-                CircleButton(
-                  icon: Icons.volume_up,
+               Obx(()=> CircleButton(
+                  icon: ctr.currentVideoVolume.value != 0 ? Icons.volume_up : Icons.volume_mute,
                   diameter: circleHeight,
-                  onTap: () {},
-                ),
+                  onTap: () {
+                    if(ctr.currentVideoVolume.value == 0){
+                      ctr.currentVideoVolume.value = 0.5;
+                    }else{
+                      ctr.currentVideoVolume.value = 0;
+                    }
+                  },
+                ),),
                 SizedBox(
                   height: circleHeight * 0.3,
                 ),
@@ -98,7 +104,6 @@ class _RightPanelState extends State<RightPanel> {
                   diameter: circleHeight,
                   onTap: () {
                     /// 測試code
-
                   },
                 ),
                 SizedBox(

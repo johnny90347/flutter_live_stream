@@ -27,10 +27,13 @@ class LiveChatRoomController extends GetxController {
   var anchorName = ''.obs; // 主播英文名字
   var anchorNickName = '载入中'.obs;//主播中文名字
   var anchorStarValue = 0.obs;// 主播人氣值
-  // --主播資訊--
 
+  // --動畫提示--
   var specialNoticeContent = ''.obs; // 特殊通知的內容(放進來就會出現提示動畫)
 
+
+  // --右側控制台--
+  var currentVideoVolume = 0.5.obs;//當前視頻音量(只有設定0 or 0.5)
 
 
 
