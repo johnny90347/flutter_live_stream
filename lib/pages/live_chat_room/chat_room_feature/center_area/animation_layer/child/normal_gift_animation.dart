@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_live_stream/core/controllers/live_chat_room_controller.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class NormalGiftAnimation extends StatefulWidget {
@@ -7,9 +8,9 @@ class NormalGiftAnimation extends StatefulWidget {
 }
 
 class _NormalGiftAnimationState extends State<NormalGiftAnimation> {
+  final ctr = Get.find<LiveChatRoomController>();
   final boxWidth = 200.0;
   final boxHeight = 50.0;
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -61,7 +62,7 @@ class _NormalGiftAnimationState extends State<NormalGiftAnimation> {
                     child: Row(
                       children: [
                         SizedBox(
-                          width: 2.0,
+                          width: 10.0,
                         ),
                         SizedBox(
                           height: boxHeight * 0.7,
@@ -99,14 +100,9 @@ class _NormalGiftAnimationState extends State<NormalGiftAnimation> {
           ),
           Positioned(
             // 送禮次數 * 幾次
-            left: 60,
+            left: 70,
             top: 20,
-            child: Container(
-              alignment: Alignment.bottomLeft,
-              width: 50,
-              height: 50,
-              child: StrokeNumber(text: '59'),
-            ),
+            child: Obx(()=> StrokeNumber(text: '${ctr.textNumber.value}',),)
           ),
         ],
       ),
@@ -148,34 +144,69 @@ class StrokeText extends StatelessWidget {
 }
 
 // 有外框的數字
-class StrokeNumber extends StatelessWidget {
+class StrokeNumber extends StatefulWidget {
   final String text;
-
   StrokeNumber({@required this.text});
 
   @override
+  _StrokeNumberState createState() => _StrokeNumberState();
+}
+
+class _StrokeNumberState extends State<StrokeNumber> with TickerProviderStateMixin {
+
+  AnimationController controller;
+  Animation<double> animation;
+  @override
+  void initState() {
+    super.initState();
+
+    controller = new AnimationController(
+    duration: const Duration(milliseconds: 2000), vsync: this);
+
+    animation = new Tween(begin: 30.0, end: 35.0).animate(controller)
+      ..addListener(() {
+        setState(() {
+          // the state that has changed here is the animation object’s value
+        });
+      });
+    controller.forward();
+  }
+
+  dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        // 文字加入邊框
-        Text(text,
-            style: GoogleFonts.pacifico(
-              textStyle: TextStyle(
-                fontSize: 35,
-                letterSpacing: 1.2,
-                foreground: Paint()
-                  ..style = PaintingStyle.stroke
-                  ..strokeWidth = 3
-                  ..color = Colors.white,
-              ),
-            )),
-        // Solid text as fill.
-        Text(text,
-            style: GoogleFonts.pacifico(
-              textStyle: TextStyle(
-                  fontSize: 35, color: Colors.black, letterSpacing: 1.2),
-            )),
-      ],
+    print('rebuild');
+    return Container(
+      alignment: Alignment.bottomLeft,
+      width: 100,
+      height: 50,
+      color: Colors.green,
+      child:Stack(
+        children: <Widget>[
+          // 文字加入邊框
+          Text(widget.text,
+              style: GoogleFonts.pacifico(
+                textStyle: TextStyle(
+                  fontSize: animation.value,
+                  letterSpacing: 1.2,
+                  foreground: Paint()
+                    ..style = PaintingStyle.stroke
+                    ..strokeWidth = 3
+                    ..color = Colors.white,
+                ),
+              )),
+          // Solid text as fill.
+          Text(widget.text,
+              style: GoogleFonts.pacifico(
+                textStyle: TextStyle(
+                    fontSize: animation.value, color: Colors.black, letterSpacing: 1.2),
+              )),
+        ],
+      ),
     );
   }
 }

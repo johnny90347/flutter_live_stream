@@ -104,6 +104,7 @@ class _RightPanelState extends State<RightPanel> {
                   diameter: circleHeight,
                   onTap: () {
                     /// 測試code
+                    ctr.textNumber += 1;
                   },
                 ),
                 SizedBox(

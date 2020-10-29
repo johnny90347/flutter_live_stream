@@ -31,7 +31,7 @@ class LiveChatRoomController extends GetxController {
 
   // --動畫提示--
   var specialNoticeContent = ''.obs; // 特殊通知的內容(放進來就會出現提示動畫)
-
+  var textNumber = 1.obs;
 
   // --右側控制台--
   var currentVideoVolume = 0.5.obs;//當前視頻音量(只有設定0 or 0.5)
