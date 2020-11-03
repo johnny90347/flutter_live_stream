@@ -7,104 +7,127 @@ class NormalGiftAnimation extends StatefulWidget {
   _NormalGiftAnimationState createState() => _NormalGiftAnimationState();
 }
 
-class _NormalGiftAnimationState extends State<NormalGiftAnimation> {
+class _NormalGiftAnimationState extends State<NormalGiftAnimation> with TickerProviderStateMixin{
   final ctr = Get.find<LiveChatRoomController>();
   final boxWidth = 200.0;
   final boxHeight = 50.0;
+
+
+  //滑動動畫控制
+  AnimationController _animationController;
+  Animation _containerSlideAnimation; //容器移動動畫
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(seconds: 4),
+      vsync: this,
+    )..addListener(() {
+
+    });
+    _containerSlideAnimation = Tween(begin: Offset(0.0, 0.0), end: Offset(0.0, -1.0)).animate(_animationController);
+    _animationController.forward();
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: boxWidth,
-      height: boxHeight * 2,
-      child: Stack(
-        children: [
-          Positioned(
-            bottom: 0,
-            left: 0,
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    // 主播背景漸層色
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: [
-                      Color.fromRGBO(254, 148, 189, 1),
-                      Color.fromRGBO(94, 231, 223, .9),
-                      Colors.transparent
-                    ],
-                    stops: [
-                      0.0,
-                      0.4,
-                      0.8
-                    ]),
-              ),
-              width: boxWidth,
-              height: boxHeight,
-              child: Stack(
-                children: [
-                  Positioned(
-                      //上方白色漸層Border
+    return SlideTransition(
+      position: _containerSlideAnimation,
+      child: SizedBox(
+        width: boxWidth,
+        height: boxHeight * 2,
+        child: Stack(
+          children: [
+            Positioned(
+              bottom: 0,
+              left: 0,
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      // 主播背景漸層色
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      colors: [
+                        Color.fromRGBO(254, 148, 189, 1),
+                        Color.fromRGBO(94, 231, 223, .9),
+                        Colors.transparent
+                      ],
+                      stops: [
+                        0.0,
+                        0.4,
+                        0.8
+                      ]),
+                ),
+                width: boxWidth,
+                height: boxHeight,
+                child: Stack(
+                  children: [
+                    Positioned(
+                        //上方白色漸層Border
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        child: WhiteBorderLine()),
+                    Positioned(
+                        //下方白色漸層Border
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: WhiteBorderLine()),
+                    Positioned(
                       top: 0,
-                      left: 0,
                       right: 0,
-                      child: WhiteBorderLine()),
-                  Positioned(
-                      //下方白色漸層Border
                       bottom: 0,
                       left: 0,
-                      right: 0,
-                      child: WhiteBorderLine()),
-                  Positioned(
-                    top: 0,
-                    right: 0,
-                    bottom: 0,
-                    left: 0,
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 10.0,
-                        ),
-                        SizedBox(
-                          height: boxHeight * 0.7,
-                          width: boxHeight * 0.7,
-                          child:
-                              Image.asset('assets/images/gift/icon/gift_1.png'),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              alignment: Alignment.centerLeft,
-                              padding: const EdgeInsets.only(left: 10.0),
-                              height: boxHeight / 2,
-                              width: boxWidth - boxHeight, // 剪掉圖片的寬度
-                              child: StrokeSymbol(
-                                text: '×',
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 10.0,
+                          ),
+                          SizedBox(
+                            height: boxHeight * 0.7,
+                            width: boxHeight * 0.7,
+                            child:
+                                Image.asset('assets/images/gift/icon/gift_1.png'),
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                alignment: Alignment.centerLeft,
+                                padding: const EdgeInsets.only(left: 10.0),
+                                height: boxHeight / 2,
+                                width: boxWidth - boxHeight, // 剪掉圖片的寬度
+                                child: StrokeSymbol(
+                                  text: '×',
+                                ),
                               ),
-                            ),
-                            Container(
-                              alignment: Alignment.topLeft,
-                              height: boxHeight / 2,
-                              child: StrokeText(
-                                text: '大麥克',
-                              ),
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                  )
-                ],
+                              Container(
+                                alignment: Alignment.topLeft,
+                                height: boxHeight / 2,
+                                child: StrokeText(
+                                  text: '大麥克',
+                                ),
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
-          ),
-          Positioned(
-            // 送禮次數 * 幾次
-            left: 70,
-            top: 20,
-            child: Obx(()=> StrokeNumber(text: '${ctr.textNumber.value}',),)
-          ),
-        ],
+            Positioned(
+              // 送禮次數 * 幾次
+              left: 70,
+              top: 20,
+              child: Obx(()=> StrokeNumber(text: '${ctr.textNumber.value}',),)
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -152,46 +175,30 @@ class StrokeNumber extends StatefulWidget {
   _StrokeNumberState createState() => _StrokeNumberState();
 }
 
-class _StrokeNumberState extends State<StrokeNumber> with TickerProviderStateMixin {
+class _StrokeNumberState extends State<StrokeNumber>{
 
-  AnimationController controller;
-  Animation<double> animation;
   @override
   void initState() {
     super.initState();
-
-    controller = new AnimationController(
-    duration: const Duration(milliseconds: 2000), vsync: this);
-
-    animation = new Tween(begin: 30.0, end: 35.0).animate(controller)
-      ..addListener(() {
-        setState(() {
-          // the state that has changed here is the animation object’s value
-        });
-      });
-    controller.forward();
   }
 
   dispose() {
-    controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    print('rebuild');
     return Container(
-      alignment: Alignment.bottomLeft,
+      alignment: Alignment.centerLeft,
       width: 100,
       height: 50,
-      color: Colors.green,
       child:Stack(
         children: <Widget>[
           // 文字加入邊框
           Text(widget.text,
               style: GoogleFonts.pacifico(
                 textStyle: TextStyle(
-                  fontSize: animation.value,
+                  fontSize: 35,
                   letterSpacing: 1.2,
                   foreground: Paint()
                     ..style = PaintingStyle.stroke
@@ -203,7 +210,7 @@ class _StrokeNumberState extends State<StrokeNumber> with TickerProviderStateMix
           Text(widget.text,
               style: GoogleFonts.pacifico(
                 textStyle: TextStyle(
-                    fontSize: animation.value, color: Colors.black, letterSpacing: 1.2),
+                    fontSize:35, color: Colors.black, letterSpacing: 1.2),
               )),
         ],
       ),
