@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_live_stream/core/services/service_module.dart';
+import 'package:flutter_live_stream/pages/live_chat_room/chat_room_feature/center_area/animation_layer/child/normal_gift_container.dart';
 import 'child/special_notice.dart';
 import 'child/normal_gift_animation.dart';
 
@@ -19,7 +20,7 @@ class AnimationLayer extends StatelessWidget {
             Positioned(
               left: 0,
               bottom: constraints.maxHeight / 2 - 50, // 50是一般動畫空間的一半
-              child: NormalGiftAnimation(), // 一般禮物-動畫
+              child: NormalGiftContainer(), // 一般禮物-動畫
             )
           ],
         ),

@@ -1,5 +1,6 @@
 //套件
 import 'package:flutter_live_stream/core/enum/response.dart';
+import 'package:flutter_live_stream/pages/live_chat_room/chat_room_feature/center_area/animation_layer/child/normal_gift_animation.dart';
 import 'package:flutter_live_stream/shared/widgets/common_dialog_content.dart';
 import 'package:get/get.dart';
 export 'package:get/get.dart';
@@ -31,8 +32,8 @@ class LiveChatRoomController extends GetxController {
 
   // --動畫提示--
   var specialNoticeContent = ''.obs; // 特殊通知的內容(放進來就會出現提示動畫)
-  var textNumber = 1.obs;
-
+  var giftNoticeList = RxList<int>([0]);// 加入此列表,會在畫面上跑出送禮畫面
+  var giftNoticeCombo = 1.obs;
   // --右側控制台--
   var currentVideoVolume = 0.5.obs;//當前視頻音量(只有設定0 or 0.5)
 

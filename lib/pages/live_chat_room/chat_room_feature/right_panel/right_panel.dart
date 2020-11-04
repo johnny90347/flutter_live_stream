@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_live_stream/core/controllers/live_chat_room_controller.dart';
 import 'package:flutter_live_stream/core/services/system_info_service/system_info_service.dart';
+import 'package:flutter_live_stream/pages/live_chat_room/chat_room_feature/center_area/animation_layer/child/normal_gift_animation.dart';
 import 'package:flutter_live_stream/shared/widgets/common_dialog_content.dart';
 import 'package:flutter_live_stream/shared/widgets/gift_bottom_sheet.dart';
 
@@ -80,7 +81,9 @@ class _RightPanelState extends State<RightPanel> {
                 CircleButton(
                   icon: Icons.refresh,
                   diameter: circleHeight,
-                  onTap: () {},
+                  onTap: () {
+                    ctr.giftNoticeList.removeAt(0);
+                  },
                 ),
                 SizedBox(
                   height: circleHeight * 0.3,
@@ -104,7 +107,8 @@ class _RightPanelState extends State<RightPanel> {
                   diameter: circleHeight,
                   onTap: () {
                     /// 測試code
-                    ctr.textNumber += 1;
+//                    ctr.giftNoticeList.add(2);
+                    ctr.giftNoticeCombo.value++;
                   },
                 ),
                 SizedBox(

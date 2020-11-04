@@ -2,16 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_live_stream/core/controllers/live_chat_room_controller.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+const boxWidth = 200.0;
+const boxHeight = 50.0;
+
+
+/// 送禮動畫的畫面+動畫
 class NormalGiftAnimation extends StatefulWidget {
   @override
   _NormalGiftAnimationState createState() => _NormalGiftAnimationState();
 }
 
-class _NormalGiftAnimationState extends State<NormalGiftAnimation> with TickerProviderStateMixin{
+class _NormalGiftAnimationState extends State<NormalGiftAnimation>
+    with TickerProviderStateMixin {
   final ctr = Get.find<LiveChatRoomController>();
-  final boxWidth = 200.0;
-  final boxHeight = 50.0;
-
 
   //滑動動畫控制
   AnimationController _animationController;
@@ -21,15 +24,14 @@ class _NormalGiftAnimationState extends State<NormalGiftAnimation> with TickerPr
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      duration: const Duration(seconds: 4),
+      duration: const Duration(seconds: 1),
       vsync: this,
-    )..addListener(() {
-
-    });
-    _containerSlideAnimation = Tween(begin: Offset(0.0, 0.0), end: Offset(0.0, -1.0)).animate(_animationController);
+    )..addListener(() {});
+    _containerSlideAnimation =
+        Tween(begin: Offset(-1.0, 0.0), end: Offset(0.0, 0.0))
+            .animate(_animationController);
     _animationController.forward();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -89,8 +91,8 @@ class _NormalGiftAnimationState extends State<NormalGiftAnimation> with TickerPr
                           SizedBox(
                             height: boxHeight * 0.7,
                             width: boxHeight * 0.7,
-                            child:
-                                Image.asset('assets/images/gift/icon/gift_1.png'),
+                            child: Image.asset(
+                                'assets/images/gift/icon/gift_1.png'),
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -121,11 +123,12 @@ class _NormalGiftAnimationState extends State<NormalGiftAnimation> with TickerPr
               ),
             ),
             Positioned(
-              // 送禮次數 * 幾次
-              left: 70,
-              top: 20,
-              child: Obx(()=> StrokeNumber(text: '${ctr.textNumber.value}',),)
-            ),
+                // 送禮次數 * 幾次
+                left: 70,
+                bottom: 16,
+                child: StrokeNumber(
+                  text: '1',
+                )),
           ],
         ),
       ),
@@ -175,8 +178,7 @@ class StrokeNumber extends StatefulWidget {
   _StrokeNumberState createState() => _StrokeNumberState();
 }
 
-class _StrokeNumberState extends State<StrokeNumber>{
-
+class _StrokeNumberState extends State<StrokeNumber> {
   @override
   void initState() {
     super.initState();
@@ -188,36 +190,40 @@ class _StrokeNumberState extends State<StrokeNumber>{
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.centerLeft,
+    return SizedBox(
       width: 100,
-      height: 50,
-      child:Stack(
+      height: 80,
+      child: Stack(
         children: <Widget>[
           // 文字加入邊框
-          Text(widget.text,
-              style: GoogleFonts.pacifico(
-                textStyle: TextStyle(
-                  fontSize: 35,
-                  letterSpacing: 1.2,
-                  foreground: Paint()
-                    ..style = PaintingStyle.stroke
-                    ..strokeWidth = 3
-                    ..color = Colors.white,
-                ),
-              )),
+          Positioned(
+            bottom: 0,
+            child: Text(widget.text,
+                style: GoogleFonts.pacifico(
+                  textStyle: TextStyle(
+                    fontSize: 40,
+                    letterSpacing: 1.2,
+                    foreground: Paint()
+                      ..style = PaintingStyle.stroke
+                      ..strokeWidth = 3
+                      ..color = Colors.white,
+                  ),
+                )),
+          ),
           // Solid text as fill.
-          Text(widget.text,
-              style: GoogleFonts.pacifico(
-                textStyle: TextStyle(
-                    fontSize:35, color: Colors.black, letterSpacing: 1.2),
-              )),
+          Positioned(
+            bottom: 0,
+            child: Text(widget.text,
+                style: GoogleFonts.pacifico(
+                  textStyle: TextStyle(
+                      fontSize: 40, color: Colors.black, letterSpacing: 1.2),
+                )),
+          ),
         ],
       ),
     );
   }
 }
-
 
 // 有外框的符號(乘號)
 class StrokeSymbol extends StatelessWidget {
@@ -251,9 +257,6 @@ class StrokeSymbol extends StatelessWidget {
     );
   }
 }
-
-
-
 
 // 白色漸層邊線
 class WhiteBorderLine extends StatelessWidget {
