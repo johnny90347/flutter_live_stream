@@ -13,7 +13,7 @@ class LiveChatRoomController extends GetxController {
   final liveStreamService = Get.find<LiveStreamService>();
   final chatRoomService = Get.find<ChatRoomService>();
 
-  /// 屬性
+  /// ---- 公開屬性 ----
   TextEditingController inputController; // 輸入框textField控制器
   FocusNode inputFocusNode; // 輸入框的聚焦
   String playerName; // 玩家名字
@@ -21,34 +21,31 @@ class LiveChatRoomController extends GetxController {
 //  List<VideoDetailPart> videos;
   var videos = RxList<VideoDetailPart>([]); //直播影片
   var chatList = RxList<CommonMessageModel>([]); // 聊天內容
-
   // --主播資訊--
-  var anchorCanLike = true.obs;  // 可不可以訂閱
+  var anchorCanLike = true.obs; // 可不可以訂閱
   var anchorFollowCount = 0.obs; // 在線人數
   var anchorLikeCount = 0.obs;
   var anchorName = ''.obs; // 主播英文名字
-  var anchorNickName = '载入中'.obs;//主播中文名字
-  var anchorStarValue = 0.obs;// 主播人氣值
-
+  var anchorNickName = '载入中'.obs; //主播中文名字
+  var anchorStarValue = 0.obs; // 主播人氣值
   // --動畫提示--
   var specialNoticeContent = ''.obs; // 特殊通知的內容(放進來就會出現提示動畫)
-  var giftNoticeList = RxList<int>([0]);// 加入此列表,會在畫面上跑出送禮畫面
-  var giftNoticeCombo = 1.obs;
+  var giftNoticeList = RxList<PlayerSendGiftModel>([]); // 加入此列表,會在畫面上跑出送禮畫面
+  var giftNoticeCombo = 1.obs; // 禮物的Combo數
   // --右側控制台--
-  var currentVideoVolume = 0.5.obs;//當前視頻音量(只有設定0 or 0.5)
-
-
-
-
+  var currentVideoVolume = 0.5.obs; //當前視頻音量(只有設定0 or 0.5)
 
   ///  ---- 私有屬性 ----
-  List<String> _specialNoticeContentTemp = []; //暫時儲存的關注內容
+  var _specialNoticeContentTemp = RxList<String>([]); //暫時儲存的關注內容(可觀察對象)
   Timer _specialNoticeTimer; // 每x秒,更新一筆資料到 specialNoticeContent 中
 
-
+  var _giftNoticeListTemp = RxList<PlayerSendGiftModel>([]); // 暫時儲存的送禮提示
+  Timer _giftNoticeTimer; // 每x秒,欲一筆資料到 giftNoticeList 中
 
   /// 初始化聊天房資訊
   void liveChatRoomInit() async {
+    _listenSpecialNoticeTemp();
+    _listenGiftNoticeListTemp();
     liveStreamService.initLiveStreamConnection(callback: () {
       print('LiveStream連線完成');
       setupPlayerLobbyConnectListener();
@@ -80,12 +77,12 @@ class LiveChatRoomController extends GetxController {
       videos.value = resultMsg.Videos;
       // 這裡,因為一直會持續更新線上人數or人氣值..等,發現如果是更新 anchorLobbyInfo 內的屬性,他的obs不會響應有發生改變,所以只好每個都拿出來
       final anchorInfo = resultMsg.AnchorLobbyInfo;
-       anchorCanLike.value = anchorInfo.CanLike;
-       anchorFollowCount.value = anchorInfo.FollowCount;
-       anchorLikeCount.value = anchorInfo.LikeCount;
-       anchorName.value = anchorInfo.Name;
-       anchorNickName.value = anchorInfo.NickName;
-       anchorStarValue.value = anchorInfo.StarValue;
+      anchorCanLike.value = anchorInfo.CanLike;
+      anchorFollowCount.value = anchorInfo.FollowCount;
+      anchorLikeCount.value = anchorInfo.LikeCount;
+      anchorName.value = anchorInfo.Name;
+      anchorNickName.value = anchorInfo.NickName;
+      anchorStarValue.value = anchorInfo.StarValue;
     });
   }
 
@@ -110,62 +107,116 @@ class LiveChatRoomController extends GetxController {
   }
 
   /// 建立關注主播監聽
-  void setUpLikeAnchorListener(){
-    liveStreamService.likeAnchorListener(callback: (msg){
+  void setUpLikeAnchorListener() {
+    liveStreamService.likeAnchorListener(callback: (msg) {
       print('關注監聽, $msg');
       final resultMsg = PlayerLikeModel.fromJson(msg[0]);
 
-      if(resultMsg.Code != 0){
-        Get.defaultDialog(title: '提示',content: CommonDialogContent(content: '关注失败,请稍后再试',));
+      if (resultMsg.Code != 0) {
+        Get.defaultDialog(
+            title: '提示',
+            content: CommonDialogContent(
+              content: '关注失败,请稍后再试',
+            ));
       }
       // 更新 人氣值,可關注
       anchorStarValue.value = resultMsg.StarValue;
       anchorLikeCount.value = resultMsg.LikeCount;
       // 自己送出去的,才需要去更新訂閱狀態
-      if(playerName == resultMsg.NickName){
+      if (playerName == resultMsg.NickName) {
         anchorCanLike.value = false;
       }
       // 需要顯示的內容
       final content = '$playerName 关注了 $anchorNickName';
-      _specialNoticeSequence(content: content);
+      // 推到暫存區,已經有寫監聽,所以推進去他就會自己做事了
+      _specialNoticeContentTemp.add(content);
     });
   }
 
   /// 建立取消關注主播監聽
-  void setUpUnlikeAnchorListener(){
-    liveStreamService.unLikeAnchorListener(callback: (msg){
+  void setUpUnlikeAnchorListener() {
+    liveStreamService.unLikeAnchorListener(callback: (msg) {
       print('取消關注監聽, $msg');
       final resultMsg = PlayerLikeModel.fromJson(msg[0]);
-      if(resultMsg.Code != 0){
-        Get.defaultDialog(title: '提醒',content: CommonDialogContent(content: '取消关注失败,请稍后再试',));
+      if (resultMsg.Code != 0) {
+        Get.defaultDialog(
+            title: '提醒',
+            content: CommonDialogContent(
+              content: '取消关注失败,请稍后再试',
+            ));
       }
       // 更新 人氣值,可關注
       anchorStarValue.value = resultMsg.StarValue;
       anchorLikeCount.value = resultMsg.LikeCount;
       // 自己送出去的,才需要去更新訂閱狀態
-      if(playerName == resultMsg.NickName){
+      if (playerName == resultMsg.NickName) {
         anchorCanLike.value = true;
       }
     });
   }
 
-
   /// 建立送禮是否成功監聽
-  void setUpPlayerSendGiftListener(){
+  void setUpPlayerSendGiftListener() {
     liveStreamService.playerSendGiftListener(callback: (msg) {
       print('送禮訊息 $msg');
-      //FIXME:Xcode沒裝好,不能執行 flutter packages pub run json_model 指令
+      final resultMsg = PlayerSendGiftModel.fromJson(msg[0]);
+      if (resultMsg.Code == SendGiftRespCode.noAnchor) {
+        Get.defaultDialog(
+            title: '提醒',
+            content: CommonDialogContent(
+              content: '当前无主播在线,无法送礼',
+            ));
+      } else if (resultMsg.Code == SendGiftRespCode.noBalance) {
+        Get.defaultDialog(
+            title: '提醒',
+            content: CommonDialogContent(
+              content: '余额不足',
+            ));
+      } else if (resultMsg.Code == SendGiftRespCode.playerCanNotSendGift) {
+        Get.defaultDialog(
+            title: '提醒',
+            content: CommonDialogContent(
+              content: '您无法送礼',
+            ));
+      } else if (resultMsg.Code == SendGiftRespCode.success) {
+        // 送禮成功
+        final okMsg = extendGiftInfo(msg: resultMsg);
 
+      }
     });
   }
 
+  /// 測試禮物用假資料
+  void MOCKGIFT(){
+    final mockData =  {
+      "Id": "string",
+      "NickName": "Johnny",
+      "MessageId": "string",
+      "Code": 0,
+      "CorrelationId": "string",
+      "GiftId": 1,
+      "StarValue": 0,
+      "Level": 16,
+      "GiftUrl": "string",
+      "GiftName": "string"
+    };
+    final okMsg = PlayerSendGiftModel.fromJson(mockData);
+    final okGiftMsg = extendGiftInfo(msg: okMsg);
+    _giftNoticeListTemp.add(okGiftMsg);
+  }
+
+  /// 清空送禮提示List
+  void resetGiftNoticeList() {
+    giftNoticeList.value = [];
+  }
+
   /// 送出關注主播
-  void sendLikeAnchor(){
+  void sendLikeAnchor() {
     liveStreamService.likeAnchor();
   }
 
   /// 送出取消關注主播
-  void sendUnlikeAnchor(){
+  void sendUnlikeAnchor() {
     liveStreamService.unLikeAnchor();
   }
 
@@ -183,39 +234,102 @@ class LiveChatRoomController extends GetxController {
   }
 
   /// 送出禮物
-  void sendGift({@required int giftId,@required int  giftValue}){
+  void sendGift({@required int giftId, @required int giftValue}) {
     liveStreamService.sendGift(giftId: giftId, giftValue: giftValue);
-  }
-
-  /// 處理特殊訊息的內容
-  void _specialNoticeSequence({@required String content}){
-    // 先將內容加到暫存區
-    _specialNoticeContentTemp.add(content);
-    // 如果沒有計時器 = 沒資料在跑
-    if(_specialNoticeTimer == null){
-      // 先馬上更新一筆資料
-      specialNoticeContent.value = _specialNoticeContentTemp[0];
-      _specialNoticeContentTemp.removeAt(0);
-      // 設定計時器,每Ｘ秒,更新一次資訊
-     _specialNoticeTimer = Timer.periodic(const Duration(seconds: 5), (Timer timer) {
-        // 還有資料在暫存區
-       if(_specialNoticeContentTemp.length > 0){
-         specialNoticeContent.value = ''; // 要先變成空白,不然如果是同一個人關注,他會認為資料沒變,而不更新內容
-         specialNoticeContent.value = _specialNoticeContentTemp[0];
-         _specialNoticeContentTemp.removeAt(0);
-       }else{
-         // 沒有資料在暫存區,清除timer
-         _specialNoticeTimer.cancel();
-         _specialNoticeTimer = null;
-         specialNoticeContent.value = '';
-       }
-      });
-    }
   }
 
   /// 禮物名稱過濾
   String _giftNameFilter({@required String originName}) {
     final strArray = originName.split('#');
     return strArray[0]; // 簡體
+  }
+
+  /// 建立特殊提示暫存區監聽,負責依序推送內容到,special Notice 中
+  void _listenSpecialNoticeTemp() {
+    _specialNoticeContentTemp.listen((tempList) {
+      if (tempList == []) {
+        return;
+      } //如果是空值,就不處理
+      // 如果沒有計時器 = 沒資料在跑
+      if (_specialNoticeTimer == null) {
+        // 先馬上更新一筆資料
+        specialNoticeContent.value = tempList[0];
+        tempList.removeAt(0);
+        // 設定計時器,每X秒,更新一次資訊
+        _specialNoticeTimer =
+            Timer.periodic(const Duration(seconds: 5), (Timer timer) {
+          // 還有資料在暫存區
+          if (tempList.length > 0) {
+            specialNoticeContent.value =
+                ''; // 要先變成空白,不然如果是同一個人關注,他會認為資料沒變,而不更新內容
+            specialNoticeContent.value = tempList[0];
+            tempList.removeAt(0);
+          } else {
+            // 沒有資料在暫存區,清除timer
+            _specialNoticeTimer.cancel();
+            _specialNoticeTimer = null;
+            specialNoticeContent.value = '';
+          }
+        });
+      }
+    });
+  }
+
+  /// 建立送禮提示暫存區監聽,負責依序推送內容到,giftNoticeList 中
+  void _listenGiftNoticeListTemp() {
+    _giftNoticeListTemp.listen((tempList) {
+      if (tempList == []) {
+        return;
+      } //如果是空值,就不處理
+      // 如果沒有計時器 = 沒資料在跑
+      if (_giftNoticeTimer == null) {
+        // 先馬上更新一筆資料
+        giftNoticeList.add(tempList[0]);
+        tempList.removeAt(0);
+        // 設定計時器,每X秒,更新一次資訊
+        _giftNoticeTimer =
+            Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+          // 還有資料在暫存區
+          if (tempList.length > 0) {
+            _giftComboDetermine();
+          } else {
+            // 沒有資料在暫存區,清除timer
+            _giftNoticeTimer.cancel();
+            _giftNoticeTimer = null;
+          }
+        });
+      }
+    });
+  }
+
+  /// 禮物是否有combo判斷
+  void _giftComboDetermine() {
+    final currentGift = giftNoticeList[0];
+    final nextGift = _giftNoticeListTemp[0];
+    // 如果是同一個人送的同一個禮物,判斷為禮物combo,只變更combo數字
+    if(currentGift.NickName == nextGift.NickName && currentGift.GiftId == currentGift.GiftId){
+      // TODO:到時要改成,後端傳回來的Combo數
+      giftNoticeCombo ++;
+      // 拿掉一個temp的資料
+      _giftNoticeListTemp.removeAt(0);
+    }else{
+      //非 combo,要等到giftNotice是空的,才能推進去
+      if(giftNoticeList.length == 0){
+        giftNoticeList.add(_giftNoticeListTemp[0]);
+        _giftNoticeListTemp.removeAt(0);
+      }
+    }
+  }
+
+  ///替禮替禮物添加資訊
+  PlayerSendGiftModel extendGiftInfo({@required PlayerSendGiftModel msg}) {
+    var resultMsg = msg;
+    this.gifts.forEach((gift) {
+      if (gift.Id == msg.GiftId) {
+        resultMsg.GiftUrl = gift.Icon;
+        resultMsg.GiftName = gift.Name;
+      }
+    });
+    return resultMsg;
   }
 }

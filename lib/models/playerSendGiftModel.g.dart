@@ -15,6 +15,7 @@ PlayerSendGiftModel _$PlayerSendGiftModelFromJson(Map<String, dynamic> json) {
     ..CorrelationId = json['CorrelationId'] as String
     ..GiftId = json['GiftId'] as num
     ..StarValue = json['StarValue'] as num
+    ..Level = json['Level'] as num
     ..GiftUrl = json['GiftUrl'] as String
     ..GiftName = json['GiftName'] as String;
 }
@@ -29,6 +30,7 @@ Map<String, dynamic> _$PlayerSendGiftModelToJson(
       'CorrelationId': instance.CorrelationId,
       'GiftId': instance.GiftId,
       'StarValue': instance.StarValue,
+      'Level': instance.Level,
       'GiftUrl': instance.GiftUrl,
       'GiftName': instance.GiftName
     };

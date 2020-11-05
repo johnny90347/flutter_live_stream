@@ -6,6 +6,7 @@
   "CorrelationId": "string",
   "GiftId": 0,
   "StarValue": 0,
+  "Level": 0,
   "GiftUrl": "string",
   "GiftName": "string"
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_live_stream/core/controllers/live_chat_room_controller.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -42,23 +44,48 @@ class _NormalGiftViewState extends State<NormalGiftView>
   //滑動動畫控制
   AnimationController _animationController;
   Animation _containerSlideAnimation; //容器移動動畫
+  Timer destroyTimer; // 計時器,用來倒數自己還剩多久可以活
 
   @override
   void initState() {
     super.initState();
+    _setUpAnimation();
+
+    //TODO: 再來個變數來監聽
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    destroyTimer.cancel();
+    super.dispose();
+  }
+
+  /// 設置動畫
+  _setUpAnimation(){
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
-    )..addListener(() {});
+    )..addListener(() {})
+      ..addStatusListener((status) {
+        if(status == AnimationStatus.dismissed){
+          //送禮畫面已經收回去了(畫面空)
+          // 把送禮提示List 清空
+          ctr.resetGiftNoticeList();
+        }
+      });
     _containerSlideAnimation =
         Tween(begin: Offset(-1.0, 0.0), end: Offset(0.0, 0.0))
             .animate(_animationController);
-    _animationController.forward();
+
+    // 0.5秒後開始動畫(怕畫面還在渲染,會卡一下)
+    Timer(Duration(milliseconds: 500), () {
+      _animationController.forward();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    print('NormalGiftView');
     return SlideTransition(
       position: _containerSlideAnimation,
       child: SizedBox(
@@ -238,12 +265,11 @@ class _StrokeNumberState extends State<StrokeNumber>  with TickerProviderStateMi
     _animationController.forward();
 
 
-
+    //如果combo數字有變動,就再做一次動畫
     ctr.giftNoticeCombo.listen((value) {
       _animationController.reset();
       _animationController.forward();
     });
-
   }
   
   dispose() {
@@ -252,7 +278,6 @@ class _StrokeNumberState extends State<StrokeNumber>  with TickerProviderStateMi
 
   @override
   Widget build(BuildContext context) {
-    print('StrokeNumber');
     return SlideTransition(
       position: _containerSlideAnimation,
       child: Stack(

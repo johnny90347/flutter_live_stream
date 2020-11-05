@@ -13,6 +13,7 @@ class PlayerSendGiftModel {
     String CorrelationId;
     num GiftId;
     num StarValue;
+    num Level;
     String GiftUrl;
     String GiftName;
     
