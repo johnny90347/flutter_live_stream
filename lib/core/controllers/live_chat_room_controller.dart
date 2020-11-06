@@ -32,6 +32,8 @@ class LiveChatRoomController extends GetxController {
   var specialNoticeContent = ''.obs; // 特殊通知的內容(放進來就會出現提示動畫)
   var giftNoticeList = RxList<PlayerSendGiftModel>([]); // 加入此列表,會在畫面上跑出送禮畫面
   var giftNoticeCombo = 1.obs; // 禮物的Combo數
+  var giftAnimateCommand = ''.obs; // 送禮動畫的命令(View端接收命令做動畫)
+  var giftViewState = ''; //禮物視窗現在的狀態(只有展示或者隱藏兩種)
   // --右側控制台--
   var currentVideoVolume = 0.5.obs; //當前視頻音量(只有設定0 or 0.5)
 
@@ -41,6 +43,7 @@ class LiveChatRoomController extends GetxController {
 
   var _giftNoticeListTemp = RxList<PlayerSendGiftModel>([]); // 暫時儲存的送禮提示
   Timer _giftNoticeTimer; // 每x秒,欲一筆資料到 giftNoticeList 中
+
 
   /// 初始化聊天房資訊
   void liveChatRoomInit() async {
@@ -205,6 +208,34 @@ class LiveChatRoomController extends GetxController {
     _giftNoticeListTemp.add(okGiftMsg);
   }
 
+  /// 測試禮物用假資料
+  void MOCKGIFTTWO(){
+    final mockData =  {
+      "Id": "string",
+      "NickName": "Johnny",
+      "MessageId": "string",
+      "Code": 0,
+      "CorrelationId": "string",
+      "GiftId": 2,
+      "StarValue": 0,
+      "Level": 16,
+      "GiftUrl": "string",
+      "GiftName": "string"
+    };
+    final okMsg = PlayerSendGiftModel.fromJson(mockData);
+    final okGiftMsg = extendGiftInfo(msg: okMsg);
+    _giftNoticeListTemp.add(okGiftMsg);
+  }
+  ///測試用
+  void showGiftView(){
+    giftAnimateCommand.value = GiftCommand.toShow;
+  }
+  /// 測試用
+  void hiddenGiftView(){
+    giftAnimateCommand.value = GiftCommand.toHidden;
+  }
+
+
   /// 清空送禮提示List
   void resetGiftNoticeList() {
     giftNoticeList.value = [];
@@ -286,21 +317,31 @@ class LiveChatRoomController extends GetxController {
         // 先馬上更新一筆資料
         giftNoticeList.add(tempList[0]);
         tempList.removeAt(0);
+        showGiftView();
+          hiddenGiftView();
         // 設定計時器,每X秒,更新一次資訊
         _giftNoticeTimer =
-            Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+            Timer.periodic(const Duration(milliseconds: 4000), (Timer timer) {
           // 還有資料在暫存區
           if (tempList.length > 0) {
-            _giftComboDetermine();
-          } else {
+            tempList.removeAt(0);
+            showGiftView();
+              hiddenGiftView();
+          }
+          if(tempList.length <= 0){
             // 沒有資料在暫存區,清除timer
+            hiddenGiftView();
             _giftNoticeTimer.cancel();
             _giftNoticeTimer = null;
+            giftNoticeCombo.value = 1;
+            print('沒有資料在暫存區,清除timer');
           }
         });
       }
     });
   }
+
+
 
   /// 禮物是否有combo判斷
   void _giftComboDetermine() {
@@ -312,11 +353,18 @@ class LiveChatRoomController extends GetxController {
       giftNoticeCombo ++;
       // 拿掉一個temp的資料
       _giftNoticeListTemp.removeAt(0);
+      print('ComBO!!!');
     }else{
-      //非 combo,要等到giftNotice是空的,才能推進去
-      if(giftNoticeList.length == 0){
+      //非 combo,要替換禮物內容
+      //1.收回
+      //2.替換內容
+      if(giftViewState != GiftViewState.hidden){
+        hiddenGiftView();
+      }else{
         giftNoticeList.add(_giftNoticeListTemp[0]);
         _giftNoticeListTemp.removeAt(0);
+        giftNoticeCombo.value = 1; // combo = 1
+        showGiftView();
       }
     }
   }

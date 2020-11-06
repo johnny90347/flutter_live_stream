@@ -2,85 +2,115 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_live_stream/core/controllers/live_chat_room_controller.dart';
+import 'package:flutter_live_stream/core/enum/response.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 const boxWidth = 250.0;
 const boxHeight = 50.0;
-const centerBoxHeight = 50.0 -4.0; // 扣除掉上下白線的中間寬
+const centerBoxHeight = 50.0 - 4.0; // 扣除掉上下白線的中間寬
 
-class NormalGiftContainer extends StatelessWidget {
-  final ctr = Get.find<LiveChatRoomController>();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: boxWidth,
-      height: boxHeight * 2,
-      child: Obx(
-        () => ListView.builder(
-          padding: EdgeInsets.all(0),
-          reverse: true,
-          itemCount: ctr.giftNoticeList.length,
-          itemBuilder: (context, index) =>
-              NormalGiftView(),
-        ),
-      ),
-    );
-  }
-}
+//class NormalGiftContainer extends StatelessWidget {
+//  final ctr = Get.find<LiveChatRoomController>();
+//
+//  Widget slideIt(BuildContext context, int index, animation) {
+//    return SlideTransition(
+//        position: Tween<Offset>(
+//          begin: const Offset(-1, 0),
+//          end: Offset(0, 0),
+//        ).animate(animation),
+//        child: NormalGiftView());
+//  }
+//
+//  @override
+//  Widget build(BuildContext context) {
+//    return Container(
+//      width: boxWidth,
+//      height: boxHeight * 2,
+//      child: AnimatedList(
+//        initialItemCount: ctr.giftNoticeList.length,
+//        itemBuilder: (context, index, animation) {
+//          return slideIt(context, index, animation);
+//        },
+//      ),
+//    );
+//  }
+//}
 
 class NormalGiftView extends StatefulWidget {
-
-
-
   @override
   _NormalGiftViewState createState() => _NormalGiftViewState();
 }
 
 class _NormalGiftViewState extends State<NormalGiftView>
     with TickerProviderStateMixin {
-
   final ctr = Get.find<LiveChatRoomController>();
   //滑動動畫控制
   AnimationController _animationController;
   Animation _containerSlideAnimation; //容器移動動畫
-  Timer destroyTimer; // 計時器,用來倒數自己還剩多久可以活
 
   @override
   void initState() {
     super.initState();
     _setUpAnimation();
 
-    //TODO: 再來個變數來監聽
+
+    _listenCommend();
   }
 
   @override
   void dispose() {
     _animationController.dispose();
-    destroyTimer.cancel();
     super.dispose();
   }
 
   /// 設置動畫
-  _setUpAnimation(){
+  _setUpAnimation() {
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 500),
       vsync: this,
-    )..addListener(() {})
-      ..addStatusListener((status) {
+    )..addStatusListener((status) {
+
+        if(status == AnimationStatus.forward){
+          // 動畫正在前進中
+          ctr.giftViewState = GiftViewState.onProcess;
+        }
+
+        if(status == AnimationStatus.completed){
+          // 畫面為顯示狀態 (故意用久一點)
+          Timer(Duration(milliseconds: 500), () {
+            ctr.giftViewState = GiftViewState.show;
+          });
+
+        }
+        if(status == AnimationStatus.reverse){
+          // 動畫返回中
+          ctr.giftViewState = GiftViewState.onProcess;
+        }//
         if(status == AnimationStatus.dismissed){
-          //送禮畫面已經收回去了(畫面空)
-          // 把送禮提示List 清空
-          ctr.resetGiftNoticeList();
+          // 畫面為隱藏狀態 (故意用久一點)
+          Timer(Duration(milliseconds: 500), () {
+            ctr.giftViewState = GiftViewState.hidden;
+          });
         }
       });
     _containerSlideAnimation =
         Tween(begin: Offset(-1.0, 0.0), end: Offset(0.0, 0.0))
-            .animate(_animationController);
+            .animate(CurvedAnimation(parent: _animationController, curve: Curves.easeIn));
+  }
 
-    // 0.5秒後開始動畫(怕畫面還在渲染,會卡一下)
-    Timer(Duration(milliseconds: 500), () {
-      _animationController.forward();
+  _listenCommend(){
+    ctr.giftAnimateCommand.listen((command) {
+      print(command);
+      if(command == GiftCommand.toShow){
+        _animationController.forward();
+      }
+      if(command == GiftCommand.toHidden){
+        ctr.giftViewState = GiftViewState.onProcess;
+        //2秒後才收回畫面
+        Timer(Duration(milliseconds: 2000), () {
+          _animationController.reverse();
+        });
+      }
     });
   }
 
@@ -107,7 +137,7 @@ class _NormalGiftViewState extends State<NormalGiftView>
                       height: boxHeight - 4,
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          // 主播背景漸層色
+                            // 主播背景漸層色
                             begin: Alignment.centerLeft,
                             end: Alignment.centerRight,
                             colors: [
@@ -123,10 +153,12 @@ class _NormalGiftViewState extends State<NormalGiftView>
                       ),
                       child: Row(
                         children: [
-                          SizedBox(width: 10,),
+                          SizedBox(
+                            width: 10,
+                          ),
                           SizedBox(
                             height: centerBoxHeight,
-                            width: boxWidth/2,
+                            width: boxWidth / 2,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -149,29 +181,29 @@ class _NormalGiftViewState extends State<NormalGiftView>
               ),
             ),
             Positioned(
-              bottom:4,
+              bottom: 4,
               left: 75,
               child: SizedBox(
                 height: boxHeight * 1.5,
                 width: boxHeight * 1.5,
-                child: Image.asset(
-                    'assets/images/gift/icon/gift_1.png'),
+                child: Image.asset('assets/images/gift/icon/gift_1.png'),
               ),
             ),
             Positioned(
-              bottom:0,
+              bottom: 0,
               left: 140,
               child: StrokeSymbol(
                 text: '×',
               ),
             ),
             Positioned(
-              bottom:-8,
-              left: 160,
-              child: Obx(()=> StrokeNumber(
-                text: '${ctr.giftNoticeCombo.value}',
-              ),)
-            ),
+                bottom: -8,
+                left: 160,
+                child: Obx(
+                  () => StrokeNumber(
+                    text: '${ctr.giftNoticeCombo.value}',
+                  ),
+                )),
           ],
         ),
       ),
@@ -197,7 +229,6 @@ class WhiteBorderLine extends StatelessWidget {
     );
   }
 }
-
 
 // 有外框的文字
 class StrokeText extends StatelessWidget {
@@ -229,7 +260,7 @@ class StrokeText extends StatelessWidget {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style:
-          TextStyle(fontSize: 12, color: Colors.black, letterSpacing: 1.2),
+              TextStyle(fontSize: 12, color: Colors.black, letterSpacing: 1.2),
         ),
       ],
     );
@@ -245,8 +276,8 @@ class StrokeNumber extends StatefulWidget {
   _StrokeNumberState createState() => _StrokeNumberState();
 }
 
-class _StrokeNumberState extends State<StrokeNumber>  with TickerProviderStateMixin {
-
+class _StrokeNumberState extends State<StrokeNumber>
+    with TickerProviderStateMixin {
   //滑動動畫控制
   AnimationController _animationController;
   Animation _containerSlideAnimation; //容器移動動畫
@@ -264,14 +295,13 @@ class _StrokeNumberState extends State<StrokeNumber>  with TickerProviderStateMi
             .animate(_animationController);
     _animationController.forward();
 
-
     //如果combo數字有變動,就再做一次動畫
     ctr.giftNoticeCombo.listen((value) {
       _animationController.reset();
       _animationController.forward();
     });
   }
-  
+
   dispose() {
     super.dispose();
   }

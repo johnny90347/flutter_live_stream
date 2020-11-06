@@ -85,7 +85,9 @@ class _RightPanelState extends State<RightPanel> {
                   icon: Icons.refresh,
                   diameter: circleHeight,
                   onTap: () {
-
+                    /// 測試code
+                    ctr.MOCKGIFTTWO();
+//                  ctr.hiddenGiftView();
                   },
                 ),
                 SizedBox(
@@ -111,6 +113,7 @@ class _RightPanelState extends State<RightPanel> {
                   onTap: () {
                     /// 測試code
                   ctr.MOCKGIFT();
+//                    ctr.showGiftView();
                   },
                 ),
                 SizedBox(

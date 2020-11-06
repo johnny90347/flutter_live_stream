@@ -20,7 +20,7 @@ class AnimationLayer extends StatelessWidget {
             Positioned(
               left: 0,
               bottom: constraints.maxHeight / 2 - 50, // 50是一般動畫空間的一半
-              child: NormalGiftContainer(), // 一般禮物-動畫
+              child: NormalGiftView(), // 一般禮物-動畫
             )
           ],
         ),
