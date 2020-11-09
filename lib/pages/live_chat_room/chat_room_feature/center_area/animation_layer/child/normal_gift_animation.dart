@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 const boxWidth = 200.0;
 const boxHeight = 50.0;
 
-
+/// 目前沒在用
 /// 送禮動畫的畫面+動畫
 class NormalGiftAnimation extends StatefulWidget {
   @override

@@ -9,33 +9,6 @@ const boxWidth = 250.0;
 const boxHeight = 50.0;
 const centerBoxHeight = 50.0 - 4.0; // 扣除掉上下白線的中間寬
 
-//class NormalGiftContainer extends StatelessWidget {
-//  final ctr = Get.find<LiveChatRoomController>();
-//
-//  Widget slideIt(BuildContext context, int index, animation) {
-//    return SlideTransition(
-//        position: Tween<Offset>(
-//          begin: const Offset(-1, 0),
-//          end: Offset(0, 0),
-//        ).animate(animation),
-//        child: NormalGiftView());
-//  }
-//
-//  @override
-//  Widget build(BuildContext context) {
-//    return Container(
-//      width: boxWidth,
-//      height: boxHeight * 2,
-//      child: AnimatedList(
-//        initialItemCount: ctr.giftNoticeList.length,
-//        itemBuilder: (context, index, animation) {
-//          return slideIt(context, index, animation);
-//        },
-//      ),
-//    );
-//  }
-//}
-
 class NormalGiftView extends StatefulWidget {
   @override
   _NormalGiftViewState createState() => _NormalGiftViewState();
@@ -52,8 +25,6 @@ class _NormalGiftViewState extends State<NormalGiftView>
   void initState() {
     super.initState();
     _setUpAnimation();
-
-
     _listenCommend();
   }
 
@@ -69,42 +40,39 @@ class _NormalGiftViewState extends State<NormalGiftView>
       duration: const Duration(milliseconds: 500),
       vsync: this,
     )..addStatusListener((status) {
-
-        if(status == AnimationStatus.forward){
+        if (status == AnimationStatus.forward) {
           // 動畫正在前進中
           ctr.giftViewState = GiftViewState.onProcess;
         }
 
-        if(status == AnimationStatus.completed){
-          // 畫面為顯示狀態 (故意用久一點)
-          Timer(Duration(milliseconds: 500), () {
-            ctr.giftViewState = GiftViewState.show;
-          });
-
+        if (status == AnimationStatus.completed) {
+          // 畫面為顯示狀態
+          ctr.giftViewState = GiftViewState.show;
         }
-        if(status == AnimationStatus.reverse){
+        if (status == AnimationStatus.reverse) {
           // 動畫返回中
           ctr.giftViewState = GiftViewState.onProcess;
-        }//
-        if(status == AnimationStatus.dismissed){
-          // 畫面為隱藏狀態 (故意用久一點)
-          Timer(Duration(milliseconds: 500), () {
-            ctr.giftViewState = GiftViewState.hidden;
-          });
+        } //
+        if (status == AnimationStatus.dismissed) {
+          // 畫面為隱藏狀態
+          ctr.giftViewState = GiftViewState.hidden;
         }
       });
     _containerSlideAnimation =
-        Tween(begin: Offset(-1.0, 0.0), end: Offset(0.0, 0.0))
-            .animate(CurvedAnimation(parent: _animationController, curve: Curves.easeIn));
+        Tween(begin: Offset(-1.0, 0.0), end: Offset(0.0, 0.0)).animate(
+            CurvedAnimation(
+                parent: _animationController, curve: Curves.easeIn));
+//    _animationController.forward();
   }
 
-  _listenCommend(){
+  /// 監聽指令,要開啟或者收起來送禮提示
+  _listenCommend() {
     ctr.giftAnimateCommand.listen((command) {
       print(command);
-      if(command == GiftCommand.toShow){
+      if (command == GiftCommand.toShow) {
         _animationController.forward();
       }
-      if(command == GiftCommand.toHidden){
+      if (command == GiftCommand.toHidden) {
         ctr.giftViewState = GiftViewState.onProcess;
         //2秒後才收回畫面
         Timer(Duration(milliseconds: 2000), () {
@@ -163,11 +131,16 @@ class _NormalGiftViewState extends State<NormalGiftView>
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                StrokeText(
-                                  text: '大麥克',
+                                Obx(
+                                  () => StrokeText(
+                                    text: '${ctr.giftNoticeList[0].NickName}',
+                                  ),
                                 ),
-                                StrokeText(
-                                  text: '送出 棒棒糖',
+                                Obx(
+                                  () => StrokeText(
+                                    text:
+                                        '送出 ${ctr.giftNoticeList[0].GiftName}',
+                                  ),
                                 ),
                               ],
                             ),
@@ -186,19 +159,22 @@ class _NormalGiftViewState extends State<NormalGiftView>
               child: SizedBox(
                 height: boxHeight * 1.5,
                 width: boxHeight * 1.5,
-                child: Image.asset('assets/images/gift/icon/gift_1.png'),
+                child: Obx(
+                  () => Image.asset(
+                      'assets/images/${ctr.giftNoticeList[0].GiftUrl}'),
+                ),
               ),
             ),
             Positioned(
               bottom: 0,
-              left: 140,
+              left: 150,
               child: StrokeSymbol(
                 text: '×',
               ),
             ),
             Positioned(
                 bottom: -8,
-                left: 160,
+                left: 170,
                 child: Obx(
                   () => StrokeNumber(
                     text: '${ctr.giftNoticeCombo.value}',

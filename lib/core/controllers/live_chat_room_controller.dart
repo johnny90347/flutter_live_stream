@@ -1,6 +1,5 @@
 //套件
 import 'package:flutter_live_stream/core/enum/response.dart';
-import 'package:flutter_live_stream/pages/live_chat_room/chat_room_feature/center_area/animation_layer/child/normal_gift_animation.dart';
 import 'package:flutter_live_stream/shared/widgets/common_dialog_content.dart';
 import 'package:get/get.dart';
 export 'package:get/get.dart';
@@ -44,9 +43,9 @@ class LiveChatRoomController extends GetxController {
   var _giftNoticeListTemp = RxList<PlayerSendGiftModel>([]); // 暫時儲存的送禮提示
   Timer _giftNoticeTimer; // 每x秒,欲一筆資料到 giftNoticeList 中
 
-
   /// 初始化聊天房資訊
   void liveChatRoomInit() async {
+    _setGiftNoticeInitValue();
     _listenSpecialNoticeTemp();
     _listenGiftNoticeListTemp();
     liveStreamService.initLiveStreamConnection(callback: () {
@@ -183,15 +182,14 @@ class LiveChatRoomController extends GetxController {
             ));
       } else if (resultMsg.Code == SendGiftRespCode.success) {
         // 送禮成功
-        final okMsg = extendGiftInfo(msg: resultMsg);
-
+        final okMsg = _extendGiftInfo(msg: resultMsg);
       }
     });
   }
 
   /// 測試禮物用假資料
-  void MOCKGIFT(){
-    final mockData =  {
+  void MOCKGIFT() {
+    final mockData = {
       "Id": "string",
       "NickName": "Johnny",
       "MessageId": "string",
@@ -204,13 +202,15 @@ class LiveChatRoomController extends GetxController {
       "GiftName": "string"
     };
     final okMsg = PlayerSendGiftModel.fromJson(mockData);
-    final okGiftMsg = extendGiftInfo(msg: okMsg);
+    final okGiftMsg = _extendGiftInfo(msg: okMsg);
+    print(okGiftMsg.GiftUrl);
+    print(okGiftMsg.GiftName);
     _giftNoticeListTemp.add(okGiftMsg);
   }
 
   /// 測試禮物用假資料
-  void MOCKGIFTTWO(){
-    final mockData =  {
+  void MOCKGIFTTWO() {
+    final mockData = {
       "Id": "string",
       "NickName": "Johnny",
       "MessageId": "string",
@@ -219,22 +219,13 @@ class LiveChatRoomController extends GetxController {
       "GiftId": 2,
       "StarValue": 0,
       "Level": 16,
-      "GiftUrl": "string",
-      "GiftName": "string"
+      "GiftUrl": "gift/icon/gift_1.png",
+      "GiftName": "棒棒"
     };
     final okMsg = PlayerSendGiftModel.fromJson(mockData);
-    final okGiftMsg = extendGiftInfo(msg: okMsg);
+    final okGiftMsg = _extendGiftInfo(msg: okMsg);
     _giftNoticeListTemp.add(okGiftMsg);
   }
-  ///測試用
-  void showGiftView(){
-    giftAnimateCommand.value = GiftCommand.toShow;
-  }
-  /// 測試用
-  void hiddenGiftView(){
-    giftAnimateCommand.value = GiftCommand.toHidden;
-  }
-
 
   /// 清空送禮提示List
   void resetGiftNoticeList() {
@@ -267,6 +258,25 @@ class LiveChatRoomController extends GetxController {
   /// 送出禮物
   void sendGift({@required int giftId, @required int giftValue}) {
     liveStreamService.sendGift(giftId: giftId, giftValue: giftValue);
+  }
+
+  /// 假的送出禮物
+  void sendMockGift({@required int giftId, @required int giftValue}){
+    final mockData = {
+      "Id": "string",
+      "NickName": "Johnny",
+      "MessageId": "string",
+      "Code": 0,
+      "CorrelationId": "string",
+      "GiftId": giftId,
+      "StarValue": giftValue,
+      "Level": 16,
+      "GiftUrl": "",
+      "GiftName": ""
+    };
+    final okMsg = PlayerSendGiftModel.fromJson(mockData);
+    final okGiftMsg = _extendGiftInfo(msg: okMsg);
+    _giftNoticeListTemp.add(okGiftMsg);
   }
 
   /// 禮物名稱過濾
@@ -315,22 +325,23 @@ class LiveChatRoomController extends GetxController {
       // 如果沒有計時器 = 沒資料在跑
       if (_giftNoticeTimer == null) {
         // 先馬上更新一筆資料
-        giftNoticeList.add(tempList[0]);
+        giftNoticeList[0] = tempList[0];
         tempList.removeAt(0);
-        showGiftView();
-          hiddenGiftView();
+        _showGiftView(); // 做了動畫後,兩秒後自動回收
+        _hiddenGiftView();
         // 設定計時器,每X秒,更新一次資訊
         _giftNoticeTimer =
             Timer.periodic(const Duration(milliseconds: 4000), (Timer timer) {
           // 還有資料在暫存區
           if (tempList.length > 0) {
+            giftNoticeList[0] = tempList[0];
             tempList.removeAt(0);
-            showGiftView();
-              hiddenGiftView();
+            _showGiftView(); // 做了動畫後,兩秒後自動回收
+            _hiddenGiftView();
           }
-          if(tempList.length <= 0){
+          if (tempList.length <= 0) {
             // 沒有資料在暫存區,清除timer
-            hiddenGiftView();
+            _hiddenGiftView();
             _giftNoticeTimer.cancel();
             _giftNoticeTimer = null;
             giftNoticeCombo.value = 1;
@@ -341,36 +352,8 @@ class LiveChatRoomController extends GetxController {
     });
   }
 
-
-
-  /// 禮物是否有combo判斷
-  void _giftComboDetermine() {
-    final currentGift = giftNoticeList[0];
-    final nextGift = _giftNoticeListTemp[0];
-    // 如果是同一個人送的同一個禮物,判斷為禮物combo,只變更combo數字
-    if(currentGift.NickName == nextGift.NickName && currentGift.GiftId == currentGift.GiftId){
-      // TODO:到時要改成,後端傳回來的Combo數
-      giftNoticeCombo ++;
-      // 拿掉一個temp的資料
-      _giftNoticeListTemp.removeAt(0);
-      print('ComBO!!!');
-    }else{
-      //非 combo,要替換禮物內容
-      //1.收回
-      //2.替換內容
-      if(giftViewState != GiftViewState.hidden){
-        hiddenGiftView();
-      }else{
-        giftNoticeList.add(_giftNoticeListTemp[0]);
-        _giftNoticeListTemp.removeAt(0);
-        giftNoticeCombo.value = 1; // combo = 1
-        showGiftView();
-      }
-    }
-  }
-
   ///替禮替禮物添加資訊
-  PlayerSendGiftModel extendGiftInfo({@required PlayerSendGiftModel msg}) {
+  PlayerSendGiftModel _extendGiftInfo({@required PlayerSendGiftModel msg}) {
     var resultMsg = msg;
     this.gifts.forEach((gift) {
       if (gift.Id == msg.GiftId) {
@@ -379,5 +362,33 @@ class LiveChatRoomController extends GetxController {
       }
     });
     return resultMsg;
+  }
+
+  /// 顯示禮物視窗
+  void _showGiftView() {
+    giftAnimateCommand.value = GiftCommand.toShow;
+  }
+
+  /// 關閉禮物視窗
+  void _hiddenGiftView() {
+    giftAnimateCommand.value = GiftCommand.toHidden;
+  }
+
+  /// 先給禮物一個初始值,我不要一直切換狀態
+  void _setGiftNoticeInitValue(){
+    final mockData = {
+      "Id": "string",
+      "NickName": "Johnny",
+      "MessageId": "string",
+      "Code": 0,
+      "CorrelationId": "string",
+      "GiftId": 2,
+      "StarValue": 0,
+      "Level": 16,
+      "GiftUrl": "gift/icon/gift_1.png",
+      "GiftName": "棒棒"
+    };
+    final initValue = PlayerSendGiftModel.fromJson(mockData);
+    giftNoticeList.add(initValue);
   }
 }
