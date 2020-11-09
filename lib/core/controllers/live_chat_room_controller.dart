@@ -264,7 +264,7 @@ class LiveChatRoomController extends GetxController {
   void sendMockGift({@required int giftId, @required int giftValue}){
     final mockData = {
       "Id": "string",
-      "NickName": "Johnny",
+      "NickName": "HTTW02",
       "MessageId": "string",
       "Code": 0,
       "CorrelationId": "string",

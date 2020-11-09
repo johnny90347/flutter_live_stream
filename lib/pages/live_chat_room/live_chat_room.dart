@@ -40,7 +40,7 @@ class _LiveChatRoomState extends State<LiveChatRoom> {
             right: 0,
             bottom: 0,
             left: 0,
-            child: LiveStream()
+            child: LiveStreamFijk()
           ),
           Positioned(
             top: 0,

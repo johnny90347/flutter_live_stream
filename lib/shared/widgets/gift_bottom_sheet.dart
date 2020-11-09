@@ -22,6 +22,7 @@ class _GiftBottomSheetState extends State<GiftBottomSheet> {
     return Container(
       height: screenMaxHeight * 0.5,
       width: screenMaxWidth,
+      color: Colors.white,
       child: Column(
         children: [
           Container(
@@ -41,6 +42,7 @@ class _GiftBottomSheetState extends State<GiftBottomSheet> {
           Expanded(
             // 禮物選單
             child: SingleChildScrollView(
+              padding: EdgeInsets.all(0),
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 20.0),
                 width: screenMaxWidth,
